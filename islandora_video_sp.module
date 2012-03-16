@@ -1,0 +1,70 @@
+<?php
+
+// $Id$
+function islandora_video_sp_menu() {
+  $items['admin/settings/islandora_video_sp'] = array(
+    'title' => 'Islandora Video Solution Pack Admin',
+    'description' => 'Configure Islandora Video Module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_video_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'islandora_video.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['islandora/video/ffm'] = array(
+    'page callback' => 'update_ffm_div',
+    'access arguments' => array('view fedora collection'),
+    'file' => 'islandora_video.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function islandora_video_sp_required_fedora_objects() {
+  module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
+  // Add the form and associate it to the content model
+  $module_path = drupal_get_path('module', 'islandora_video_sp');
+  $form_name = 'Islandora Video MODS Form';
+  $form_xml = file_get_contents("$module_path/install_files/MODS_VIDEO_FORM.xml");
+  solution_pack_add_form($form_name, $form_xml);
+  solution_pack_add_form_association('islandora:sp_videoCModel', $form_name);
+
+  
+
+
+
+  return array(
+    'islandora_video_sp' => array(
+      'module' => 'islandora_video_sp',
+      'title' => 'Islandora Video Solution Pack',
+      'objects' => array(
+        array(
+          'foxml_file' => "$module_path/install_files/islandora_sp_videoCModel.xml",
+          'pid' => 'islandora:sp_videoCModel',
+          'dsid' => NULL,
+          'datastream_file' => NULL,
+          'dsversion' => NULL,
+        ),
+        array(
+          'pid' => 'islandora:video_collection',
+          'label' => 'video Collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'parent' => 'islandora:root',
+          'datastreams' => array(
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'datastream_file' => "$module_path/install_files/video_collection_policy.xml",
+            ),
+            array(
+              'dsid' => 'TN',
+              'datastream_file' => "$module_path/images/Crystal_Clear_filesystem_folder_video.png",
+              'mimetype' => 'image/png',
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+

@@ -1,0 +1,8 @@
+; $Id$ 
+name = Islandora Video Solution Pack
+description = Islandora configurations for persisting and displaying video files
+dependencies[] = fedora_repository
+dependencies[] = swftools
+package = Islandora Solution Pack
+version = 11.2.beta1
+core = 6.x
