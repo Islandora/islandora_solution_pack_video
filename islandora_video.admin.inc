@@ -8,7 +8,7 @@
 function islandora_video_admin_settings(&$form_state) {
 
 
-  $ffm_path = isset($form_state['values']['islandora_ffm_path']) ? $form_state['values']['islandora_ffm_path'] : variable_get('islandora_ffm_path', '/usr/bin/tesseract');
+  $ffm_path = isset($form_state['values']['islandora_ffm_path']) ? $form_state['values']['islandora_ffm_path'] : variable_get('islandora_ffm_path', '/usr/bin/ffmpeg');
   $ffm_avail = exec("$ffm_path");
   $confirmation_message = ($ffm_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
           . t('Executable found at !ffm_path', array('!ffm_path' => $ffm_path)) : '<img src="'
