@@ -10,10 +10,11 @@ function islandora_video_admin_settings(&$form_state) {
 
   $ffm_path = isset($form_state['values']['islandora_ffm_path']) ? $form_state['values']['islandora_ffm_path'] : variable_get('islandora_ffm_path', '/usr/bin/ffmpeg');
   $ffm_avail = exec("ls $ffm_path");
+
   $confirmation_message = ($ffm_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
-          . t('Executable found at !ffm_path', array('!ffm_path' => $ffm_path)) : '<img src="'
+          . t('FFMpeg found at !ffm_path', array('!ffm_path' => $ffm_path)) : '<img src="'
           . url('misc/watchdog-error.png') . '"/> '
-          . t('Unable to locate executable at !ffm_path</p>', array('!ffm_path' => $ffm_path)));
+          . t('Unable to locate FFMpeg at !ffm_path</p>', array('!ffm_path' => $ffm_path)));
 
   $ffm = isset($form_state['values']['islandora_video_do_ffm']) ? $form_state['values']['islandora_video_do_ffm'] : variable_get('islandora_video_do_ffm', TRUE);
 
@@ -51,12 +52,53 @@ function islandora_video_admin_settings(&$form_state) {
       '#type' => 'item',
       '#value' => $confirmation_message,
     );
+  }
 
-    $form['video_ahah_wrapper']['refresh_page'] = array(
-      '#type' => 'submit',
-      '#value' => t('Test Path'),
-      '#attributes' => array('class' => 'refresh-button'),
-      '#submit' => array('video_admin_refresh'),
+  //  check for exiftool
+
+
+  $exif_path = isset($form_state['values']['islandora_exif_path']) ? $form_state['values']['islandora_exif_path'] : variable_get('islandora_exif_path', '/usr/bin/exiftool');
+  $exif_avail = exec("ls $exif_path");
+
+  $exif_confirmation_message = ($exif_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
+          . t('Exiftool found at !exif_path', array('!exif_path' => $exif_path)) : '<img src="'
+          . url('misc/watchdog-error.png') . '"/> '
+          . t('Unable to locate Exiftool at !exif_path</p>', array('!exif_path' => $exif_path)));
+
+  $exif = isset($form_state['values']['islandora_video_do_exif']) ? $form_state['values']['islandora_video_do_exif'] : variable_get('islandora_video_do_exif', TRUE);
+
+  $form['video_ahah_exif_wrapper'] = array(
+    '#prefix' => '<div id="ivideo-exif-url">',
+    '#suffix' => '</div>',
+    '#type' => 'fieldset',
+  );
+  $form['video_ahah_exif_wrapper']['islandora_video_do_exif'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Extract Exif data locally ?'),
+    '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
+    '#default_value' => $exif,
+    '#ahah' => array(
+      'path' => 'islandora/video/exif',
+      'wrapper' => 'ivideo-exif-url',
+      'effect' => 'fade',
+      'event' => 'change'),
+  );
+
+  if ($exif) {
+    $form['video_ahah_exif_wrapper']['islandora_exif_path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Path to Exiftool executable'),
+      '#description' => t('Path to exiftool program on your server'),
+      '#default_value' => $exif_path,
+      '#ahah' => array(
+        'path' => 'islandora/video/exif',
+        'wrapper' => 'ivideo-exif-url',
+        'effect' => 'fade',
+        'event' => 'change'),
+    );
+    $form['video_ahah_exif_wrapper']['infobox'] = array(
+      '#type' => 'item',
+      '#value' => $exif_confirmation_message,
     );
   }
 
@@ -74,6 +116,21 @@ function update_ffm_div() {
 
   $form = video_callback_prep();
   $changed_elements = $form['video_ahah_wrapper'];
+  unset($changed_elements['#prefix'], $changed_elements['#suffix']);
+  $output = theme('status_messages') . drupal_render($changed_elements);
+  drupal_json(array(
+    'status' => TRUE,
+    'data' => $output,
+  ));
+}
+
+/**
+ * update exif div
+ */
+function update_exif_div() {
+
+  $form = video_callback_prep();
+  $changed_elements = $form['video_ahah_exif_wrapper'];
   unset($changed_elements['#prefix'], $changed_elements['#suffix']);
   $output = theme('status_messages') . drupal_render($changed_elements);
   drupal_json(array(

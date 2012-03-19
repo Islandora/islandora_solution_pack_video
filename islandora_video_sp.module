@@ -18,6 +18,12 @@ function islandora_video_sp_menu() {
     'file' => 'islandora_video.admin.inc',
     'type' => MENU_CALLBACK,
   );
+    $items['islandora/video/exif'] = array(
+    'page callback' => 'update_exif_div',
+    'access arguments' => array('view fedora collection'),
+    'file' => 'islandora_video.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
