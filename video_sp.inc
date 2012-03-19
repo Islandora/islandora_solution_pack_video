@@ -12,6 +12,8 @@ class VideoCreation {
     if (!variable_get('islandora_video_do_ffm', TRUE)) {
       return;
     }
+    $path_info = pathinfo($file);
+    $newfile = str_replace('.' . $path_info['extension'],'.m4v',$file);
     $file_suffix = "_$dsid.$file_ext";
     $return_value = TRUE;
     $fullfile = $_SERVER['DOCUMENT_ROOT'] . $base_path . $file;
@@ -20,11 +22,11 @@ class VideoCreation {
     $executable = variable_get('islandora_ffm_path', '/usr/local/bin/ffmpeg');
 
 
-    $command_string = "$this->executable -i $file -y -f mp4 -vcodec copy -acodec copy  ${file}.m4v";
+    $command_string = "$this->executable -i $file -y -f mp4 -vcodec copy -acodec copy  $newfile";
     exec($command_string, $output, $returnValue);
 
     if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["PROXY_M4V"] = $file . '.m4v';
+      $_SESSION['fedora_ingest_files']["PROXY_M4V"] = $newfile;
       return TRUE;
     }
     else {
