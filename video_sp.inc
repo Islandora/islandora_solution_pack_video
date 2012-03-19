@@ -9,6 +9,9 @@ class VideoCreation {
 
   function createFile($parameterArray = NULL, $dsid, $file, $file_ext) {
     global $base_path;
+    if (!variable_get('islandora_video_do_ffm', TRUE)) {
+      return;
+    }
     $file_suffix = "_$dsid.$file_ext";
     $return_value = TRUE;
     $fullfile = $_SERVER['DOCUMENT_ROOT'] . $base_path . $file;
@@ -30,6 +33,9 @@ class VideoCreation {
   }
 
   function get_thumbnail($parameterArray, $dsid, $file, $file_ext) {
+    if (!variable_get('islandora_video_do_ffm', TRUE)) {
+      return;
+    }
     $defaults = array('ss' => '00:00:10', 's' => NULL);
     $params = array_merge($defaults, $parameterArray);
     $system = getenv('System');
