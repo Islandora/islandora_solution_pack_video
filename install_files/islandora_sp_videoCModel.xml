@@ -43,7 +43,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
               <applies_to>video/ogg</applies_to>
               <applies_to>audio/ogg</applies_to>
               <ingest_methods>
-                <ingest_method class="Exiftool" dsid="OBJ_EXIFTOOL" file="plugins/Exiftool.inc" method="extractMetadata" modified_files_ext="">
+                <ingest_method class="Exiftool" dsid="EXIF" file="plugins/Exiftool.inc" method="extractMetadata" modified_files_ext="">
                   <parameters></parameters>
                 </ingest_method>
                 <ingest_method class="VideoCreation" dsid="TN" file="video_sp.inc" method="get_thumbnail" module="islandora_video_sp" modified_files_ext="jpg">
