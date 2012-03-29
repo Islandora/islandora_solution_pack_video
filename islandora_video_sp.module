@@ -54,7 +54,7 @@ function islandora_video_sp_required_fedora_objects() {
         ),
         array(
           'pid' => 'islandora:video_collection',
-          'label' => 'video Collection',
+          'label' => t('Video Collection'),
           'cmodel' => 'islandora:collectionCModel',
           'parent' => 'islandora:root',
           'datastreams' => array(

@@ -9,29 +9,44 @@ class VideoCreation {
 
   function createFile($parameterArray = NULL, $dsid, $file, $file_ext) {
     global $base_path;
+    $success = FALSE;
     if (!variable_get('islandora_video_do_ffm', TRUE)) {
       return;
     }
     $path_info = pathinfo($file);
-    $newfile = str_replace('.' . $path_info['extension'], '.m4v', $file);
-    $file_suffix = "_$dsid.$file_ext";
-    $return_value = TRUE;
-    $fullfile = $_SERVER['DOCUMENT_ROOT'] . $base_path . $file;
-    $fullfile = str_replace('//', '/', $fullfile);
-    $output = array();
-    $executable = variable_get('islandora_ffm_path', '/usr/local/bin/ffmpeg');
 
 
-    $command_string = "$this->executable -i $file -y -f mp4 -vcodec copy -acodec copy  $newfile";
+    //makes mp4 file, adds file in ingest list
+    $mp4file = str_replace('.' . $path_info['extension'], '_.mp4', $file);
+    $command_string = "$this->executable -i $file -vcodec ffv1 -acodec pcm_s16le -async 1 $mp4file";
     exec($command_string, $output, $returnValue);
 
     if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["PROXY_M4V"] = $newfile;
-      return TRUE;
+      $_SESSION['fedora_ingest_files']["MP4"] = $mp4file;
+      $success = TRUE;
     }
-    else {
-      return FALSE;
+
+    //makes mkv file, adds file in ingest list
+    $mkvfile = str_replace('.' . $path_info['extension'], '_.mkv', $file);
+    $command_string = "$this->executable -i $file -f mp4 $mkvfile";
+    exec($command_string, $output, $returnValue);
+
+    if ($returnValue == '0') {
+      $_SESSION['fedora_ingest_files']["MKV"] = $mkvfile;
+      $success = TRUE;
     }
+
+    //makes ogg file, adds file in ingest list
+    $oggfile = str_replace('.' . $path_info['extension'], '_.ogg', $file);
+    $command_string = "$this->executable -i $file -f mp4 $oggfile";
+    exec($command_string, $output, $returnValue);
+
+    if ($returnValue == '0') {
+      $_SESSION['fedora_ingest_files']["OGG"] = $oggfile;
+      $success = TRUE;
+    }
+
+    return $success;
   }
 
   function get_thumbnail($parameterArray, $dsid, $file, $file_ext) {
@@ -61,9 +76,6 @@ class VideoCreation {
       $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
       return TRUE;
     }
-
-    $_SESSION['fedora_ingest_files']["$dsid"] = $file . $file_suffix;
-    return TRUE;
   }
 
 }
@@ -75,7 +87,7 @@ class VideoExiftool {
 
   /**
    * Constructor
-   * @param type $pid
+   * @param string $pid
    */
   function __construct($pid = null) {
     //drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
@@ -88,13 +100,16 @@ class VideoExiftool {
 
   /**
    * extract metadata ??
-   * @param type $parameterArray
-   * @param type $dsid
-   * @param type $file
-   * @param type $file_ext
-   * @return type
+   * @param array $parameterArray
+   * @param string $dsid
+   * @param string $file
+   * @param string $file_ext
+   * @return boolean
    */
   function extractMetadata($parameterArray, $dsid, $file, $file_ext) {
+    if (!variable_get('islandora_video_do_exif', TRUE)) {
+      return;
+    }
     $path_info = pathinfo($file);
     $newfile = str_replace('.' . $path_info['extension'], '_EXIF.xml', $file);
     $returnValue = TRUE;
@@ -106,8 +121,8 @@ class VideoExiftool {
   }
 
   /**
-   * display metadata ???
-   * @return type
+   * display metadata 
+   * @return html
    */
   function displayMetadata() {
     $output = '';

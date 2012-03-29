@@ -20,8 +20,8 @@ class IslandoraVideoPlayer {
     $model = new fedora_item($this->pid);
     $ds_list = $model->get_datastreams_list_as_array();
 
-    if (isset($ds_list['PROXY_M4V'])) { // only display if M4V datastream exists
-      $swfURL = $base_url . '/fedora/repository/' . $this->pid . '/PROXY_M4V/' . $ds_list['PROXY_M4V']['label'];
+    if (isset($ds_list['MP4'])) { // only display if M4V datastream exists
+      $swfURL = $base_url . '/fedora/repository/' . $this->pid . '/MP4/' . $ds_list['MP4']['label'];
 
 
       $swfImageURL = $base_url . '/fedora/repository/' . $this->pid . '/TN';

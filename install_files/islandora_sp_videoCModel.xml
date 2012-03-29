@@ -61,10 +61,13 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
           </ingest_rules>
           <datastreams>
             <datastream dsid="OBJ"></datastream>
-            <datastream dsid="PROXY_M4V">
+            <datastream dsid="MP4">
               <display_method class="IslandoraVideoPlayer" file="video_viewer.inc" method="showM4V" module="islandora_video_sp"></display_method>
             </datastream>
             <datastream dsid="OBJ_EXIFTOOL"></datastream>
+            <datastream dsid="MP4"></datastream>
+            <datastream dsid="MKV"></datastream>
+            <datastream dsid="OGG"></datastream>
             <datastream dsid="TN"></datastream>
             <datastream dsid="FULL_SIZE"></datastream>
           </datastreams>
