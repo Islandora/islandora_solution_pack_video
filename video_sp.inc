@@ -9,16 +9,27 @@ class VideoCreation {
 
   function createFile($parameterArray = NULL, $dsid, $file, $file_ext) {
     global $base_path;
+
+    //removes spaces from filename
+
+    $old_filename = pathinfo($file, PATHINFO_FILENAME);
+    $new_file_name = preg_replace("/[^a-z\.\d]/i", "", $old_filename);
+    if ($new_file_name != $old_filename) {
+      $original = $file;
+      $new_fullname = str_replace($old_filename, $new_file_name, $file);
+      $success = rename("$file", "$new_fullname");
+      $file = $new_fullname;
+      $changed = TRUE;
+    }
     $success = FALSE;
     if (!variable_get('islandora_video_do_ffm', TRUE)) {
       return;
     }
     $path_info = pathinfo($file);
 
-
     //makes mp4 file, adds file in ingest list
     $mp4file = str_replace('.' . $path_info['extension'], '_.mp4', $file);
-    $command_string = "$this->executable -i $file -vcodec ffv1 -acodec pcm_s16le -async 1 $mp4file";
+    $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
     exec($command_string, $output, $returnValue);
 
     if ($returnValue == '0') {
@@ -38,7 +49,7 @@ class VideoCreation {
 
     //makes ogg file, adds file in ingest list
     $oggfile = str_replace('.' . $path_info['extension'], '_.ogg', $file);
-    $command_string = "$this->executable -i $file -f mp4 $oggfile";
+    $command_string = "ffmpeg2theora $file -o $oggfile";
     exec($command_string, $output, $returnValue);
 
     if ($returnValue == '0') {
@@ -46,6 +57,10 @@ class VideoCreation {
       $success = TRUE;
     }
 
+    // restores original filename, allowing succesful comletion of conetnt model rules
+    if ($changed) {
+      rename($file, $original);
+    }
     return $success;
   }
 
