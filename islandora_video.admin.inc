@@ -102,6 +102,53 @@ function islandora_video_admin_settings(&$form_state) {
     );
   }
 
+
+  //check for ffmpeg2theora
+  $theora_path = isset($form_state['values']['islandora_theora_path']) ? $form_state['values']['islandora_theora_path'] : variable_get('islandora_theora_path', '/usr/local/bin/ffmpeg2theora');
+  $theora_avail = exec("ls $theora_path");
+
+  $theora_confirmation_message = ($theora_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
+          . t('Theora2ffmepg found at !theora_path', array('!theora_path' => $theora_path)) : '<img src="'
+          . url('misc/watchdog-error.png') . '"/> '
+          . t('Unable to locate Theora2ffmpeg at !theora_path</p>', array('!theora_path' => $theora_path)));
+
+  $theora = isset($form_state['values']['islandora_video_do_theora']) ? $form_state['values']['islandora_video_do_theora'] : variable_get('islandora_video_do_theora', TRUE);
+
+  $form['video_ahah_theora_wrapper'] = array(
+    '#prefix' => '<div id="ivideo-theora-url">',
+    '#suffix' => '</div>',
+    '#type' => 'fieldset',
+  );
+  $form['video_ahah_theora_wrapper']['islandora_video_do_theora'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Create OGG locally?'),
+    '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
+    '#default_value' => $theora,
+    '#ahah' => array(
+      'path' => 'islandora/video/theora',
+      'wrapper' => 'ivideo-theora-url',
+      'effect' => 'fade',
+      'event' => 'change'),
+  );
+
+  if ($theora) {
+    $form['video_ahah_theora_wrapper']['islandora_theora_path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Path to Theora executable'),
+      '#description' => t('Path to theora program on your server'),
+      '#default_value' => $theora_path,
+      '#ahah' => array(
+        'path' => 'islandora/video/theora',
+        'wrapper' => 'ivideo-theora-url',
+        'effect' => 'fade',
+        'event' => 'change'),
+    );
+    $form['video_ahah_theora_wrapper']['infobox'] = array(
+      '#type' => 'item',
+      '#value' => $theora_confirmation_message,
+    );
+  }
+
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save Configuration'));
   $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults'));
   $form['#submit'][] = 'video_settings_form_submit';
@@ -138,6 +185,22 @@ function update_exif_div() {
     'data' => $output,
   ));
 }
+
+/**
+ * update exif div
+ */
+function update_theora_div() {
+
+  $form = video_callback_prep();
+  $changed_elements = $form['video_ahah_theora_wrapper'];
+  unset($changed_elements['#prefix'], $changed_elements['#suffix']);
+  $output = theme('status_messages') . drupal_render($changed_elements);
+  drupal_json(array(
+    'status' => TRUE,
+    'data' => $output,
+  ));
+}
+
 
 /**
  * book callback prep
