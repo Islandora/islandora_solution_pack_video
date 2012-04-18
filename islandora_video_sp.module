@@ -18,8 +18,14 @@ function islandora_video_sp_menu() {
     'file' => 'islandora_video.admin.inc',
     'type' => MENU_CALLBACK,
   );
-    $items['islandora/video/exif'] = array(
+  $items['islandora/video/exif'] = array(
     'page callback' => 'update_exif_div',
+    'access arguments' => array('view fedora collection'),
+    'file' => 'islandora_video.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['islandora/video/theora'] = array(
+    'page callback' => 'update_theora_div',
     'access arguments' => array('view fedora collection'),
     'file' => 'islandora_video.admin.inc',
     'type' => MENU_CALLBACK,
@@ -36,7 +42,7 @@ function islandora_video_sp_required_fedora_objects() {
   solution_pack_add_form($form_name, $form_xml);
   solution_pack_add_form_association('islandora:sp_videoCModel', $form_name);
 
-  
+
 
 
 
