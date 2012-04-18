@@ -22,41 +22,45 @@ class VideoCreation {
       $changed = TRUE;
     }
     $success = FALSE;
-    if (!variable_get('islandora_video_do_ffm', TRUE)) {
-      return;
-    }
-    $path_info = pathinfo($file);
 
-    //makes mp4 file, adds file in ingest list
-    $mp4file = str_replace('.' . $path_info['extension'], '_.mp4', $file);
-    $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
-    exec($command_string, $output, $returnValue);
+    if (variable_get('islandora_video_do_ffm', TRUE)) {
 
-    if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["MP4"] = $mp4file;
-      $success = TRUE;
-    }
 
-    //makes mkv file, adds file in ingest list
-    $mkvfile = str_replace('.' . $path_info['extension'], '_.mkv', $file);
-    $command_string = "$this->executable -i $file -f mp4 $mkvfile";
-    exec($command_string, $output, $returnValue);
+      $path_info = pathinfo($file);
 
-    if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["MKV"] = $mkvfile;
-      $success = TRUE;
-    }
+      //makes mp4 file, adds file in ingest list
+      $mp4file = str_replace('.' . $path_info['extension'], '_.mp4', $file);
+      $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
+      exec($command_string, $output, $returnValue);
 
-    //makes ogg file, adds file in ingest list
-    $oggfile = str_replace('.' . $path_info['extension'], '_.ogg', $file);
-    $command_string = "ffmpeg2theora $file -o $oggfile";
-    exec($command_string, $output, $returnValue);
+      if ($returnValue == '0') {
+        $_SESSION['fedora_ingest_files']["MP4"] = $mp4file;
+        $success = TRUE;
+      }
 
-    if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["OGG"] = $oggfile;
-      $success = TRUE;
+      //makes mkv file, adds file in ingest list
+      $mkvfile = str_replace('.' . $path_info['extension'], '_.mkv', $file);
+      $command_string = "$this->executable -i $file -f mp4 $mkvfile";
+      exec($command_string, $output, $returnValue);
+
+      if ($returnValue == '0') {
+        $_SESSION['fedora_ingest_files']["MKV"] = $mkvfile;
+        $success = TRUE;
+      }
     }
 
+    if (variable_get('islandora_video_do_theora', TRUE)) {
+      //makes ogg file, adds file in ingest list
+      $theora = variable_get('islandora_theora_path', '/usr/local/bin/ffmpeg2theora');
+      $oggfile = str_replace('.' . $path_info['extension'], '_.ogg', $file);
+      $command_string = "$theora $file -o $oggfile";
+      exec($command_string, $output, $returnValue);
+
+      if ($returnValue == '0') {
+        $_SESSION['fedora_ingest_files']["OGG"] = $oggfile;
+        $success = TRUE;
+      }
+    }
     // restores original filename, allowing succesful comletion of conetnt model rules
     if ($changed) {
       rename($file, $original);
