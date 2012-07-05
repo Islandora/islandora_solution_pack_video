@@ -25,8 +25,6 @@ class VideoCreation {
     $success = FALSE;
 
     if (variable_get('islandora_video_do_ffm', TRUE)) {
-
-
       $path_info = pathinfo($file);
 
       //makes mp4 file, adds file in ingest list
@@ -36,16 +34,18 @@ class VideoCreation {
 
       if ($returnValue == '0') {
         $_SESSION['fedora_ingest_files']["MP4"] = $mp4file;
+        drupal_set_message('MP4 created successfully');
         $success = TRUE;
       }
 
       //makes mkv file, adds file in ingest list
-      $mkvfile =       $mp4file = $clean_name . '_.mkv';
+      $mkvfile = $mp4file = $clean_name . '_.mkv';
       $command_string = "$this->executable -i $file -f mp4 $mkvfile";
       exec($command_string, $output, $returnValue);
 
       if ($returnValue == '0') {
         $_SESSION['fedora_ingest_files']["MKV"] = $mkvfile;
+        drupal_set_message('MKV created successfully');
         $success = TRUE;
       }
     }
@@ -53,12 +53,13 @@ class VideoCreation {
     if (variable_get('islandora_video_do_theora', TRUE)) {
       //makes ogg file, adds file in ingest list
       $theora = variable_get('islandora_theora_path', '/usr/local/bin/ffmpeg2theora');
-      $oggfile =       $mp4file = $clean_name . '_.ogg';
+      $oggfile = $mp4file = $clean_name . '_.ogg';
       $command_string = "$theora $file -o $oggfile";
       exec($command_string, $output, $returnValue);
 
       if ($returnValue == '0') {
         $_SESSION['fedora_ingest_files']["OGG"] = $oggfile;
+        drupal_set_message('OGG created successfully');
         $success = TRUE;
       }
     }
