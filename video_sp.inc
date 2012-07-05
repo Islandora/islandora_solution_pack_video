@@ -14,6 +14,7 @@ class VideoCreation {
 
     $old_filename = pathinfo($file, PATHINFO_FILENAME);
     $new_file_name = preg_replace("/[^a-z\.\d]/i", "", $old_filename);
+    $clean_name = preg_replace('/^form-.*?_/', '', $old_filename);
     if ($new_file_name != $old_filename) {
       $original = $file;
       $new_fullname = str_replace($old_filename, $new_file_name, $file);
@@ -29,7 +30,7 @@ class VideoCreation {
       $path_info = pathinfo($file);
 
       //makes mp4 file, adds file in ingest list
-      $mp4file = str_replace('.' . $path_info['extension'], '_.mp4', $file);
+      $mp4file = $clean_name . '_.mp4';
       $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
       exec($command_string, $output, $returnValue);
 
@@ -39,7 +40,7 @@ class VideoCreation {
       }
 
       //makes mkv file, adds file in ingest list
-      $mkvfile = str_replace('.' . $path_info['extension'], '_.mkv', $file);
+      $mkvfile =       $mp4file = $clean_name . '_.mkv';
       $command_string = "$this->executable -i $file -f mp4 $mkvfile";
       exec($command_string, $output, $returnValue);
 
@@ -52,7 +53,7 @@ class VideoCreation {
     if (variable_get('islandora_video_do_theora', TRUE)) {
       //makes ogg file, adds file in ingest list
       $theora = variable_get('islandora_theora_path', '/usr/local/bin/ffmpeg2theora');
-      $oggfile = str_replace('.' . $path_info['extension'], '_.ogg', $file);
+      $oggfile =       $mp4file = $clean_name . '_.ogg';
       $command_string = "$theora $file -o $oggfile";
       exec($command_string, $output, $returnValue);
 
@@ -61,7 +62,7 @@ class VideoCreation {
         $success = TRUE;
       }
     }
-    // restores original filename, allowing succesful comletion of conetnt model rules
+    // restores original filename, allowing succesful comletion of content model rules
     if ($changed) {
       rename($file, $original);
     }
@@ -87,14 +88,14 @@ class VideoCreation {
     }
     $command = "$this->executable -i " . escapeshellarg($file) . ' -r 1 -ss ' . escapeshellarg($params['ss']) . ' ' . $size . ' -t 1 ' . escapeshellarg($file . $file_suffix);
     exec("$this->executable -i " . escapeshellarg($file) . ' -r 1 -ss ' . escapeshellarg($params['ss']) . ' ' . $size . ' -t 1 ' . escapeshellarg($file . $file_suffix));
-
-    if (!file_exists($file . $file_suffix)) {
+    $thumbnail = $file . $file_suffix;
+    if (!file_exists($thumbnail)) {
       $stored_thumbnail = drupal_get_path('module', 'islandora_video_sp') . '/images/Crystal_Clear_app_camera.png';
       file_copy($stored_thumbnail, file_directory_path());
       $thumbnail = file_directory_path() . '/' . 'Crystal_Clear_app_camera.png';
-      $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
-      return TRUE;
     }
+    $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
+    return TRUE;
   }
 
 }

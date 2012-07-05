@@ -37,6 +37,12 @@ function islandora_video_admin_settings(&$form_state) {
   );
 
   if ($ffm) {
+    $form['video_retain_original'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Keep original file after ingest?'),
+      '#description' => t('Stores original file for archival purposes.'),
+    );
+
     $form['video_ahah_wrapper']['islandora_ffm_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to ffm executable'),
@@ -200,7 +206,6 @@ function update_theora_div() {
     'data' => $output,
   ));
 }
-
 
 /**
  * book callback prep
