@@ -120,7 +120,6 @@ class VideoExiftool {
     $new_file_name = preg_replace("/[^a-z\.\d]/i", "", $old_filename);
     $clean_name = preg_replace('/\/form-.*?_/', '/', $file);
     $clean_name .= "_EXIF.xml";
-    drupal_set_message("clean name is $clean_name");
     $returnValue = TRUE;
     $output = array();
     exec('exiftool -X ' . escapeshellarg($file) . '', $output);
