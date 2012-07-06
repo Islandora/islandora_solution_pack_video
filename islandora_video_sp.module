@@ -91,7 +91,7 @@ function islandora_video_sp_form_fedora_repository_ingest_form_alter(&$form, &$f
         '#required' => TRUE, // If FALSE the user can submit the form without uploading any files, if true at least one file must be uploaded.
         '#width' => '100px', // The width of the upload button.
         '#height' => '40px', // The height of the rendered button
-        '#extensions' => array('ogg', 'mp4','mov', 'qt', 'm4a', 'flv'), // Limit uploads to matching file extensions. Examples array('jpg', 'xml')
+        '#extensions' => array('ogg', 'mp4', 'mov', 'qt', 'm4a', 'flv'), // Limit uploads to matching file extensions. Examples array('jpg', 'xml')
         '#multiple_files' => FALSE, // Allow multiple files to selected at once
       ),
     );
@@ -99,6 +99,7 @@ function islandora_video_sp_form_fedora_repository_ingest_form_alter(&$form, &$f
     if (!variable_get('video_retain_original', TRUE)) {
       $form['#validate'][] = 'video_remove_original';
     }
+    $form['submit']['#value'] = t("Create Video Object");
   }
 }
 

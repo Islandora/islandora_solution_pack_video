@@ -41,6 +41,14 @@ function islandora_video_admin_settings(&$form_state) {
       '#type' => 'checkbox',
       '#title' => t('Keep original file after ingest?'),
       '#description' => t('Stores original file for archival purposes.'),
+      '#default_value' => variable_get('video_retain_original', TRUE),
+    );
+
+    $form['video_make_archive'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Create .mkv file for archival purposes?'),
+      '#description' => t('Stores original file for archival purposes.'),
+      '#default_value' => variable_get('video_make_archive', TRUE),
     );
 
     $form['video_ahah_wrapper']['islandora_ffm_path'] = array(
