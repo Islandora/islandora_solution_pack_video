@@ -46,7 +46,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
                 <ingest_method class="VideoExiftool" dsid="EXIF" file="video_sp.inc" method="extractMetadata" module="islandora_video_sp" modified_files_ext="">
                   <parameters></parameters>
                 </ingest_method>
-                <ingest_method class="fits" dsid="FITS" file="video_sp.inc" method="extractMetadata" module="islandora_video_sp" modified_files_ext="">
+                <ingest_method class="fits" dsid="FITS" file="fits.inc" method="extractFits" module="islandora" modified_files_ext="">
                   <parameters></parameters>
                 </ingest_method>
                 <ingest_method class="VideoCreation" dsid="TN" file="video_sp.inc" method="get_thumbnail" module="islandora_video_sp" modified_files_ext="jpg">
