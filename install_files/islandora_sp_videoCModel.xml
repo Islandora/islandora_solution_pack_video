@@ -57,8 +57,9 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
                 <ingest_method class="VideoCreation" dsid="PROXY_M4V" file="video_sp.inc" method="createFile" module="islandora_video_sp" modified_files_ext="">
                   <parameters></parameters>
                 </ingest_method>
-
-
+                <ingest_method class="VideoFits" dsid="FITS" file="video_sp.inc" method="createFile" module="islandora_video_sp" modified_files_ext="">
+                  <parameters></parameters>
+                </ingest_method>
               </ingest_methods>
             </rule>
           </ingest_rules>
@@ -68,6 +69,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
               <display_method class="IslandoraVideoPlayer" file="video_viewer.inc" method="showM4V" module="islandora_video_sp"></display_method>
             </datastream>
             <datastream dsid="OBJ_EXIFTOOL"></datastream>
+            <datastream dsid="FITS"></datastream>
             <datastream dsid="MP4"></datastream>
             <datastream dsid="MKV"></datastream>
             <datastream dsid="OGG"></datastream>
