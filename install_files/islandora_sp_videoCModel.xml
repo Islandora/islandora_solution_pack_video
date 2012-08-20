@@ -41,7 +41,7 @@
               <applies_to>audio/ogg</applies_to>
               <ingest_methods>
                 <ingest_method class="VideoExiftool" dsid="EXIF" file="video_sp.inc" method="extractMetadata" module="islandora_video_sp" modified_files_ext=""/>
-                <ingest_method class="fits" dsid="FITS" file="plugins/fits.inc" method="extractFits" module="fedora_repository" modified_files_ext=""/>
+                <ingest_method class="fits" dsid="TECHMD_FITS" file="plugins/fits.inc" method="extractFits" module="fedora_repository" modified_files_ext=""/>
                 <ingest_method class="VideoCreation" dsid="TN" file="video_sp.inc" method="get_thumbnail" module="islandora_video_sp" modified_files_ext="jpg">
                   <parameters>
                     <parameter name="s">92x92</parameter>
@@ -57,7 +57,7 @@
               <display_method class="IslandoraVideoPlayer" file="video_viewer.inc" method="showM4V" module="islandora_video_sp"/>
             </datastream>
             <datastream dsid="OBJ_EXIFTOOL"/>
-            <datastream dsid="FITS"/>
+            <datastream dsid="TECHMD_FITS"/>
             <datastream dsid="MP4"/>
             <datastream dsid="MKV"/>
             <datastream dsid="OGG"/>
