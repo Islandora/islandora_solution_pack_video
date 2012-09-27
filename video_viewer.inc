@@ -42,7 +42,7 @@ class IslandoraVideoPlayer {
 
       $content .= '<video id="flashContent"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</video>';
       $content .= '<div id="dl_link"><a href="' . $swfURL . '">Download MP4</a></div>';
-
+      $fullscreen = variable_get('video_fullsize', FALSE)? 'true':'false';
 
       // player bits
 
@@ -50,7 +50,7 @@ class IslandoraVideoPlayer {
 
 var swfVersionStr = "10.0.0";
 var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'false' };
-var params = { allowfullscreen:'false', allowscriptaccess:'false' };
+var params = { allowfullscreen:'$fullscreen', allowscriptaccess:'false' };
 var attributes = { id:'VideoViewer', name:'VideoViewer' };
 swfobject.embedSWF('$base_url/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','false',flashvars, params, attributes);
 swfobject.createCSS("#flashContent", "display:block;text-align:left;");

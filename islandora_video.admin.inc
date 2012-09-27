@@ -19,11 +19,19 @@ function islandora_video_admin_settings(&$form_state) {
   $ffm = isset($form_state['values']['islandora_video_do_ffm']) ? $form_state['values']['islandora_video_do_ffm'] : variable_get('islandora_video_do_ffm', TRUE);
 
   $form = array();
+  $form['video_fullsize'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow Fullscreen Display ?'),
+    '#description' => t('Allows users to video display to fullscreen view.'),
+    '#default_value' => variable_get('video_fullsize', FALSE),
+  );
+
   $form['video_ahah_wrapper'] = array(
     '#prefix' => '<div id="ivideo-url">',
     '#suffix' => '</div>',
     '#type' => 'fieldset',
   );
+
   $form['video_ahah_wrapper']['islandora_video_do_ffm'] = array(
     '#type' => 'checkbox',
     '#title' => t('Transform files locally ?'),
