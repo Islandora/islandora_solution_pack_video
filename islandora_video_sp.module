@@ -30,6 +30,7 @@ function islandora_video_sp_menu() {
     'file' => 'islandora_video.admin.inc',
     'type' => MENU_CALLBACK,
   );
+
   return $items;
 }
 
@@ -80,3 +81,37 @@ function islandora_video_sp_required_fedora_objects() {
   );
 }
 
+function islandora_video_sp_form_fedora_repository_ingest_form_alter(&$form, &$form_state) {
+
+  if ($form['content_model_pid']['#value'] == 'islandora:sp_videoCModel') {
+    $form['upload'] = array(
+      'upload' => array(
+        '#weight' => -99,
+        '#type' => 'yui_uploader',
+        '#required' => TRUE, // If FALSE the user can submit the form without uploading any files, if true at least one file must be uploaded.
+        '#width' => '100px', // The width of the upload button.
+        '#height' => '40px', // The height of the rendered button
+        '#extensions' => array('ogg', 'mp4', 'mov', 'qt', 'm4a'), // Limit uploads to matching file extensions. Examples array('jpg', 'xml')
+        '#multiple_files' => FALSE, // Allow multiple files to selected at once
+      ),
+    );
+    array_unshift($form['#validate'], 'manage_yui_uploads');
+    if (!variable_get('video_retain_original', TRUE)) {
+      $form['#validate'][] = 'video_remove_original';
+    }
+    $form['submit']['#value'] = t("Create Video Object");
+  }
+}
+
+function manage_yui_uploads($form, &$form_state) {
+  $upload_files = $form_state['storage']['yui_uploader'];
+  foreach ($upload_files as $file) {
+    $path = $file->filepath;
+    $ext = pathinfo($path, PATHINFO_EXTENSION);
+    $form_state['values']['ingest-file-location'] = $path;
+  }
+}
+
+function video_remove_original($form, &$form_state) {
+  $form_state['values']['ingest-file-location'] = NULL;
+}
