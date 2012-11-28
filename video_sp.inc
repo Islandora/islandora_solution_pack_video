@@ -14,6 +14,7 @@ class VideoCreation {
 
     $old_filename = pathinfo($file, PATHINFO_FILENAME);
     $new_file_name = preg_replace("/[^a-z\.\d]/i", "", $old_filename);
+    $clean_name = preg_replace('/^form-.*?_/', '', $old_filename);
     if ($new_file_name != $old_filename) {
       $original = $file;
       $new_fullname = str_replace($old_filename, $new_file_name, $file);
@@ -23,45 +24,52 @@ class VideoCreation {
     }
     $success = FALSE;
 
+
     if (variable_get('islandora_video_do_ffm', TRUE)) {
-
-
       $path_info = pathinfo($file);
 
       //makes mp4 file, adds file in ingest list
-      $mp4file = str_replace('.' . $path_info['extension'], '_.mp4', $file);
+      $mp4file = $clean_name . '_.mp4';
       $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
       exec($command_string, $output, $returnValue);
 
       if ($returnValue == '0') {
         $_SESSION['fedora_ingest_files']["MP4"] = $mp4file;
+        drupal_set_message('MP4 created successfully');
         $success = TRUE;
       }
 
       //makes mkv file, adds file in ingest list
-      $mkvfile = str_replace('.' . $path_info['extension'], '_.mkv', $file);
-      $command_string = "$this->executable -i $file -f mp4 $mkvfile";
-      exec($command_string, $output, $returnValue);
+      if (variable_get('video_make_archive', TRUE)) {
+        $mkvfile = $clean_name . '_.mkv';
+        $command_string = "$this->executable -i $file -f mp4 $mkvfile";
+        exec($command_string, $output, $returnValue);
 
-      if ($returnValue == '0') {
-        $_SESSION['fedora_ingest_files']["MKV"] = $mkvfile;
-        $success = TRUE;
+        if ($returnValue == '0') {
+          $_SESSION['fedora_ingest_files']["MKV"] = $mkvfile;
+          drupal_set_message('MKV created successfully');
+          $success = TRUE;
+        }
+
       }
     }
 
     if (variable_get('islandora_video_do_theora', TRUE)) {
       //makes ogg file, adds file in ingest list
       $theora = variable_get('islandora_theora_path', '/usr/local/bin/ffmpeg2theora');
-      $oggfile = str_replace('.' . $path_info['extension'], '_.ogg', $file);
+
+      $oggfile = $clean_name . '_.ogg';
       $command_string = "$theora $file -o $oggfile";
       exec($command_string, $output, $returnValue);
 
       if ($returnValue == '0') {
         $_SESSION['fedora_ingest_files']["OGG"] = $oggfile;
+
+        drupal_set_message('OGG created successfully');
         $success = TRUE;
       }
     }
-    // restores original filename, allowing succesful comletion of conetnt model rules
+    // restores original filename, allowing succesful comletion of content model rules
     if ($changed) {
       rename($file, $original);
     }
@@ -69,32 +77,14 @@ class VideoCreation {
   }
 
   function get_thumbnail($parameterArray, $dsid, $file, $file_ext) {
-    if (!variable_get('islandora_video_do_ffm', TRUE)) {
-      return;
-    }
-    $defaults = array('ss' => '00:00:10', 's' => NULL);
-    $params = array_merge($defaults, $parameterArray);
-    $system = getenv('System');
-    $file_suffix = '_' . $dsid . '.' . $file_ext;
-    $returnValue = TRUE;
-    $output = array();
-    $size = '';
-    $file = $_SERVER['DOCUMENT_ROOT'] . $base_path . $file;
-    $file = str_replace('//', '/', $file);
 
-    if ($params['s'] != NULL) {
-      $size = ' -s ' . escapeshellarg($params['s']);
-    }
-    $command = "$this->executable -i " . escapeshellarg($file) . ' -r 1 -ss ' . escapeshellarg($params['ss']) . ' ' . $size . ' -t 1 ' . escapeshellarg($file . $file_suffix);
-    exec("$this->executable -i " . escapeshellarg($file) . ' -r 1 -ss ' . escapeshellarg($params['ss']) . ' ' . $size . ' -t 1 ' . escapeshellarg($file . $file_suffix));
 
-    if (!file_exists($file . $file_suffix)) {
-      $stored_thumbnail = drupal_get_path('module', 'islandora_video_sp') . '/images/Crystal_Clear_app_camera.png';
-      file_copy($stored_thumbnail, file_directory_path());
-      $thumbnail = file_directory_path() . '/' . 'Crystal_Clear_app_camera.png';
-      $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
-      return TRUE;
-    }
+    $stored_thumbnail = drupal_get_path('module', 'islandora_video_sp') . '/images/Crystal_Clear_app_camera.png';
+    $copied = file_copy($stored_thumbnail, file_directory_path());
+    $thumbnail = file_directory_path() . '/' . 'Crystal_Clear_app_camera.png';
+
+    $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
+    return TRUE;
   }
 
 }
@@ -129,13 +119,16 @@ class VideoExiftool {
     if (!variable_get('islandora_video_do_exif', TRUE)) {
       return;
     }
-    $path_info = pathinfo($file);
-    $newfile = str_replace('.' . $path_info['extension'], '_EXIF.xml', $file);
+
+    $old_filename = pathinfo($file, PATHINFO_FILENAME);
+    $new_file_name = preg_replace("/[^a-z\.\d]/i", "", $old_filename);
+    $clean_name = preg_replace('/\/form-.*?_/', '/', $file);
+    $clean_name .= "_EXIF.xml";
     $returnValue = TRUE;
     $output = array();
     exec('exiftool -X ' . escapeshellarg($file) . '', $output);
-    file_put_contents($newfile, implode("\n", $output));
-    $_SESSION['fedora_ingest_files']["$dsid"] = $newfile;
+    file_put_contents($clean_name, implode("\n", $output));
+    $_SESSION['fedora_ingest_files']["$dsid"] = $clean_name;
     return TRUE;
   }
 

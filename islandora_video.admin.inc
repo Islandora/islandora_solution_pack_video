@@ -19,11 +19,19 @@ function islandora_video_admin_settings(&$form_state) {
   $ffm = isset($form_state['values']['islandora_video_do_ffm']) ? $form_state['values']['islandora_video_do_ffm'] : variable_get('islandora_video_do_ffm', TRUE);
 
   $form = array();
+  $form['video_fullsize'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow Fullscreen Display ?'),
+    '#description' => t('Allows users to video display to fullscreen view.'),
+    '#default_value' => variable_get('video_fullsize', FALSE),
+  );
+
   $form['video_ahah_wrapper'] = array(
     '#prefix' => '<div id="ivideo-url">',
     '#suffix' => '</div>',
     '#type' => 'fieldset',
   );
+
   $form['video_ahah_wrapper']['islandora_video_do_ffm'] = array(
     '#type' => 'checkbox',
     '#title' => t('Transform files locally ?'),
@@ -37,6 +45,20 @@ function islandora_video_admin_settings(&$form_state) {
   );
 
   if ($ffm) {
+    $form['video_retain_original'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Keep original file after ingest?'),
+      '#description' => t('Stores original file for archival purposes.'),
+      '#default_value' => variable_get('video_retain_original', TRUE),
+    );
+
+    $form['video_make_archive'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Create .mkv file for archival purposes?'),
+      '#description' => t('Stores original file for archival purposes.'),
+      '#default_value' => variable_get('video_make_archive', TRUE),
+    );
+
     $form['video_ahah_wrapper']['islandora_ffm_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to ffm executable'),
@@ -54,8 +76,55 @@ function islandora_video_admin_settings(&$form_state) {
     );
   }
 
-  //  check for exiftool
+  // check for fits
+  $fits_path = isset($form_state['value']['islandora_fits_path']) ? $form_state['values']['islandora_fits_path'] : variable_get('islandora_fits_path', '/usr/bin/fits');
+  $fits_avail = exec("ls $fits_path");
 
+  $fits_confirmation_message = ($fits_avail ? '<image src="' . url('misc/watchdog-ok.png') . '"/>'
+   . t('Fits found at !fits_path', array('!fits_path' => $fits_path)) : '<img src="'
+   . url('misc/watchdog-error.png') . '"/> '
+   . t('Unable to locate Fits at !fits_path</p>', array('!fits_path' => $fits_path)));
+
+  $fits = isset($form_state['values']['islandora_video_do_fits']) ? $form_state['values']['islandora_video_do_fits'] : variable_get('islandora_video_do_fits', TRUE);
+
+// do i need this for fits? check.
+
+  $form['video_ahah_exif_wrapper'] = array(
+    '#prefix' => '<div id="ivideo-exif-url">',
+    '#suffix' => '</div>',
+    '#type' => 'fieldset',
+  );
+  $form['video_ahah_fits_wrapper']['islandora_video_do_fits'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Extract Fits data locally ?'),
+    '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
+    '#default_value' => $fits,
+    '#ahah' => array(
+    'path' => 'islandora/video/fits',
+    'wrapper' => 'ivideo-fits-url',
+    'effect' => 'fade',
+    'event' => 'change'),
+  );
+
+  if ($exif) {
+    $form['video_ahah_fits_wrapper']['islandora_fits_path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Path to Fits executable'),
+      '#description' => t('Path to Fits on your server'),
+      '#default_value' => $fits_path,
+      '#ahah' => array(
+      'path' => 'islandora/video/fits',
+      'wrapper' => 'ivideo-fits-url',
+      'effect' => 'fade',
+      'event' => 'change'),
+    );
+    $form['video_ahah_fits_wrapper']['infobox'] = array(
+      '#type' => 'item',
+      '#value' => $fits_confirmation_message,
+    );
+  }
+
+  // check for exiftool
 
   $exif_path = isset($form_state['values']['islandora_exif_path']) ? $form_state['values']['islandora_exif_path'] : variable_get('islandora_exif_path', '/usr/bin/exiftool');
   $exif_avail = exec("ls $exif_path");
@@ -201,10 +270,9 @@ function update_theora_div() {
   ));
 }
 
-
 /**
  * book callback prep
- * @return type 
+ * @return type
  */
 function video_callback_prep() {
   $form_state = array('storage' => NULL, 'submitted' => FALSE, 'rebuild' => TRUE);
@@ -225,7 +293,7 @@ function video_callback_prep() {
  * book settings form submit ??
  * @param type $form
  * @param type $form_state
- * @return type 
+ * @return type
  */
 function video_settings_form_submit($form, &$form_state) {
 
@@ -268,7 +336,7 @@ function video_settings_form_submit($form, &$form_state) {
 /**
  * video admin refresh
  * @param array $form
- * @param array $form_state 
+ * @param array $form_state
  */
 function video_admin_refresh($form, &$form_state) {
   $values = $form_state['values'];
