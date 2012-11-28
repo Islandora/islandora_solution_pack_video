@@ -4,5 +4,5 @@ dependencies[] = fedora_repository
 dependencies[] = swftools
 dependencies[] = yui
 package = Islandora Solution Pack
-version = 6.x-12.1.0
+version = 6.x-12.3.0-RC
 core = 6.x
