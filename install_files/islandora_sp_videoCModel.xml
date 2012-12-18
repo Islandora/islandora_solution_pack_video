@@ -29,6 +29,8 @@
             <type>video/m4v</type>
             <type>audio/ogg</type>
             <type>video/ogg</type>
+            <type>video/x-msvideo</type>
+            <type>video/quicktime</type>
           </mimetypes>
           <ingest_rules>
             <rule>
