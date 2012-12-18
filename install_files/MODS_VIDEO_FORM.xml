@@ -4,9 +4,15 @@
     <root_name>mods</root_name>
     <schema_uri>http://www.loc.gov/standards/mods/v3/mods-3-4.xsd</schema_uri>
     <namespaces default="http://www.loc.gov/mods/v3">
-      <namespace prefix="mods">http://www.loc.gov/mods/v3</namespace>
-      <namespace prefix="xsi">http://www.w3.org/2001/XMLSchema-instance</namespace>
-      <namespace prefix="xlink">http://www.w3.org/1999/xlink</namespace>
+      <namespace prefix="mods"
+                                                  >http://www.loc.gov/mods/v3
+      </namespace>
+      <namespace prefix="xsi"
+                                                  >http://www.w3.org/2001/XMLSchema-instance
+      </namespace>
+      <namespace prefix="xlink"
+                                                  >http://www.w3.org/1999/xlink
+      </namespace>
     </namespaces>
   </properties>
   <form>
@@ -20,19 +26,6 @@
       <tree>TRUE</tree>
     </properties>
     <children>
-      <element name="ingest-file-location">
-        <properties>
-          <type>file</type>
-          <access>TRUE</access>
-          <attributes>
-            <enctype>multipart/form-data</enctype>
-          </attributes>
-          <description>Select video file to upload. These formats are allowed - .mov, .qt, .avi, .mp4, ...</description>
-          <required>FALSE</required>
-          <tree>TRUE</tree>
-        </properties>
-        <children/>
-      </element>
       <element name="titleInfo">
         <properties>
           <type>markup</type>
@@ -221,9 +214,10 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Select a role from this vocabulary - &lt;a
-                                        href="http://id.loc.gov/vocabulary/relators.html"
-                                        target="_blank"&gt;http://id.loc.gov/vocabulary/relators.html&lt;/a&gt;
+                  <description>Select a role from this vocabulary -
+                                                  &lt;a
+                                                  href="http://id.loc.gov/vocabulary/relators.html"
+                                                  target="_blank"&gt;http://id.loc.gov/vocabulary/relators.html&lt;/a&gt;
                   </description>
                   <required>FALSE</required>
                   <title>Role</title>
@@ -235,8 +229,9 @@
                       <schema/>
                       <type>xml</type>
                       <prefix>NULL</prefix>
-                      <value>&lt;role&gt;&lt;roleTerm authority="marcrelator"
-                                                type="text"&gt;%value%&lt;/roleTerm&gt;&lt;/role&gt;
+                      <value>&lt;role&gt;&lt;roleTerm
+                                                  authority="marcrelator"
+                                                  type="text"&gt;%value%&lt;/roleTerm&gt;&lt;/role&gt;
                       </value>
                     </create>
                     <read>
@@ -290,17 +285,21 @@
           <type>select</type>
           <access>TRUE</access>
           <options>
-            <index key="Select a Genre"/>
+            <index key="">Select a Genre</index>
             <Actuality>Actuality</Actuality>
             <Adaptation>Adaptation</Adaptation>
             <Adventure>Adventure</Adventure>
-            <Adventure_Nonfiction>Adventure (Nonfiction)</Adventure_Nonfiction>
+            <Adventure_Nonfiction>Adventure
+                                                  (Nonfiction)
+            </Adventure_Nonfiction>
             <Ancient_world>Ancient world</Ancient_world>
             <Animal>Animal</Animal>
             <Art>Art</Art>
             <Aviation>Aviation</Aviation>
             <Biographical>Biographical</Biographical>
-            <Biographical_Nonfiction>Biographical (Nonfiction)</Biographical_Nonfiction>
+            <Biographical_Nonfiction>Biographical
+                                                  (Nonfiction)
+            </Biographical_Nonfiction>
             <Buddy>Buddy</Buddy>
             <Caper>Caper</Caper>
             <Chase>Chase</Chase>
@@ -318,11 +317,15 @@
             <Erotic>Erotic</Erotic>
             <Espionage>Espionage</Espionage>
             <Ethnic>Ethnic</Ethnic>
-            <Ethnic_Nonfiction>Ethnic (Nonfiction)</Ethnic_Nonfiction>
+            <Ethnic_Nonfiction>Ethnic
+                                                  (Nonfiction)
+            </Ethnic_Nonfiction>
             <Ethnographic>Ethnographic</Ethnographic>
             <Experimental>Experimental</Experimental>
             <Absolute>Absolute</Absolute>
-            <Abstract_live_action>Abstract live action</Abstract_live_action>
+            <Abstract_live_action>Abstract live
+                                                  action
+            </Abstract_live_action>
             <Activist>Activist</Activist>
             <Autobiographical>Autobiographical</Autobiographical>
             <City_symphony>City symphony</City_symphony>
@@ -331,7 +334,9 @@
             <Diary>Diary</Diary>
             <Feminist>Feminist</Feminist>
             <Gay_lesbian>Gay/lesbian</Gay_lesbian>
-            <Intermittent_animation>Intermittent animation</Intermittent_animation>
+            <Intermittent_animation>Intermittent
+                                                  animation
+            </Intermittent_animation>
             <Landscape>Landscape</Landscape>
             <Loop>Loop</Loop>
             <Lyrical>Lyrical</Lyrical>
@@ -358,14 +363,20 @@
             <Interview>Interview</Interview>
             <Journalism>Journalism</Journalism>
             <Jungle>Jungle</Jungle>
-            <Juvenile_delinquency>Juvenile delinquency</Juvenile_delinquency>
+            <Juvenile_delinquency>Juvenile
+                                                  delinquency
+            </Juvenile_delinquency>
             <Lecture>Lecture</Lecture>
             <Legal>Legal</Legal>
             <Magazine>Magazine</Magazine>
             <Martial_arts>Martial arts</Martial_arts>
-            <Maternal_melodrama>Maternal melodrama</Maternal_melodrama>
+            <Maternal_melodrama>Maternal
+                                                  melodrama
+            </Maternal_melodrama>
             <Medical>Medical</Medical>
-            <Medical_Nonfiction>Medical (Nonfiction)</Medical_Nonfiction>
+            <Medical_Nonfiction>Medical
+                                                  (Nonfiction)
+            </Medical_Nonfiction>
             <Melodrama>Melodrama</Melodrama>
             <Military>Military</Military>
             <Music>Music</Music>
@@ -392,19 +403,29 @@
             <Road>Road</Road>
             <Romance>Romance</Romance>
             <Science_fiction>Science fiction</Science_fiction>
-            <Screwball_comedy>Screwball comedy</Screwball_comedy>
+            <Screwball_comedy>Screwball
+                                                  comedy
+            </Screwball_comedy>
             <Show_business>Show business</Show_business>
             <Singing_cowboy>Singing cowboy</Singing_cowboy>
-            <Situation_comedy>Situation comedy</Situation_comedy>
-            <Slapstick_comedy>Slapstick comedy</Slapstick_comedy>
+            <Situation_comedy>Situation
+                                                  comedy
+            </Situation_comedy>
+            <Slapstick_comedy>Slapstick
+                                                  comedy
+            </Slapstick_comedy>
             <Slasher>Slasher</Slasher>
             <Soap_opera>Soap opera</Soap_opera>
             <Social_guidance>Social guidance</Social_guidance>
             <Social_problem>Social problem</Social_problem>
-            <Sophisticated_comedy>Sophisticated comedy</Sophisticated_comedy>
+            <Sophisticated_comedy>Sophisticated
+                                                  comedy
+            </Sophisticated_comedy>
             <Speculation>Speculation</Speculation>
             <Sponsored>Sponsored</Sponsored>
-            <Sports_NonFiction>Sports (Nonfiction)</Sports_NonFiction>
+            <Sports_NonFiction>Sports
+                                                  (Nonfiction)
+            </Sports_NonFiction>
             <Sports>Sports</Sports>
             <Survival>Survival</Survival>
             <Talk>Talk</Talk>
@@ -477,7 +498,9 @@
             <properties>
               <type>textfield</type>
               <access>TRUE</access>
-              <description>Enter date in the format YYYY-MM-DD.</description>
+              <description>Enter date in the format
+                                                  YYYY-MM-DD.
+              </description>
               <required>FALSE</required>
               <title>Date Issued</title>
               <tree>TRUE</tree>
@@ -547,12 +570,12 @@
                   <type>xml</type>
                   <prefix>NULL</prefix>
                   <value>&lt;place&gt;&lt;placeTerm
-                                        authority='marccountry'&gt;%value%&lt;/placeTerm&gt;&lt;/place&gt;
+                                                  authority='marccountry'&gt;%value%&lt;/placeTerm&gt;&lt;/place&gt;
                   </value>
                 </create>
                 <read>
                   <path>/mods:mods/mods:originInfo/mods:place/mods:placeTerm[@type
-                                        = 'code']
+                                                  = 'code']
                   </path>
                   <context>parent</context>
                 </read>
@@ -580,12 +603,12 @@
                   <type>xml</type>
                   <prefix>NULL</prefix>
                   <value>&lt;place&gt;&lt;placeTerm
-                                        type="text"&gt;%value%&lt;/placeTerm&gt;&lt;/place&gt;
+                                                  type="text"&gt;%value%&lt;/placeTerm&gt;&lt;/place&gt;
                   </value>
                 </create>
                 <read>
                   <path>/mods:mods/mods:originInfo/mods:place/mods:placeTerm[@type
-                                        = 'text']
+                                                  = 'text']
                   </path>
                   <context>parent</context>
                 </read>
@@ -604,8 +627,9 @@
         <properties>
           <type>textfield</type>
           <access>TRUE</access>
-          <description>Select a three letter iso639-2b language code from
-                        http://www.loc.gov/standards/iso639-2/php/code_list.php
+          <description>Select a three letter iso639-2b
+                                                  language code from
+                                                  http://www.loc.gov/standards/iso639-2/php/code_list.php
           </description>
           <required>FALSE</required>
           <title>Language</title>
@@ -617,8 +641,9 @@
               <schema/>
               <type>xml</type>
               <prefix>NULL</prefix>
-              <value>&lt;language&gt;&lt;languageTerm authority="iso639-2b"
-                                type="code"&gt;%value%&lt;/languageTerm&gt;&lt;/language&gt;
+              <value>&lt;language&gt;&lt;languageTerm
+                                                  authority="iso639-2b"
+                                                  type="code"&gt;%value%&lt;/languageTerm&gt;&lt;/language&gt;
               </value>
             </create>
             <read>
@@ -725,26 +750,37 @@
               <type>select</type>
               <access>TRUE</access>
               <default_value>videorecording</default_value>
-              <description>A designation of a particular physical presentation of a
-                                resource, including the physical form or medium of material for a
-                                resource.
+              <description>A designation of a particular
+                                                  physical presentation of a resource, including the
+                                                  physical form or medium of material for a
+                                                  resource.
               </description>
               <options>
                 <videorecording>videorecording</videorecording>
                 <unspecified>unspecified</unspecified>
                 <text>text</text>
-                <tactile_material>tactile material</tactile_material>
+                <tactile_material>tactile
+                                                  material
+                </tactile_material>
                 <sound_recording>sound recording</sound_recording>
-                <index key="remote-sensing_image">remote-sensing image</index>
-                <projected_graphic>projected graphic</projected_graphic>
+                <index key="remote-sensing_image">remote-sensing
+                                                  image
+                </index>
+                <projected_graphic>projected
+                                                  graphic
+                </projected_graphic>
                 <notated_music>notated music</notated_music>
-                <nonprojected_graphic>nonprojected graphic</nonprojected_graphic>
+                <nonprojected_graphic>nonprojected
+                                                  graphic
+                </nonprojected_graphic>
                 <motion_picture>motion picture</motion_picture>
                 <microform>microform</microform>
                 <map>map</map>
                 <kit>kit</kit>
                 <globe>globe</globe>
-                <electronic_resource>electronic resource</electronic_resource>
+                <electronic_resource>electronic
+                                                  resource
+                </electronic_resource>
               </options>
               <required>FALSE</required>
               <title>Form</title>
@@ -757,7 +793,7 @@
                   <type>xml</type>
                   <prefix>NULL</prefix>
                   <value>&lt;form
-                                        authority="marccategory"&gt;%value%&lt;/form&gt;
+                                                  authority="marccategory"&gt;%value%&lt;/form&gt;
                   </value>
                 </create>
                 <read>
@@ -1076,8 +1112,8 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Name of a country, i.e. a political entity
-                                        considered a country.
+                  <description>Name of a country, i.e. a political
+                                                  entity considered a country.
                   </description>
                   <required>FALSE</required>
                   <title>Country</title>
@@ -1108,8 +1144,9 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Includes first order political divisions called
-                                        provinces within a country, e.g. in Canada.
+                  <description>Includes first order political
+                                                  divisions called provinces within a country, e.g.
+                                                  in Canada.
                   </description>
                   <required>FALSE</required>
                   <title>Province</title>
@@ -1140,9 +1177,9 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Includes regions that have status as a
-                                        jurisdiction, usually incorporating more than one first
-                                        level jurisdiction.
+                  <description>Includes regions that have status as
+                                                  a jurisdiction, usually incorporating more than
+                                                  one first level jurisdiction.
                   </description>
                   <required>FALSE</required>
                   <title>Region</title>
@@ -1173,8 +1210,9 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Name of the largest local administrative unit in
-                                        various countries, e.g. England.
+                  <description>Name of the largest local
+                                                  administrative unit in various countries, e.g.
+                                                  England.
                   </description>
                   <required>FALSE</required>
                   <title>County</title>
@@ -1205,8 +1243,8 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Name of an inhabited place incorporated as a city,
-                                        town, etc.
+                  <description>Name of an inhabited place
+                                                  incorporated as a city, town, etc.
                   </description>
                   <required>FALSE</required>
                   <title>City</title>
@@ -1237,8 +1275,9 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Name of a smaller unit within a populated place,
-                                        e.g., neighborhoods, parks, or streets.
+                  <description>Name of a smaller unit within a
+                                                  populated place, e.g., neighborhoods, parks, or
+                                                  streets.
                   </description>
                   <required>FALSE</required>
                   <title>City Section</title>
@@ -1299,8 +1338,8 @@
                 <properties>
                   <type>textfield</type>
                   <access>TRUE</access>
-                  <description>Contains a statement of coordinates covered by the
-                                        resource.
+                  <description>Contains a statement of coordinates
+                                                  covered by the resource.
                   </description>
                   <required>FALSE</required>
                   <title>Coordinates</title>
