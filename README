@@ -1,2 +1,31 @@
-Video Solution Pack
-Adds all required Fedora objects to allow users to ingest and retrieve video files through the Islandora interface
+CONTENTS OF THIS FILE
+---------------------
+
+ * summary
+ * requirements
+ * installation
+ * configuration
+
+SUMMARY
+-------
+
+Adds all required Fedora objects to allow users to ingest and retrieve video
+files through the Islandora interface.
+
+REQUIREMENTS
+------------
+
+ffmpeg, ffmpeg2theora see
+https://wiki.duraspace.org/display/ISLANDORA6122/Chapter+12+-+Installing+Solution+Pack+Dependencies
+for instalation help.
+
+INSTALLATION
+------------
+
+For technical metadata extraction enable the Islandora FITS module.
+
+CONFIGURATION
+-------------
+
+For compatability with the D6 version of the video solution pack one may wish to
+configure the FITS DSID to FITS in the Islandora FITS module's admin.

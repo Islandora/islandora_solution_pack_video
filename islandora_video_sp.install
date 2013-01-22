@@ -1,28 +1,32 @@
 <?php
+/**
+ * @file
+ *   Will attempt to ingest or purge Fedora objects when installing
+ *   or uninstalling the module.
+ */
 
 /**
- * Implements hook_enable().  Re-ingests any required objects into Fedora that
- * are required by the solution pack.
+ * Implements hook_install().
+ *
+ * @see islandora_video_sp_islandora_required_objects()
  */
-function islandora_video_sp_enable() {
-  module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-  module_load_include('inc', 'fedora_repository', 'api/fedora_utils');
-  if (!fedora_available()) {
-    drupal_set_message(t('Fedora instance is not currently available.  Installation must be verified and completed on the Islandora Configuration page.'));
-  }
-  else {
-    // Get info on the required fedora objects for this solution pack
-    $solution_pack_info = islandora_video_sp_fedora_repository_required_fedora_objects();
+function islandora_video_sp_install() {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  islandora_install_solution_pack('islandora_video_sp');
+}
 
-
-    // Iterate through the required objects, and push an operation onto the
-    // batch model to re-ingest the object if it does not exist
-    foreach ($solution_pack_info['islandora_video_sp']['objects'] as $object) {
-      $item = new Fedora_Item($object['pid']);
-      if (!$item->exists()) {
-        fedora_repository_batch_reingest_object($object);
-      }
-    }
-    
-  }
+/**
+ * Implements hook_uninstall().
+ */
+function islandora_video_sp_uninstall() {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  variable_del('islandora_video_sp_viewers');
+  variable_del('islandora_video_sp_ffmpeg_path');
+  variable_del('islandora_video_sp_retain_original');
+  variable_del('islandora_video_sp_make_archive');
+  variable_del('islandora_video_sp_video_fullsize');
+  variable_del('islandora_video_sp_make_mp4_locally');
+  variable_del('islandora_video_sp_make_ogg_locally');
+  variable_del('islandora_video_sp_ffmpeg2theora_path');
+  islandora_install_solution_pack('islandora_video_sp', 'uninstall');
 }

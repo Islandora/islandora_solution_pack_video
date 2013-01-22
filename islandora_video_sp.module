@@ -1,122 +1,206 @@
 <?php
+/**
+ * @file
+ *   This is the main file for a module supporting video for Islandora.
+ */
 
-// $Id$
+/**
+ * Implements hook_menu().
+ */
 function islandora_video_sp_menu() {
-  $items['admin/settings/islandora_video_sp'] = array(
-    'title' => 'Islandora Video Solution Pack Admin',
+  $items['admin/islandora/islandora_video_sp'] = array(
+    'title' => 'Islandora Video Solution Pack',
     'description' => 'Configure Islandora Video Module',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_video_admin_settings'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'islandora_video.admin.inc',
+    'file' => 'includes/admin.form.inc',
     'type' => MENU_NORMAL_ITEM,
   );
-
-  $items['islandora/video/ffm'] = array(
-    'page callback' => 'update_ffm_div',
-    'access arguments' => array('view fedora collection'),
-    'file' => 'islandora_video.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
-  $items['islandora/video/exif'] = array(
-    'page callback' => 'update_exif_div',
-    'access arguments' => array('view fedora collection'),
-    'file' => 'islandora_video.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
-  $items['islandora/video/theora'] = array(
-    'page callback' => 'update_theora_div',
-    'access arguments' => array('view fedora collection'),
-    'file' => 'islandora_video.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
-
   return $items;
 }
 
 /**
-* Implements hook_fedora_repository_required_fedora_objects
-*
-* @return array
-*/
-function islandora_video_sp_fedora_repository_required_fedora_objects() {
-  module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
-  // Add the form and associate it to the content model
+ * Implements hook_islandora_required_objects().
+ */
+function islandora_video_sp_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_video_sp');
-  $form_name = 'Islandora Video MODS Form';
-  $form_xml = file_get_contents("$module_path/install_files/MODS_VIDEO_FORM.xml");
-  solution_pack_add_form($form_name, $form_xml);
-  solution_pack_add_form_association('islandora:sp_videoCModel', $form_name);
-
-
-
-
-
+  // Video Content Model.
+  $video_content_model = $connection->repository->constructObject('islandora:sp_videoCModel');
+  $video_content_model->owner = 'fedoraAdmin';
+  $video_content_model->label = 'Islandora Video Content Model';
+  $video_content_model->models = 'fedora-system:ContentModel-3.0';
+  // ISLANDORACM Datastream.
+  $datastream = $video_content_model->constructDatastream('ISLANDORACM', 'X');
+  $datastream->label = 'Islandora content model';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandoracm.xml", FALSE);
+  $video_content_model->ingestDatastream($datastream);
+  // DS-COMPOSITE-MODEL Datastream.
+  $datastream = $video_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/ds_composite_model.xml", FALSE);
+  $video_content_model->ingestDatastream($datastream);
+  // Video Collection.
+  $video_collection = $connection->repository->constructObject('islandora:video_collection');
+  $video_collection->owner = 'fedoraAdmin';
+  $video_collection->label = 'Video Collection';
+  $video_collection->models = 'islandora:collectionCModel';
+  $video_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+  // Collection Policy Datastream.
+  $datastream = $video_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/video_collection_policy.xml", FALSE);
+  $video_collection->ingestDatastream($datastream);
+  // TN Datastream.
+  $datastream = $video_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/crystal_clear_filesystem_folder_grey.png", FALSE);
+  $video_collection->ingestDatastream($datastream);
   return array(
     'islandora_video_sp' => array(
-      'module' => 'islandora_video_sp',
-      'title' => 'Islandora Video Solution Pack',
+      'title' => 'Islandora Video',
       'objects' => array(
-        array(
-          'foxml_file' => "$module_path/install_files/islandora_sp_videoCModel.xml",
-          'pid' => 'islandora:sp_videoCModel',
-          'dsid' => NULL,
-          'datastream_file' => NULL,
-          'dsversion' => NULL,
-        ),
-        array(
-          'pid' => 'islandora:video_collection',
-          'label' => t('Video Collection'),
-          'cmodel' => 'islandora:collectionCModel',
-          'parent' => 'islandora:root',
-          'datastreams' => array(
-            array(
-              'dsid' => 'COLLECTION_POLICY',
-              'datastream_file' => "$module_path/install_files/video_collection_policy.xml",
-            ),
-            array(
-              'dsid' => 'TN',
-              'datastream_file' => "$module_path/images/Crystal_Clear_filesystem_folder_video.png",
-              'mimetype' => 'image/png',
-            ),
-          ),
-        ),
+        $video_content_model,
+        $video_collection,
       ),
     ),
   );
 }
 
-function islandora_video_sp_form_fedora_repository_ingest_form_alter(&$form, &$form_state) {
-
-  if ($form['content_model_pid']['#value'] == 'islandora:sp_videoCModel') {
-    $form['upload'] = array(
-      'upload' => array(
-        '#weight' => -99,
-        '#type' => 'yui_uploader',
-        '#required' => TRUE, // If FALSE the user can submit the form without uploading any files, if true at least one file must be uploaded.
-        '#width' => '100px', // The width of the upload button.
-        '#height' => '40px', // The height of the rendered button
-        '#extensions' => array('ogg', 'mp4', 'mov', 'qt', 'm4a'), // Limit uploads to matching file extensions. Examples array('jpg', 'xml')
-        '#multiple_files' => FALSE, // Allow multiple files to selected at once
-      ),
-    );
-    array_unshift($form['#validate'], 'manage_yui_uploads');
-    if (!variable_get('video_retain_original', TRUE)) {
-      $form['#validate'][] = 'video_remove_original';
-    }
-    $form['submit']['#value'] = t("Create Video Object");
+/**
+ * Implements hook_CMODEL_PID_islandora_view_object().
+ */
+function islandora_video_sp_islandora_sp_videoCModel_islandora_view_object($islandora_object, $page_number, $page_size) {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  $video_params = array();
+  // Thumbnail.
+  if (isset($islandora_object['TN'])) {
+    $video_params['tn_url'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
   }
+  // Video player.
+  $video_params['url'] = url("islandora/object/{$islandora_object->id}/datastream/MP4/view", array('absolute' => TRUE));
+  $video_params["pid"] = $islandora_object->id;
+  $video_params["mime"] = 'video/mp4';
+  $video_params['tn'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view", array('absolute' => TRUE));
+  
+  $viewer = islandora_get_viewer($video_params, 'islandora_video_sp_viewers');
+  return array('' => $viewer);
 }
 
-function manage_yui_uploads($form, &$form_state) {
-  $upload_files = $form_state['storage']['yui_uploader'];
-  foreach ($upload_files as $file) {
-    $path = $file->filepath;
-    $ext = pathinfo($path, PATHINFO_EXTENSION);
-    $form_state['values']['ingest-file-location'] = $path;
-  }
+/**
+ * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
+ */
+function islandora_video_sp_islandora_sp_videoCModel_islandora_ingest_post_ingest($object) {
+  module_load_include('inc', 'islandora_video_sp', 'includes/process');
+  islandora_video_sp_make_derivatives($object);
 }
 
-function video_remove_original($form, &$form_state) {
-  $form_state['values']['ingest-file-location'] = NULL;
+
+/**
+ * Implements hook_islandora_xml_form_builder_forms().
+ */
+function islandora_video_sp_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'islandora_video_sp');
+  return array(
+    'Video MODS form' => array(
+      'form_file' => "$module_path/xml/mods_video_form.xml",
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_content_model_forms_form_associations().
+ */
+function islandora_video_sp_islandora_content_model_forms_form_associations() {
+  return array(
+    'islandora_video_mods_form' => array(
+      'content_model' => 'islandora:sp_videoCModel',
+      'form_name' => 'Video MODS form',
+      'dsid' => 'MODS',
+      'title_field' => array('titleInfo', 'title'),
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_video_sp_islandora_sp_videoCModel_islandora_ingest_steps(array $configuration) {
+
+  return array(
+    'islandora_video_upload' => array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'islandora_video_sp_upload_form',
+    ),
+  );
+}
+
+/**
+ * Defines a file upload form for uploading the islandora video.
+ *
+ * @param array $form
+ *   The drupal form.
+ * @param array $form_state
+ *   The drupal form state.
+ *
+ * @return array
+ *   The drupal form definition.
+ */
+function islandora_video_sp_upload_form($form, &$form_state) {
+
+  $form['file'] = array(
+    '#title' => t('Video'),
+    '#type' => 'managed_file',
+    '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
+    '#required' => TRUE,
+    '#extensions' => array('ogg', 'mp4', 'mov', 'qt', 'm4a'),
+    '#upload_location' => 'temporary://',
+    '#upload_validators' => array('file_validate_extensions' => array('ogg mp4 mov qt m4a')),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler, adds uploaded file to the video object.
+ *
+ * @param array $form
+ *   The drupal form.
+ * @param array $form_state
+ *   The drupal form state.
+ */
+function islandora_video_sp_upload_form_submit(array $form, array &$form_state) {
+  $tuque_object = $form_state['islandora']['objects'][0];
+  if (empty($tuque_object['OBJ'])) {
+    $obj_datastream = $tuque_object->constructDatastream('OBJ', 'M');
+    $tuque_object->ingestDatastream($obj_datastream);
+  }
+  else {
+    $obj_datastream = $tuque_object['OBJ'];
+  }
+  $file = file_load($form_state['values']['file']);
+  $path = drupal_realpath($file->uri);
+  $obj_datastream->setContentFromFile($path);
+  $obj_datastream->label = $file->filename;
+  $obj_datastream->mimetype = $file->filemime;
+
+
+  if (empty($tuque_object['TN'])) {
+    $tn_datastream = $tuque_object->constructDatastream('TN', 'M');
+    $tuque_object->ingestDatastream($tn_datastream);
+  }
+  else {
+    $tn_datastream = $tuque_object['TN'];
+  }
+  $stored_thumbnail = drupal_get_path('module', 'islandora_video_sp') . '/images/crystal_clear_app_camera.png';
+  $tn_datastream->setContentFromFile($stored_thumbnail);
+  $tn_datastream->label = 'Thumbnail';
+  $tn_datastream->mimetype = 'image/png';
 }
