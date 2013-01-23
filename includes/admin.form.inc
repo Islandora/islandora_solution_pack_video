@@ -30,12 +30,6 @@ function islandora_video_admin_settings($form, &$form_state) {
     '#weight' => 1,
     '#submit' => array('islandora_video_sp_admin_submit'),
   );
-  $form['islandora_video_sp_video_fullsize'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Allow Fullscreen Display ?'),
-    '#description' => t('Allows users to video display to fullscreen view.'),
-    '#default_value' => variable_get('islandora_video_sp_video_fullsize', FALSE),
-  );
 
   // Misc config.
   $form['islandora_video_sp_retain_original'] = array(
@@ -61,7 +55,7 @@ function islandora_video_admin_settings($form, &$form_state) {
   );
   $form['islandora_video_sp_make_mp4_locally'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Transform files locally ?'),
+    '#title' => t('Create display MP4 locally ?'),
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_sp_make_mp4_locally', TRUE),
   );
@@ -94,7 +88,6 @@ function islandora_video_sp_admin_submit($form, &$form_state) {
       variable_del('islandora_video_sp_ffmpeg_path');
       variable_del('islandora_video_sp_retain_original');
       variable_del('islandora_video_sp_make_archive');
-      variable_del('islandora_video_sp_video_fullsize');
       variable_del('islandora_video_sp_make_mp4_locally');
       variable_del('islandora_video_sp_make_ogg_locally');
       variable_del('islandora_video_sp_ffmpeg2theora_path');
