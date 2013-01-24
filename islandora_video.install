@@ -1,0 +1,31 @@
+<?php
+/**
+ * @file
+ *   Will attempt to ingest or purge Fedora objects when installing
+ *   or uninstalling the module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * @see islandora_video_islandora_required_objects()
+ */
+function islandora_video_install() {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  islandora_install_solution_pack('islandora_video');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function islandora_video_uninstall() {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  variable_del('islandora_video_viewers');
+  variable_del('islandora_video_ffmpeg_path');
+  variable_del('islandora_video_retain_original');
+  variable_del('islandora_video_make_archive');
+  variable_del('islandora_video_make_mp4_locally');
+  variable_del('islandora_video_make_ogg_locally');
+  variable_del('islandora_video_ffmpeg2theora_path');
+  islandora_install_solution_pack('islandora_video', 'uninstall');
+}

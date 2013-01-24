@@ -10,16 +10,16 @@
  * @param object $fedora_object
  *   The Tuque object to make derivatives for.
  */
-function islandora_video_sp_make_derivatives($fedora_object) {
+function islandora_video_make_derivatives($fedora_object) {
   if (!isset($fedora_object["OBJ"])) {
     drupal_set_message("Could not create derivatives for %s. No file was uploaded.", array("%s" => $fedora_object->id), "error");
     return FALSE;
   }
   // Get original file or quit.
-  if (variable_get('islandora_video_sp_make_mp4_locally', TRUE) ||
-      variable_get('islandora_video_sp_make_fits_locally', TRUE) ||
-      variable_get('islandora_video_sp_make_ogg_locally', TRUE) ||
-      variable_get('islandora_video_sp_make_archive', TRUE)) {
+  if (variable_get('islandora_video_make_mp4_locally', TRUE) ||
+      variable_get('islandora_video_make_fits_locally', TRUE) ||
+      variable_get('islandora_video_make_ogg_locally', TRUE) ||
+      variable_get('islandora_video_make_archive', TRUE)) {
     // @TODO: this file name code could be library I stole it from audio pack.
     $mime_detect = new MimeDetect();
     $ext = $mime_detect->getExtension($fedora_object['OBJ']->mimeType);
@@ -32,28 +32,28 @@ function islandora_video_sp_make_derivatives($fedora_object) {
   }
 
   // Make and ingest MP4.
-  if (variable_get('islandora_video_sp_make_mp4_locally', TRUE)) {
-    $mp4_file = islandora_video_sp_create_mp4($archival_file);
+  if (variable_get('islandora_video_make_mp4_locally', TRUE)) {
+    $mp4_file = islandora_video_create_mp4($archival_file);
     if ($mp4_file) {
-      islandora_video_sp_add_datastream($fedora_object, 'MP4', $mp4_file, 'Display MP4.');
+      islandora_video_add_datastream($fedora_object, 'MP4', $mp4_file, 'Display MP4.');
       file_unmanaged_delete($mp4_file);
     }
   }
 
   // Make and ingest OGG.
-  if (variable_get('islandora_video_sp_make_ogg_locally', TRUE)) {
-    $ogg_file = islandora_video_sp_create_ogg($archival_file);
+  if (variable_get('islandora_video_make_ogg_locally', TRUE)) {
+    $ogg_file = islandora_video_create_ogg($archival_file);
     if ($ogg_file) {
-      islandora_video_sp_add_datastream($fedora_object, 'OGG', $ogg_file);
+      islandora_video_add_datastream($fedora_object, 'OGG', $ogg_file);
       file_unmanaged_delete($ogg_file);
     }
   }
 
   // Make and ingest MKV.
-  if (variable_get('islandora_video_sp_make_mkv_locally', TRUE)) {
-    $mkv_file = islandora_video_sp_create_mkv($archival_file);
+  if (variable_get('islandora_video_make_mkv_locally', TRUE)) {
+    $mkv_file = islandora_video_create_mkv($archival_file);
     if ($mkv_file) {
-      islandora_video_sp_add_datastream($fedora_object, 'MKV', $mkv_file);
+      islandora_video_add_datastream($fedora_object, 'MKV', $mkv_file);
       file_unmanaged_delete($mkv_file);
     }
   }
@@ -71,11 +71,11 @@ function islandora_video_sp_make_derivatives($fedora_object) {
  *   $out_file the location of the derivative
  *   FALSE on failure.
  */
-function islandora_video_sp_create_mp4($archival_file) {
+function islandora_video_create_mp4($archival_file) {
   $archival_file = drupal_realpath($archival_file);
   $out_file = $archival_file . '.mp4';
 
-  $ffmpeg_executable = variable_get('islandora_video_sp_ffmpeg_path', '/usr/bin/ffmpeg');
+  $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
   $command = "$ffmpeg_executable -i $archival_file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $out_file";
   $return_value = FALSE;
   exec($command, $output, $return_value);
@@ -100,11 +100,11 @@ function islandora_video_sp_create_mp4($archival_file) {
  *   $out_file the location of the derivative
  *   FALSE on failure.
  */
-function islandora_video_sp_create_ogg($archival_file) {
+function islandora_video_create_ogg($archival_file) {
   $archival_file = drupal_realpath($archival_file);
   $out_file = $archival_file . '.ogg';
 
-  $theora_executable = variable_get('islandora_video_sp_ffmpeg2theora_path', '/usr/bin/ffmpeg2theora');
+  $theora_executable = variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora');
   $command = "$theora_executable $archival_file -o $out_file";
   $return_value = FALSE;
   exec($command, $output, $return_value);
@@ -129,11 +129,11 @@ function islandora_video_sp_create_ogg($archival_file) {
  *   $out_file the location of the derivative
  *   FALSE on failure.
  */
-function islandora_video_sp_create_mkv($archival_file) {
+function islandora_video_create_mkv($archival_file) {
   $archival_file = drupal_realpath($archival_file);
   $out_file = $archival_file . '.mkv';
 
-  $ffmpeg_executable = variable_get('islandora_video_sp_ffmpeg_path', '/usr/bin/ffmpeg');
+  $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
   $command = "$ffmpeg_executable -i $archival_file -f mp4 $out_file";
   $return_value = FALSE;
   exec($command, $output, $return_value);
@@ -159,7 +159,7 @@ function islandora_video_sp_create_mkv($archival_file) {
  * @param string $file_uri
  *   A URI to the file containing the content for the datastream.
  */
-function islandora_video_sp_add_datastream($fedora_object, $datastream_id, $file_uri, $label = NULL) {
+function islandora_video_add_datastream($fedora_object, $datastream_id, $file_uri, $label = NULL) {
   try {
     $mime_detector = new MimeDetect();
     $ds = $fedora_object->constructDatastream($datastream_id, "M");
