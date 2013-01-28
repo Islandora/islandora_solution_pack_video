@@ -73,7 +73,12 @@ function islandora_video_admin_settings($form, &$form_state) {
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_ogg_locally', TRUE),
   );
-
+  $form['islandora_video_make_thumbnail_locally'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Create thumbnail locally?'),
+    '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
+    '#default_value' => variable_get('islandora_video_make_thumbnail_locally', TRUE),
+  );
   return system_settings_form($form);
 }
 

@@ -19,7 +19,8 @@ function islandora_video_make_derivatives($fedora_object) {
   if (variable_get('islandora_video_make_mp4_locally', TRUE) ||
       variable_get('islandora_video_make_fits_locally', TRUE) ||
       variable_get('islandora_video_make_ogg_locally', TRUE) ||
-      variable_get('islandora_video_make_archive', TRUE)) {
+      variable_get('islandora_video_make_archive', TRUE) ||
+      variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
     // @TODO: this file name code could be library I stole it from audio pack.
     $mime_detect = new MimeDetect();
     $ext = $mime_detect->getExtension($fedora_object['OBJ']->mimeType);
@@ -55,6 +56,23 @@ function islandora_video_make_derivatives($fedora_object) {
     if ($mkv_file) {
       islandora_video_add_datastream($fedora_object, 'MKV', $mkv_file);
       file_unmanaged_delete($mkv_file);
+    }
+  }
+
+
+  if (variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
+    $tn_file = islandora_video_create_thumbnail($archival_file);
+
+    if ($tn_file) {
+      islandora_video_add_datastream($fedora_object, 'TN', $tn_file);
+      file_unmanaged_delete($tn_file);
+      drupal_set_message(t('TN created successfully with ffmpeg!'));
+    }
+    // Resort to adding the generic TN because Ffmpeg failed.
+    else {
+      $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
+      islandora_video_add_datastream($fedora_object, 'TN', $stored_thumbnail);
+      drupal_set_message(t('Default TN added!'));
     }
   }
 
@@ -144,6 +162,49 @@ function islandora_video_create_mkv($archival_file) {
   }
   else {
     drupal_set_message('MKV creation failed.');
+  }
+  return FALSE;
+}
+
+
+function islandora_video_create_thumbnail($archival_file) {
+  $archival_file = drupal_realpath($archival_file);
+  $out_file = $archival_file . '-TN.jpg';
+
+  $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
+
+  $ret_value = FALSE;
+  $vid_length = "$ffmpeg_executable -i $archival_file 2>&1";
+  exec($vid_length, $time_output, $ret_value);
+
+  $dur_match = FALSE;
+  $duration = '';
+  foreach ($time_output as $key => $value) {
+    preg_match('/Duration: (.*), start/', $value, $time_match);
+    if (count($time_match)) {
+      $dur_match = TRUE;
+      $duration = $time_match[1];
+      break;
+    }
+  }
+
+  if ($dur_match) {
+    // Snip off the ms because we don't care about them.
+    $time_val = preg_replace('/\.(.*)/', '', $duration);
+    $time_array = explode(':', $time_val);
+    $output_time = floor((($time_array[0] * 360) + ($time_array[1] * 60) + $time_array[2]) / 2);
+
+    $tn_creation = "$ffmpeg_executable -itsoffset -4 -ss $output_time -i $archival_file -vcodec mjpeg -vframes 1 -an -f rawvideo $out_file";
+
+    $return_value = FALSE;
+    exec($tn_creation, $output, $return_value);
+
+    if ($return_value == '0') {
+      return $out_file;
+    }
+    else {
+      return FALSE;
+    }
   }
   return FALSE;
 }

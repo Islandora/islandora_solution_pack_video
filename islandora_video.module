@@ -86,7 +86,7 @@ function islandora_video_islandora_sp_videoCModel_islandora_view_object($islando
   $video_params["pid"] = $islandora_object->id;
   $video_params["mime"] = 'video/mp4';
   $video_params['tn'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view", array('absolute' => TRUE));
-  
+
   $viewer = islandora_get_viewer($video_params, 'islandora_video_viewers');
   return array('' => $viewer);
 }
@@ -190,17 +190,5 @@ function islandora_video_upload_form_submit(array $form, array &$form_state) {
   $obj_datastream->setContentFromFile($path);
   $obj_datastream->label = $file->filename;
   $obj_datastream->mimetype = $file->filemime;
-
-
-  if (empty($tuque_object['TN'])) {
-    $tn_datastream = $tuque_object->constructDatastream('TN', 'M');
-    $tuque_object->ingestDatastream($tn_datastream);
-  }
-  else {
-    $tn_datastream = $tuque_object['TN'];
-  }
-  $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
-  $tn_datastream->setContentFromFile($stored_thumbnail);
-  $tn_datastream->label = 'Thumbnail';
-  $tn_datastream->mimetype = 'image/png';
+  file_delete($file);
 }
