@@ -107,9 +107,9 @@ function islandora_video_islandora_sp_videoCModel_islandora_view_object($islando
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
+ * Implements hook_CMODEL_PID_islandora_object_ingested().
  */
-function islandora_video_islandora_sp_videoCModel_islandora_ingest_post_ingest($object) {
+function islandora_video_islandora_sp_videoCModel_islandora_object_ingested($object) {
   module_load_include('inc', 'islandora_video', 'includes/process');
   islandora_video_make_derivatives($object);
 }
