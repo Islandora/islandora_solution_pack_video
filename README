@@ -5,6 +5,7 @@ CONTENTS OF THIS FILE
  * requirements
  * installation
  * configuration
+ * licensing
 
 SUMMARY
 -------
@@ -29,3 +30,8 @@ CONFIGURATION
 
 For compatability with the D6 version of the video solution pack one may wish to
 configure the FITS DSID to FITS in the Islandora FITS module's admin.
+
+LICENSING
+---------
+
+This module requires libaac.  libaac is not free for comercial use.
