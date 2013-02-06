@@ -16,9 +16,14 @@ files through the Islandora interface.
 REQUIREMENTS
 ------------
 
-ffmpeg, ffmpeg2theora see
+ffmpeg2theora see
 https://wiki.duraspace.org/display/ISLANDORA6122/Chapter+12+-+Installing+Solution+Pack+Dependencies
 for instalation help.
+A specific ffmpeg version has been tested:
+http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz
+These instructions should be applicable except for using this tar file instead of downloading HEAD of dev.
+http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide
+https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 
 INSTALLATION
 ------------
