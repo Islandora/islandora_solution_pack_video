@@ -40,4 +40,4 @@ configure the FITS DSID to FITS in the Islandora FITS module's admin.
 LICENSING
 ---------
 
-This module requires libaac.  libaac is not free for comercial use.
+This module requires libfaac.  libfaac is not free for comercial use.
