@@ -22,6 +22,7 @@ for instalation help.
 A specific ffmpeg version has been tested:
 http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz
 These instructions should be applicable except for using this tar file instead of downloading HEAD of dev.
+One will also need to remove the --enable-x11grab flag on the ffmpeg configure.
 http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide
 https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 
