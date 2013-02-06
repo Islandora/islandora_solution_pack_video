@@ -5,6 +5,7 @@ CONTENTS OF THIS FILE
  * requirements
  * installation
  * configuration
+ * licensing
 
 SUMMARY
 -------
@@ -15,9 +16,15 @@ files through the Islandora interface.
 REQUIREMENTS
 ------------
 
-ffmpeg, ffmpeg2theora see
+ffmpeg2theora see
 https://wiki.duraspace.org/display/ISLANDORA6122/Chapter+12+-+Installing+Solution+Pack+Dependencies
 for instalation help.
+A specific ffmpeg version has been tested:
+http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz
+These instructions should be applicable except for using this tar file instead of downloading HEAD of dev.
+One will also need to remove the --enable-x11grab flag on the ffmpeg configure.
+http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide
+https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 
 INSTALLATION
 ------------
@@ -29,3 +36,8 @@ CONFIGURATION
 
 For compatability with the D6 version of the video solution pack one may wish to
 configure the FITS DSID to FITS in the Islandora FITS module's admin.
+
+LICENSING
+---------
+
+This module requires libaac.  libaac is not free for comercial use.
