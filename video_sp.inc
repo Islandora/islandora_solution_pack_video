@@ -29,7 +29,7 @@ class VideoCreation {
 
       //makes mp4 file, adds file in ingest list
       $mp4file = $clean_name . '_.mp4';
-      $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -vpre normal -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
+      $command_string = "$this->executable -i $file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 $mp4file";
       exec($command_string, $output, $returnValue);
 
       if ($returnValue == '0') {
