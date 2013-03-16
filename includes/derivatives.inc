@@ -94,7 +94,7 @@ function islandora_video_create_mp4($archival_file) {
   $out_file = $archival_file . '.mp4';
 
   $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
-  $command = "$ffmpeg_executable -i $archival_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 $out_file";
+  $command = "$ffmpeg_executable -i $archival_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
   $return_value = FALSE;
   exec($command, $output, $return_value);
 
