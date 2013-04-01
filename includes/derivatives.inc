@@ -10,7 +10,7 @@
  * @param object $fedora_object
  *   The Tuque object to make derivatives for.
  */
-function islandora_video_make_derivatives($fedora_object) {
+function islandora_video_create_all_derivatives($fedora_object) {
   if (!isset($fedora_object["OBJ"])) {
     drupal_set_message("Could not create derivatives for %s. No file was uploaded.", array("%s" => $fedora_object->id), "error");
     return FALSE;

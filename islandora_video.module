@@ -1,18 +1,21 @@
 <?php
+
 /**
  * @file
- *   This is the main file for a module supporting video for Islandora.
+ *
+ * Hooks and callbacks for this module.
  */
 
 /**
  * Implements hook_menu().
  */
 function islandora_video_menu() {
-  $items['admin/islandora/islandora_video'] = array(
+  $items = array();
+  $items['admin/islandora/video'] = array(
     'title' => 'Video Solution Pack',
-    'description' => 'Configure Islandora Video Module',
+    'description' => 'Configure video solution pack',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('islandora_video_admin_settings'),
+    'page arguments' => array('islandora_video_admin'),
     'access arguments' => array('administer site configuration'),
     'file' => 'includes/admin.form.inc',
     'type' => MENU_NORMAL_ITEM,
@@ -21,12 +24,38 @@ function islandora_video_menu() {
 }
 
 /**
+ * Implements hook_theme().
+ *
+ * We supply a pattern so we can overide templates at the theme level if needed.
+ * we can append a pid to a template and the new template file will be called (the pids
+ * colon should be replaced with a dash)
+ *
+ * @return array
+ */
+function islandora_video_theme($existing, $type, $theme, $path) {
+  return array(
+    'islandora_video' => array(
+      'template' => 'theme/islandora-video',
+      /**
+       * We can add pids to the end of this pattern in our preprocess function and templates
+       * will be able to have have a pid appended to the template name to overide a template on a per object basis
+       * an example template would be named islandora-video--islandora-27.tpl.phps
+       */
+      'pattern' => 'islandora_video__',
+      'variables' => array('islandora_object' => NULL),
+    ),
+  );
+}
+
+/**
  * Implements hook_islandora_required_objects().
+ *
+ * @return type
  */
 function islandora_video_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_video');
   // Video Content Model.
-  $video_content_model = $connection->repository->constructObject('islandora:sp_videoCModel');
+  $video_content_model = $connection->repository->constructObject('islandora:sp_video_cmodel');
   $video_content_model->owner = 'fedoraAdmin';
   $video_content_model->label = 'Islandora Video Content Model';
   $video_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -34,13 +63,13 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
   $datastream = $video_content_model->constructDatastream('ISLANDORACM', 'X');
   $datastream->label = 'Islandora content model';
   $datastream->mimetype = 'text/xml';
-  $datastream->setContentFromFile("$module_path/xml/islandoracm.xml", FALSE);
+  $datastream->setContentFromFile("$module_path/xml/islandora_video_cmodel.xml", FALSE);
   $video_content_model->ingestDatastream($datastream);
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $video_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
   $datastream->mimetype = 'text/xml';
-  $datastream->setContentFromFile("$module_path/xml/ds_composite_model.xml", FALSE);
+  $datastream->setContentFromFile("$module_path/xml/islandora_video_ds_composite_model.xml", FALSE);
   $video_content_model->ingestDatastream($datastream);
   // Video Collection.
   $video_collection = $connection->repository->constructObject('islandora:video_collection');
@@ -52,13 +81,13 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
   $datastream = $video_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
   $datastream->mimetype = 'text/xml';
-  $datastream->setContentFromFile("$module_path/xml/video_collection_policy.xml", FALSE);
+  $datastream->setContentFromFile("$module_path/xml/islandora_video_collection_policy.xml", FALSE);
   $video_collection->ingestDatastream($datastream);
   // TN Datastream.
   $datastream = $video_collection->constructDatastream('TN', 'M');
   $datastream->label = 'Thumbnail';
   $datastream->mimetype = 'image/png';
-  $datastream->setContentFromFile("$module_path/images/crystal_clear_filesystem_folder_grey.png", FALSE);
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
   $video_collection->ingestDatastream($datastream);
   return array(
     'islandora_video' => array(
@@ -66,52 +95,9 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
       'objects' => array(
         $video_content_model,
         $video_collection,
-      ),
-    ),
+      )
+    )
   );
-}
-
-/**
- * Implements hook_CMODEL_PID_islandora_view_object().
- */
-function islandora_video_islandora_sp_videoCModel_islandora_view_object($islandora_object, $page_number, $page_size) {
-  module_load_include('inc', 'islandora', 'includes/solution_packs');
-
-  // Set content title.
-  if (isset($islandora_object->label)) {
-    drupal_set_title($islandora_object->label);
-  }
-
-  $video_params = array();
-  // Thumbnail.
-  if (isset($islandora_object['TN'])) {
-    $video_params['tn_url'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
-  }
-
-  // Use OGG datastream for chrome but MP4 for everybody else.
-  if (stristr($_SERVER['HTTP_USER_AGENT'], 'chrome') !== FALSE) {
-    $viewer_dsid = 'OGG';
-  }
-  else {
-    $viewer_dsid = 'MP4';
-  }
-
-  // Video player.
-  $video_params['url'] = url("islandora/object/{$islandora_object->id}/datastream/$viewer_dsid/view", array('absolute' => TRUE));
-  $video_params["pid"] = $islandora_object->id;
-  $video_params["mime"] = 'video/mp4';
-  $video_params['tn'] = url("islandora/object/{$islandora_object->id}/datastream/TN/view", array('absolute' => TRUE));
-
-  $viewer = islandora_get_viewer($video_params, 'islandora_video_viewers');
-  return array('' => $viewer);
-}
-
-/**
- * Implements hook_CMODEL_PID_islandora_object_ingested().
- */
-function islandora_video_islandora_sp_videoCModel_islandora_object_ingested($object) {
-  module_load_include('inc', 'islandora_video', 'includes/derivatives');
-  islandora_video_make_derivatives($object);
 }
 
 /**
@@ -121,18 +107,18 @@ function islandora_video_islandora_xml_form_builder_forms() {
   $module_path = drupal_get_path('module', 'islandora_video');
   return array(
     'Video MODS form' => array(
-      'form_file' => "$module_path/xml/mods_video_form.xml",
+      'form_file' => "$module_path/xml/islandora_video_form_mods.xml",
     ),
   );
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_form_associations().
+ * Implements hook_islandora_content_model_forms_form_associations().
  */
-function islandora_video_islandora_xml_form_builder_form_associations() {
+function islandora_video_islandora_content_model_forms_form_associations() {
   return array(
     'islandora_video_mods_form' => array(
-      'content_model' => 'islandora:sp_videoCModel',
+      'content_model' => 'islandora:sp_video_cmodel',
       'form_name' => 'Video MODS form',
       'dsid' => 'MODS',
       'title_field' => array('titleInfo', 'title'),
@@ -143,65 +129,98 @@ function islandora_video_islandora_xml_form_builder_form_associations() {
 }
 
 /**
+ * Implements hook_CMODEL_PID_islandora_view_object().
+ */
+function islandora_video_islandora_sp_video_cmodel_islandora_view_object($object, $page_number, $page_size) {
+  $output = theme('islandora_video', array('islandora_object' => $object));
+  return array('' => $output);
+}
+
+/**
+ * Implements hook_CMODEL_PID_islandora_object_ingested().
+ */
+function islandora_video_islandora_sp_video_cmodel_islandora_object_ingested($object) {
+  module_load_include('inc', 'islandora_video', 'includes/derivatives');
+  islandora_video_create_all_derivatives($object);
+}
+
+/**
+ * Implements hook_preprocess().
+ *
+ * @param array $variables
+ *   an array of variables that will be passed to the theme function
+ */
+function islandora_video_preprocess_islandora_video(&$variables) {
+ drupal_add_js('misc/form.js');
+ drupal_add_js('misc/collapse.js');
+ $islandora_object = $variables['islandora_object'];
+ $repository = $islandora_object->repository;
+ module_load_include('inc', 'islandora', 'includes/datastream');
+ module_load_include('inc', 'islandora', 'includes/utilities');
+ module_load_include('inc', 'islandora', 'includes/solution_packs');
+ module_load_include('inc', 'islandora', 'includes/authtokens');
+ // Get DC metadata
+ try {
+   $dc = $islandora_object['DC']->content;
+   $dc_object = DublinCore::importFromXMLString($dc);
+ } catch (Exception $e) {
+   drupal_set_message(t('Error retriveing object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
+ }
+ $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
+ $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
+ $variables['islandora_object_label'] = $islandora_object->label;
+ $variables['theme_hook_suggestions'][] = 'islandora_video__' . str_replace(':', '_', $islandora_object->id);
+ $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
+ $video_params = array();
+ // Thumbnail
+ if (isset($islandora_object['TN'])) {
+   $video_params = array(
+     'tn_url' => url("islandora/object/{$islandora_object->id}/datastream/TN/view"),
+   );
+ }
+ // Use OGG datastream for chrome but MP4 for everybody else.
+ if (stristr($_SERVER['HTTP_USER_AGENT'], 'chrome') !== FALSE) {
+   $viewer_dsid = 'OGG';
+ }
+ else {
+   $viewer_dsid = 'MP4';
+ }
+ $token = islandora_get_object_token($islandora_object->id, $viewer_dsid, 2);
+ $video_url = url("islandora/object/{$islandora_object->id}/datastream/$viewer_dsid/view",
+   array(
+     'absolute' => TRUE,
+     'query' => array('token' => $token),
+     )
+   );
+ // Video player
+ $video_params = array(
+   'url' => $video_url,
+   'pid' => $islandora_object->id,
+   'mime' => 'video/mp4',
+   'tn' => url("islandora/object/{$islandora_object->id}/datastream/TN/view", array('absolute' => TRUE)),
+ );
+ $viewer = islandora_get_viewer($video_params, 'islandora_video_viewers', $islandora_object);
+ $variables['islandora_content'] = '';
+ if ($viewer) {
+   $variables['islandora_content'] = $viewer;
+ }
+ else {
+   $variables['islandora_content'] = NULL;
+ }
+ return array('' => $viewer);
+}
+
+/**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps(array $configuration) {
-
+function islandora_video_islandora_sp_video_cmodel_islandora_ingest_steps() {
   return array(
     'islandora_video_upload' => array(
       'weight' => 10,
       'type' => 'form',
       'form_id' => 'islandora_video_upload_form',
-    ),
+      'module' => 'islandora_video',
+      'file' => 'includes/video_upload.form.inc'
+    )
   );
-}
-
-/**
- * Defines a file upload form for uploading the islandora video.
- *
- * @param array $form
- *   The drupal form.
- * @param array $form_state
- *   The drupal form state.
- *
- * @return array
- *   The drupal form definition.
- */
-function islandora_video_upload_form($form, &$form_state) {
-
-  $form['file'] = array(
-    '#title' => t('Video'),
-    '#type' => 'managed_file',
-    '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
-    '#required' => TRUE,
-    '#upload_location' => 'temporary://',
-    '#upload_validators' => array('file_validate_extensions' => array('ogg mp4 mov qt m4a avi')),
-  );
-
-  return $form;
-}
-
-/**
- * Submit handler, adds uploaded file to the video object.
- *
- * @param array $form
- *   The drupal form.
- * @param array $form_state
- *   The drupal form state.
- */
-function islandora_video_upload_form_submit(array $form, array &$form_state) {
-  $tuque_object = $form_state['islandora']['objects'][0];
-  if (empty($tuque_object['OBJ'])) {
-    $obj_datastream = $tuque_object->constructDatastream('OBJ', 'M');
-    $tuque_object->ingestDatastream($obj_datastream);
-  }
-  else {
-    $obj_datastream = $tuque_object['OBJ'];
-  }
-  $file = file_load($form_state['values']['file']);
-  $path = drupal_realpath($file->uri);
-  $obj_datastream->setContentFromFile($path);
-  $obj_datastream->label = $file->filename;
-  $obj_datastream->mimetype = $file->filemime;
-  file_delete($file);
 }

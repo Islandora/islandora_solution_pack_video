@@ -1,7 +1,8 @@
-name = Islandora Video Solution Pack
-description = Islandora configurations for persisting and displaying video files
+name = "Islandora video"
+description = "A default Islandora module to handle video"
 dependencies[] = islandora
 package = Islandora
-configure = admin/islandora/video
 version = 7.x-dev
 core = 7.x
+configure = admin/islandora/video
+stylesheets[all][] = css/islandora_video.theme.css
