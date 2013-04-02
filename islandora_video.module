@@ -185,11 +185,11 @@ function islandora_video_preprocess_islandora_video(&$variables) {
  else {
    $viewer_dsid = 'MP4';
  }
- $token = islandora_get_object_token($islandora_object->id, $viewer_dsid, 2);
+ //$token = islandora_get_object_token($islandora_object->id, $viewer_dsid, 2);
  $video_url = url("islandora/object/{$islandora_object->id}/datastream/$viewer_dsid/view",
    array(
      'absolute' => TRUE,
-     'query' => array('token' => $token),
+     //'query' => array('token' => $token),
      )
    );
  // Video player
