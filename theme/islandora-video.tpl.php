@@ -19,14 +19,9 @@
 ?>
 
 <div class="islandora-video-object islandora">
-  <p>PRINT FUCKER</p>
-  <?php print $islandora_content; ?>
   <div class="islandora-video-content-wrapper clearfix">
     <?php if ($islandora_content): ?>
       <div class="islandora-video-content">
-        <p>PRINT MOTHERFUCKER</p>
-        <?php print $viewer; ?>
-        <?php print $video_params; ?>
         <?php print $islandora_content; ?>
       </div>
     <?php endif; ?>

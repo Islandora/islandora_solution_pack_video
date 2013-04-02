@@ -24,9 +24,9 @@ function islandora_video_upload_form(array $form, array &$form_state) {
     'file' => array(
       '#title' => t('Video'),
       '#type' => 'managed_file',
-      '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
-      'description' => t('Select video to upload.<br/>Files must be less than <b>!size MB.</b><br/>Allowed file types: <b>!ext.</b>', array('!size' => $upload_size, '!ext' => $extensions[0])),
       '#required' => TRUE,
+      '#description' => t('Select video to upload.<br/>Files must be less than <b>!size MB.</b><br/>Allowed file types: <b>!ext.</b>', array('!size' => $upload_size, '!ext' => $extensions[0])),
+      '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
       '#upload_location' => 'temporary://',
       '#upload_validators' => array(
         'file_validate_extensions' => $extensions,
