@@ -55,7 +55,7 @@ function islandora_video_theme($existing, $type, $theme, $path) {
 function islandora_video_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_video');
   // Video Content Model.
-  $video_content_model = $connection->repository->constructObject('islandora:sp_video_cmodel');
+  $video_content_model = $connection->repository->constructObject('islandora:sp_videoCModel');
   $video_content_model->owner = 'fedoraAdmin';
   $video_content_model->label = 'Islandora Video Content Model';
   $video_content_model->models = 'fedora-system:ContentModel-3.0';
@@ -118,7 +118,7 @@ function islandora_video_islandora_xml_form_builder_forms() {
 function islandora_video_islandora_content_model_forms_form_associations() {
   return array(
     'islandora_video_mods_form' => array(
-      'content_model' => 'islandora:sp_video_cmodel',
+      'content_model' => 'islandora:sp_videoCModel',
       'form_name' => 'Video MODS form',
       'dsid' => 'MODS',
       'title_field' => array('titleInfo', 'title'),
