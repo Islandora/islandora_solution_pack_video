@@ -1,4 +1,4 @@
-name = "Islandora video"
+name = "Islandora Video Solution Pack"
 description = "A default Islandora module to handle video"
 dependencies[] = islandora
 package = Islandora
