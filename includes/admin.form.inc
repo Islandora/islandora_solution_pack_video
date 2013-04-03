@@ -15,7 +15,7 @@
  * @return array
  *   The form definition.
  */
-function islandora_video_admin_settings($form, &$form_state) {
+function islandora_video_admin($form, &$form_state) {
   $form = array();
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   // Get viewer table.
