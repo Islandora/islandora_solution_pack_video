@@ -95,8 +95,8 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
       'objects' => array(
         $video_content_model,
         $video_collection,
-      )
-    )
+      ),
+    ),
   );
 }
 
