@@ -131,7 +131,7 @@ function islandora_video_islandora_xml_form_builder_form_associations() {
 /**
  * Implements hook_CMODEL_PID_islandora_view_object().
  */
-function islandora_video_islandora_sp_video_cmodel_islandora_view_object($object, $page_number, $page_size) {
+function islandora_video_islandora_sp_videoCModel_islandora_view_object($object, $page_number, $page_size) {
   $output = theme('islandora_video', array('islandora_object' => $object));
   return array('' => $output);
 }
@@ -139,7 +139,7 @@ function islandora_video_islandora_sp_video_cmodel_islandora_view_object($object
 /**
  * Implements hook_CMODEL_PID_islandora_object_ingested().
  */
-function islandora_video_islandora_sp_video_cmodel_islandora_object_ingested($object) {
+function islandora_video_islandora_sp_videoCModel_islandora_object_ingested($object) {
   module_load_include('inc', 'islandora_video', 'includes/derivatives');
   islandora_video_create_all_derivatives($object);
 }
@@ -213,7 +213,7 @@ function islandora_video_preprocess_islandora_video(&$variables) {
 /**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_video_islandora_sp_video_cmodel_islandora_ingest_steps() {
+function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
   return array(
     'islandora_video_upload' => array(
       'weight' => 10,
