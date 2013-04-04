@@ -34,8 +34,8 @@ function islandora_video_admin_settings($form, &$form_state) {
   // Misc config.
   $form['islandora_video_retain_original'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Keep original file after ingest?'),
-    '#description' => t('Stores original file for archival purposes.'),
+    '#title' => t('Keep original file after ingest'),
+    '#description' => t('Stores the originally uploaded video file for archival purposes.'),
     '#default_value' => variable_get('islandora_video_retain_original', TRUE),
   );
 
@@ -49,13 +49,13 @@ function islandora_video_admin_settings($form, &$form_state) {
   );
   $form['islandora_video_make_archive'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Create .mkv file for archival purposes?'),
-    '#description' => t('Stores original file for archival purposes.'),
+    '#title' => t('Create .mkv derivative'),
+    '#description' => t('Appends a video datastream to the object using the Matroska container.'),
     '#default_value' => variable_get('islandora_video_make_archive', TRUE),
   );
   $form['islandora_video_make_mp4_locally'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Create display MP4 locally ?'),
+    '#title' => t('Create display MP4 locally'),
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_mp4_locally', TRUE),
   );
@@ -64,18 +64,18 @@ function islandora_video_admin_settings($form, &$form_state) {
   $form['islandora_video_ffmpeg2theora_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to Theora executable'),
-    '#description' => t('Path to Theora program on your server'),
+    '#description' => t('Path to Theora conversion program on your server'),
     '#default_value' => variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora'),
   );
   $form['islandora_video_make_ogg_locally'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Create OGG locally?'),
+    '#title' => t('Create OGG locally'),
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_ogg_locally', TRUE),
   );
   $form['islandora_video_make_thumbnail_locally'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Create thumbnail locally?'),
+    '#title' => t('Create thumbnail locally'),
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_thumbnail_locally', TRUE),
   );

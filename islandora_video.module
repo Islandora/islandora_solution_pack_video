@@ -9,8 +9,8 @@
  */
 function islandora_video_menu() {
   $items['admin/islandora/islandora_video'] = array(
-    'title' => 'Video Solution Pack',
-    'description' => 'Configure Islandora Video Module',
+    'title' => 'Video Collection',
+    'description' => 'Configure the Video solution pack',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_video_admin_settings'),
     'access arguments' => array('administer site configuration'),
