@@ -1,5 +1,5 @@
 name = Islandora Video Solution Pack
-description = Islandora configurations for persisting and displaying video files
+description = A default Islandora module to handle videos
 dependencies[] = islandora
 package = Islandora
 configure = admin/islandora/video

@@ -66,13 +66,13 @@ function islandora_video_make_derivatives($fedora_object) {
     if ($tn_file) {
       islandora_video_add_datastream($fedora_object, 'TN', $tn_file);
       file_unmanaged_delete($tn_file);
-      drupal_set_message(t('TN created successfully with ffmpeg.'));
+      drupal_set_message(t('Thumbnail created successfully with ffmpeg.'));
     }
     // Resort to adding the generic TN because Ffmpeg failed.
     else {
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
       islandora_video_add_datastream($fedora_object, 'TN', $stored_thumbnail);
-      drupal_set_message(t('Default TN added.'));
+      drupal_set_message(t('Default thumbnail added.'));
     }
   }
 
