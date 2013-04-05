@@ -1,13 +1,14 @@
 <?php
+
 /**
  * @file
- *   This file holds supporting code for Islandora video.
+ * Create derivatives for video content.
  */
 
 /**
  * This function will create the derivatives for an Islandora video object.
  *
- * @param object $fedora_object
+ * @param object $object
  *   The Tuque object to make derivatives for.
  */
 function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
@@ -58,7 +59,6 @@ function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
       file_unmanaged_delete($mkv_file);
     }
   }
-
 
   if (variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
     $tn_file = islandora_video_create_thumbnail($archival_file);
@@ -167,6 +167,12 @@ function islandora_video_create_mkv($archival_file) {
 }
 
 
+/**
+ * Create the thumbnail for the given file.
+ *
+ * @param string $archival_file
+ *   The path to the archival file.
+ */
 function islandora_video_create_thumbnail($archival_file) {
   $archival_file = drupal_realpath($archival_file);
   $out_file = $archival_file . '-TN.jpg';
@@ -210,8 +216,7 @@ function islandora_video_create_thumbnail($archival_file) {
 }
 
 /**
- * Adds the file as a datastream to the given object using the
- * given datastream id to identify it.
+ * Adds the file as a datastream to the given object.
  *
  * @param FedoraObject $object
  *   The object to add the datasteam to.
