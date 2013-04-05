@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Hooks and callbacks for this module.
  */
 
@@ -13,7 +12,7 @@ function islandora_video_menu() {
   $items = array();
   $items['admin/islandora/video'] = array(
     'title' => 'Video Solution Pack',
-    'description' => 'Configure video solution pack',
+    'description' => 'Configure the Video solution pack',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_video_admin'),
     'access arguments' => array('administer site configuration'),
@@ -39,7 +38,7 @@ function islandora_video_theme($existing, $type, $theme, $path) {
       /**
        * We can add pids to the end of this pattern in our preprocess function and templates
        * will be able to have have a pid appended to the template name to overide a template on a per object basis
-       * an example template would be named islandora-video--islandora-27.tpl.phps
+       * an example template would be named islandora-video--islandora-27.tpl.php
        */
       'pattern' => 'islandora_video__',
       'variables' => array('islandora_object' => NULL),
@@ -49,8 +48,6 @@ function islandora_video_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_islandora_required_objects().
- *
- * @return type
  */
 function islandora_video_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_video');
