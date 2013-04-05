@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * islandora_video.install
+ * Hooks for installing/unintstalling this module.
  */
 
 /**
@@ -19,12 +20,15 @@ function islandora_video_install() {
  */
 function islandora_video_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  variable_del('islandora_video_viewers');
-  variable_del('islandora_video_ffmpeg_path');
-  variable_del('islandora_video_retain_original');
-  variable_del('islandora_video_make_archive');
-  variable_del('islandora_video_make_mp4_locally');
-  variable_del('islandora_video_make_ogg_locally');
-  variable_del('islandora_video_ffmpeg2theora_path');
+  $variables = array(
+    'islandora_video_viewers',
+    'islandora_video_ffmpeg_path',
+    'islandora_video_retain_original',
+    'islandora_video_make_archive',
+    'islandora_video_make_mp4_locally',
+    'islandora_video_make_ogg_locally',
+    'islandora_video_ffmpeg2theora_path',
+  );
+  array_map('variable_del', $variables);
   islandora_install_solution_pack('islandora_video', 'uninstall');
 }

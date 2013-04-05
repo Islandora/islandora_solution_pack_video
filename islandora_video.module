@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Hooks and callbacks for this module.
  */
 
@@ -13,7 +12,7 @@ function islandora_video_menu() {
   $items = array();
   $items['admin/islandora/video'] = array(
     'title' => 'Video Solution Pack',
-    'description' => 'Configure video solution pack',
+    'description' => 'Configure the Video solution pack',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('islandora_video_admin'),
     'access arguments' => array('administer site configuration'),
@@ -25,32 +24,20 @@ function islandora_video_menu() {
 
 /**
  * Implements hook_theme().
- *
- * We supply a pattern so we can overide templates at the theme level if needed.
- * we can append a pid to a template and the new template file will be called (the pids
- * colon should be replaced with a dash)
- *
- * @return array
  */
 function islandora_video_theme($existing, $type, $theme, $path) {
   return array(
     'islandora_video' => array(
       'template' => 'theme/islandora-video',
-      /**
-       * We can add pids to the end of this pattern in our preprocess function and templates
-       * will be able to have have a pid appended to the template name to overide a template on a per object basis
-       * an example template would be named islandora-video--islandora-27.tpl.phps
-       */
+      'file' => 'theme/theme.inc',
       'pattern' => 'islandora_video__',
-      'variables' => array('islandora_object' => NULL),
+      'variables' => array('object' => NULL),
     ),
   );
 }
 
 /**
  * Implements hook_islandora_required_objects().
- *
- * @return type
  */
 function islandora_video_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_video');
@@ -132,7 +119,7 @@ function islandora_video_islandora_xml_form_builder_form_associations() {
  * Implements hook_CMODEL_PID_islandora_view_object().
  */
 function islandora_video_islandora_sp_videoCModel_islandora_view_object($object, $page_number, $page_size) {
-  $output = theme('islandora_video', array('islandora_object' => $object));
+  $output = theme('islandora_video', array('object' => $object));
   return array('' => $output);
 }
 
@@ -145,72 +132,6 @@ function islandora_video_islandora_sp_videoCModel_islandora_object_ingested($obj
 }
 
 /**
- * Implements hook_preprocess().
- *
- * @param array $variables
- *   an array of variables that will be passed to the theme function
- */
-function islandora_video_preprocess_islandora_video(&$variables) {
- drupal_add_js('misc/form.js');
- drupal_add_js('misc/collapse.js');
- $islandora_object = $variables['islandora_object'];
- $repository = $islandora_object->repository;
- module_load_include('inc', 'islandora', 'includes/datastream');
- module_load_include('inc', 'islandora', 'includes/utilities');
- module_load_include('inc', 'islandora', 'includes/solution_packs');
- module_load_include('inc', 'islandora', 'includes/authtokens');
- // Get DC metadata
- try {
-   $dc = $islandora_object['DC']->content;
-   $dc_object = DublinCore::importFromXMLString($dc);
- } catch (Exception $e) {
-   drupal_set_message(t('Error retriveing object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
- }
- $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
- $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
- $variables['islandora_object_label'] = $islandora_object->label;
- $variables['theme_hook_suggestions'][] = 'islandora_video__' . str_replace(':', '_', $islandora_object->id);
- $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
- $video_params = array();
- // Thumbnail
- if (isset($islandora_object['TN'])) {
-   $video_params = array(
-     'tn_url' => url("islandora/object/{$islandora_object->id}/datastream/TN/view"),
-   );
- }
- // Use OGG datastream for chrome but MP4 for everybody else.
- if (stristr($_SERVER['HTTP_USER_AGENT'], 'chrome') !== FALSE) {
-   $viewer_dsid = 'OGG';
- }
- else {
-   $viewer_dsid = 'MP4';
- }
- //$token = islandora_get_object_token($islandora_object->id, $viewer_dsid, 2);
- $video_url = url("islandora/object/{$islandora_object->id}/datastream/$viewer_dsid/view",
-   array(
-     'absolute' => TRUE,
-     //'query' => array('token' => $token),
-     )
-   );
- // Video player
- $video_params = array(
-   'url' => $video_url,
-   'pid' => $islandora_object->id,
-   'mime' => 'video/mp4',
-   'tn' => url("islandora/object/{$islandora_object->id}/datastream/TN/view", array('absolute' => TRUE)),
- );
- $viewer = islandora_get_viewer($video_params, 'islandora_video_viewers', $islandora_object);
- $variables['islandora_content'] = '';
- if ($viewer) {
-   $variables['islandora_content'] = $viewer;
- }
- else {
-   $variables['islandora_content'] = NULL;
- }
- return array('' => $viewer);
-}
-
-/**
  * Implements hook_islandora_ingest_steps().
  */
 function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
@@ -220,7 +141,7 @@ function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
       'type' => 'form',
       'form_id' => 'islandora_video_upload_form',
       'module' => 'islandora_video',
-      'file' => 'includes/video_upload.form.inc'
-    )
+      'file' => 'includes/video_upload.form.inc',
+    ),
   );
 }

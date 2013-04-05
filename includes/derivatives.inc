@@ -1,13 +1,14 @@
 <?php
+
 /**
  * @file
- *   This file holds supporting code for Islandora video.
+ * Create derivatives for video content.
  */
 
 /**
  * This function will create the derivatives for an Islandora video object.
  *
- * @param object $fedora_object
+ * @param object $object
  *   The Tuque object to make derivatives for.
  */
 function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
@@ -59,20 +60,19 @@ function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
     }
   }
 
-
   if (variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
     $tn_file = islandora_video_create_thumbnail($archival_file);
 
     if ($tn_file) {
       islandora_video_add_datastream($object, 'TN', $tn_file);
       file_unmanaged_delete($tn_file);
-      drupal_set_message(t('TN created successfully with ffmpeg.'));
+      drupal_set_message(t('Thumbnail created successfully with ffmpeg.'));
     }
     // Resort to adding the generic TN because Ffmpeg failed.
     else {
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
       islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
-      drupal_set_message(t('Default TN added.'));
+      drupal_set_message(t('Default thumbnail added.'));
     }
   }
 
@@ -167,6 +167,12 @@ function islandora_video_create_mkv($archival_file) {
 }
 
 
+/**
+ * Create the thumbnail for the given file.
+ *
+ * @param string $archival_file
+ *   The path to the archival file.
+ */
 function islandora_video_create_thumbnail($archival_file) {
   $archival_file = drupal_realpath($archival_file);
   $out_file = $archival_file . '-TN.jpg';
@@ -210,10 +216,9 @@ function islandora_video_create_thumbnail($archival_file) {
 }
 
 /**
- * Adds the file as a datastream to the given object using the
- * given datastream id to identify it.
+ * Adds the file as a datastream to the given object.
  *
- * @param Object $object
+ * @param FedoraObject $object
  *   The object to add the datasteam to.
  * @param string $datastream_id
  *   The datastream id of the added datastream.
