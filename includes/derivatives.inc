@@ -1,18 +1,19 @@
 <?php
+
 /**
  * @file
- *   This file holds supporting code for Islandora video.
+ * Create derivatives for video content.
  */
 
 /**
  * This function will create the derivatives for an Islandora video object.
  *
- * @param object $fedora_object
+ * @param object $object
  *   The Tuque object to make derivatives for.
  */
-function islandora_video_make_derivatives($fedora_object) {
-  if (!isset($fedora_object["OBJ"])) {
-    drupal_set_message("Could not create derivatives for %s. No file was uploaded.", array("%s" => $fedora_object->id), "error");
+function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
+  if (!isset($object["OBJ"])) {
+    drupal_set_message("Could not create derivatives for %s. No file was uploaded.", array("%s" => $object->id), "error");
     return FALSE;
   }
   // Get original file or quit.
@@ -23,10 +24,10 @@ function islandora_video_make_derivatives($fedora_object) {
       variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
     // @TODO: this file name code could be library I stole it from audio pack.
     $mime_detect = new MimeDetect();
-    $ext = $mime_detect->getExtension($fedora_object['OBJ']->mimeType);
-    $archival_file = str_replace(":", "-", $fedora_object->id) . ".OBJ.{$ext}";
+    $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
+    $archival_file = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
     $archival_file = file_create_filename($archival_file, 'temporary://');
-    $fedora_object['OBJ']->getContent($archival_file);
+    $object['OBJ']->getContent($archival_file);
   }
   else {
     return;
@@ -36,7 +37,7 @@ function islandora_video_make_derivatives($fedora_object) {
   if (variable_get('islandora_video_make_mp4_locally', TRUE)) {
     $mp4_file = islandora_video_create_mp4($archival_file);
     if ($mp4_file) {
-      islandora_video_add_datastream($fedora_object, 'MP4', $mp4_file, 'Display MP4.');
+      islandora_video_add_datastream($object, 'MP4', $mp4_file, 'Display MP4.');
       file_unmanaged_delete($mp4_file);
     }
   }
@@ -45,7 +46,7 @@ function islandora_video_make_derivatives($fedora_object) {
   if (variable_get('islandora_video_make_ogg_locally', TRUE)) {
     $ogg_file = islandora_video_create_ogg($archival_file);
     if ($ogg_file) {
-      islandora_video_add_datastream($fedora_object, 'OGG', $ogg_file);
+      islandora_video_add_datastream($object, 'OGG', $ogg_file);
       file_unmanaged_delete($ogg_file);
     }
   }
@@ -54,24 +55,23 @@ function islandora_video_make_derivatives($fedora_object) {
   if (variable_get('islandora_video_make_mkv_locally', TRUE)) {
     $mkv_file = islandora_video_create_mkv($archival_file);
     if ($mkv_file) {
-      islandora_video_add_datastream($fedora_object, 'MKV', $mkv_file);
+      islandora_video_add_datastream($object, 'MKV', $mkv_file);
       file_unmanaged_delete($mkv_file);
     }
   }
-
 
   if (variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
     $tn_file = islandora_video_create_thumbnail($archival_file);
 
     if ($tn_file) {
-      islandora_video_add_datastream($fedora_object, 'TN', $tn_file);
+      islandora_video_add_datastream($object, 'TN', $tn_file);
       file_unmanaged_delete($tn_file);
       drupal_set_message(t('Thumbnail created successfully with ffmpeg.'));
     }
     // Resort to adding the generic TN because Ffmpeg failed.
     else {
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
-      islandora_video_add_datastream($fedora_object, 'TN', $stored_thumbnail);
+      islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
       drupal_set_message(t('Default thumbnail added.'));
     }
   }
@@ -167,6 +167,12 @@ function islandora_video_create_mkv($archival_file) {
 }
 
 
+/**
+ * Create the thumbnail for the given file.
+ *
+ * @param string $archival_file
+ *   The path to the archival file.
+ */
 function islandora_video_create_thumbnail($archival_file) {
   $archival_file = drupal_realpath($archival_file);
   $out_file = $archival_file . '-TN.jpg';
@@ -210,24 +216,23 @@ function islandora_video_create_thumbnail($archival_file) {
 }
 
 /**
- * Adds the file as a datastream to the given object using the
- * given datastream id to identify it.
+ * Adds the file as a datastream to the given object.
  *
- * @param FedoraObject $fedora_object
+ * @param FedoraObject $object
  *   The object to add the datasteam to.
  * @param string $datastream_id
  *   The datastream id of the added datastream.
  * @param string $file_uri
  *   A URI to the file containing the content for the datastream.
  */
-function islandora_video_add_datastream($fedora_object, $datastream_id, $file_uri, $label = NULL) {
+function islandora_video_add_datastream($object, $datastream_id, $file_uri, $label = NULL) {
   try {
     $mime_detector = new MimeDetect();
-    $ds = $fedora_object->constructDatastream($datastream_id, "M");
+    $ds = $object->constructDatastream($datastream_id, "M");
     $ds->label = $label ? $label : $datastream_id;
     $ds->mimetype = $mime_detector->getMimetype($file_uri);
     $ds->setContentFromFile(drupal_realpath($file_uri));
-    $fedora_object->ingestDatastream($ds);
+    $object->ingestDatastream($ds);
   }
   catch (exception $e) {
     drupal_set_message(t("@message", array("@message" => $e->getMessage())));

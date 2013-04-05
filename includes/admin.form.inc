@@ -1,23 +1,24 @@
 <?php
+
 /**
  * @file
- *   Holds administration functionality for the video solution pack.
+ * Handles the display/submission of the admin settings form for this module.
  */
 
 /**
- * islandora video administration settings
+ * Defines the admin settings form.
  *
  * @param array $form
- *   The form definition.
+ *   The Drupal form definition.
  * @param array $form_state
- *   The state of the form.
+ *   The Drupal form state.
  *
  * @return array
- *   The form definition.
+ *   The Drupal form definition.
  */
-function islandora_video_admin_settings($form, &$form_state) {
-  $form = array();
+function islandora_video_admin(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
+  $form = array();
   // Get viewer table.
   $viewer_table = islandora_viewers_form('islandora_video_viewers', 'video/mp4');
   $form += $viewer_table;
