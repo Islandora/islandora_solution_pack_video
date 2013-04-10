@@ -44,12 +44,7 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
   else {
     $viewer_dsid = 'MP4';
   }
-  $token = islandora_get_object_token($object->id, $viewer_dsid, 2);
-  $options = array(
-    'absolute' => TRUE,
-    'query' => array('token' => $token),
-  );
-  $video_url = url("islandora/object/{$object->id}/datastream/$viewer_dsid/view", $options);
+  $video_url = url("islandora/object/{$object->id}/datastream/$viewer_dsid/view");
   // Video player.
   $video_params = array(
     'url' => $video_url,
