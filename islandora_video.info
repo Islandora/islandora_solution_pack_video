@@ -6,3 +6,5 @@ version = 7.x-dev
 core = 7.x
 configure = admin/islandora/video
 stylesheets[all][] = css/islandora_video.theme.css
+files[] = tests/islandora_video_and_derivatives_ingest_purge.test
+files[] = tests/islandora_video_ingest_purge.test
