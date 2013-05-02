@@ -11,7 +11,7 @@
  * @param object $object
  *   The Tuque object to make derivatives for.
  */
-function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
+function islandora_video_create_all_derivatives(AbstractObject $object) {
   if (!isset($object["OBJ"])) {
     drupal_set_message("Could not create derivatives for %s. No file was uploaded.", array("%s" => $object->id), "error");
     return FALSE;
@@ -218,7 +218,7 @@ function islandora_video_create_thumbnail($archival_file) {
 /**
  * Adds the file as a datastream to the given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the datasteam to.
  * @param string $datastream_id
  *   The datastream id of the added datastream.
