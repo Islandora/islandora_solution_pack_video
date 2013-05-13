@@ -13,7 +13,7 @@
  */
 function islandora_video_create_all_derivatives(AbstractFedoraObject $object) {
   if (!isset($object["OBJ"])) {
-    drupal_set_message("Could not create derivatives for %s. No file was uploaded.", array("%s" => $object->id), "error");
+    drupal_set_message(t("Could not create derivatives for @s. No file was uploaded.", array("@s" => $object->id)), "error");
     return FALSE;
   }
   // Get original file or quit.
@@ -99,11 +99,11 @@ function islandora_video_create_mp4($archival_file) {
   exec($command, $output, $return_value);
 
   if ($return_value == '0') {
-    drupal_set_message('MP4 created successfully.');
+    drupal_set_message(t('MP4 created successfully.'));
     return $out_file;
   }
   else {
-    drupal_set_message('MP4 creation failed.');
+    drupal_set_message(t('MP4 creation failed.'));
   }
   return FALSE;
 }
@@ -128,11 +128,11 @@ function islandora_video_create_ogg($archival_file) {
   exec($command, $output, $return_value);
 
   if ($return_value == '0') {
-    drupal_set_message('OGG created successfully.');
+    drupal_set_message(t('OGG created successfully.'));
     return $out_file;
   }
   else {
-    drupal_set_message('OGG creation failed.');
+    drupal_set_message(t('OGG creation failed.'));
   }
   return FALSE;
 }
@@ -157,11 +157,11 @@ function islandora_video_create_mkv($archival_file) {
   exec($command, $output, $return_value);
 
   if ($return_value == '0') {
-    drupal_set_message('MKV created successfully.');
+    drupal_set_message(t('MKV created successfully.'));
     return $out_file;
   }
   else {
-    drupal_set_message('MKV creation failed.');
+    drupal_set_message(t('MKV creation failed.'));
   }
   return FALSE;
 }
