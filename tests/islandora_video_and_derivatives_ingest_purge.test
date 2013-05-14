@@ -5,7 +5,7 @@
  * Attempts to ingest a video file into a randomly generated video collection.
  */
 
-class IslandoraVideoDerivativesIngestTestCase extends CollectionWebTestCase {
+class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTestCase {
 
   /**
    * Get test information.
@@ -16,7 +16,7 @@ class IslandoraVideoDerivativesIngestTestCase extends CollectionWebTestCase {
     return array(
       'name' => 'Video Ingest/Purge (With Derivatives)',
       'description' => 'Ingests and purges a video file from a randomly generated video collection with ffmpeg and ffmpeg2theora derivatives',
-      'group' => 'Islandora Object Management',
+      'group' => 'Islandora Video',
     );
   }
 
@@ -39,12 +39,18 @@ class IslandoraVideoDerivativesIngestTestCase extends CollectionWebTestCase {
   public function testIngestPurgeVideoDerivatives() {
 
     // Sets up the testing space.
-    $user = $this->createDrupalAdminUser();
+
+    $user = $this->drupalCreateUser(array(
+      'view fedora repository objects',
+      'ingest fedora objects',
+      'administer site configuration',
+    ));
     $this->drupalLogin($user);
+
     $label = $this->randomName(16);
     $suffix = $this->randomName(16);
     $collectionpid = 'islandora:' . $suffix;
-    $this->createRootTestCollection($label, 'islandora:sp_videoCModel', $collectionpid);
+    $this->createTestCollection($label, 'islandora:sp_videoCModel', $collectionpid);
 
     // Ensures derivative creation is turned on.
     $edit = array(
@@ -59,13 +65,13 @@ class IslandoraVideoDerivativesIngestTestCase extends CollectionWebTestCase {
     // Attempts to create an object.
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $edit = array();
-    $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.avi';
+    $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.mp4';
     $edit['files[file]'] = $file;
     $this->drupalPost($path, $edit, t('Ingest'));
     $this->assertText('New Object', 'Video object was created', 'Islandora');
 
     // Determines whether or not the appropriate datastreams were created.
-    $objectpid = arg(5, $this->url);
+    $object = $this->getPidFromPath($this->url);
     $datastreams = array(
       'RELS-EXT',
       'DC',
@@ -75,10 +81,10 @@ class IslandoraVideoDerivativesIngestTestCase extends CollectionWebTestCase {
       'MKV',
       'TN',
     );
-    $this->assertDatastreams($objectpid, $datastreams);
+    $this->assertDatastreams($object, $datastreams);
 
     // Attempts to delete the object and then collection.
-    $this->deleteTestObject($objectpid, 'New Object');
-    $this->deleteRootTestCollectionByPid($collectionpid);
+    $this->deleteObject($object->id);
+    $this->deleteTestCollection($collectionpid);
   }
 }
