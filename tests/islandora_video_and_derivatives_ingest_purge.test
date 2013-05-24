@@ -39,7 +39,6 @@ class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTest
   public function testIngestPurgeVideoDerivatives() {
 
     // Sets up the testing space.
-
     $user = $this->drupalCreateUser(array(
       'view fedora repository objects',
       'ingest fedora objects',
