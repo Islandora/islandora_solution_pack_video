@@ -23,4 +23,4 @@ script:
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_video
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
-  - drush test-run --uri=http://localhost:8081 "Islandora Solution Pack Video"
+  - drush test-run --uri=http://localhost:8081 "Islandora Video"
