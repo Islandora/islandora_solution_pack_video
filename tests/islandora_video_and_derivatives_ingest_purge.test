@@ -44,6 +44,9 @@ class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTest
       'view fedora repository objects',
       'ingest fedora objects',
       'administer site configuration',
+      'manage object properties',
+      'delete fedora objects and datastreams',
+      'create child collection',
     ));
     $this->drupalLogin($user);
 
@@ -65,7 +68,7 @@ class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTest
     // Attempts to create an object.
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $edit = array();
-    $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.mp4';
+    $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.avi';
     $edit['files[file]'] = $file;
     $this->drupalPost($path, $edit, t('Ingest'));
     $this->assertText('New Object', 'Video object was created', 'Islandora');
