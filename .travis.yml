@@ -11,16 +11,9 @@ before_install:
   - cd $HOME
   - git clone -b 7.x git://github.com/Islandora/islandora.git
   - git clone -b 7.x git://github.com/Islandora/islandora_solution_pack_collection.git
-  - wget -c http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz
-  - tar -xzvf ffmpeg-1.1.1.tar.gz
-  - cd ffmpeg-1.1.1/
-  - ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include"   --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --extra-libs="-ldl" --enable-gpl   --enable-libass --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libtheora   --enable-libvorbis --enable-libvpx --enable-libx264 --enable-nonfree --enable-x11grab
+  - wget -c https://raw.github.com/christianselig/islandora_solution_pack_video/7.x/ffmpeg-install.sh
+  - sudo sh ffmpeg-install.sh
   - $HOME/islandora/tests/scripts/travis_setup.sh
-  - make
-  - make install
-  - make distclean
-  - hash -r
-  - source ~/.profile
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_video
   - ln -s $HOME/islandora_solution_pack_collection sites/all/modules/islandora_solution_pack_collection
