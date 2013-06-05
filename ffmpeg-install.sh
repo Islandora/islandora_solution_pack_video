@@ -1,3 +1,8 @@
+     apt-get -y install oracle-java6-installer libjpeg-dev libpng12-dev libtiff4-dev php5 php5-cli php5-curl php5-dev php5-gd php5-ldap php5-mysql php5-xsl \
+     php-soap php-xml-htmlsax3 php-xml-parser php-xml-rpc php-xml-rpc2 php-xml-rss php-xml-serializer php5-imagick php5-mcrypt php-xml* mysql-server vim curl apache2 \
+     rsync wget imagemagick ant libimage-exiftool-perl unzip lame autoconf build-essential checkinstall git libass-dev libfaac-dev libgpac-dev libmp3lame-dev \
+     libopencore-amrnb-dev libopencore-amrwb-dev librtmp-dev libtheora-dev libtool libvorbis-dev pkg-config texi2html zlib1g-dev ffmpeg2theora poppler-utils
+
      ## Install ffmpeg from source
      mkdir ~/ffmpeg-source
      cd ~/ffmpeg-source
@@ -44,14 +49,3 @@
      hash -r
      ## Cleanup ffmpeg mess
      cd ~
-     rm -rf ~/ffmpeg-source
-     a2enmod rewrite
-     a2enmod proxy
-     a2enmod proxy_http
-     pecl install uploadprogress
-     sed -i '949iextension=uploadprogress.so' /etc/php5/apache2/php.ini
-     sed -i "s|memory_limit = 128M|memory_limit = 512M|g" /etc/php5/apache2/php.ini
-     sed -i "s|post_max_size = 8M|post_max_size = 2048M|g" /etc/php5/apache2/php.ini
-     sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 2048M|g" /etc/php5/apache2/php.ini
-     echo -e '<VirtualHost *:80>\n        ServerAdmin webmaster@localhost\n\n        DocumentRoot /var/www/drupal7\n        <Directory />\n                Options FollowSymLinks\n                AllowOverride None\n        </Directory>\n        <Directory /var/www/drupal7/>\n                Options Indexes FollowSymLinks MultiViews\n                AllowOverride all\n                Order allow,deny\n                allow from all\n        </Directory>\n\n        ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/\n        <Directory "/usr/lib/cgi-bin">\n                AllowOverride None\n                Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch\n                Order allow,deny\n                Allow from all\n        </Directory>\n\n        ErrorLog ${APACHE_LOG_DIR}/error.log\n\n        # Possible values include: debug, info, notice, warn, error, crit,\n        # alert, emerg.\n        LogLevel warn\n\n        CustomLog ${APACHE_LOG_DIR}/access.log combined\n\n    Alias /doc/ "/usr/share/doc/"\n    <Directory "/usr/share/doc/">\n        Options Indexes MultiViews FollowSymLinks\n        AllowOverride None\n        Order deny,allow\n        Deny from all\n        Allow from 127.0.0.0/255.0.0.0 ::1/128\n    </Directory>\n\n        ProxyPass /adore-djatoka http://localhost:8080/adore-djatoka\n        ProxyPassReverse /adore-djatoka http://localhost:8080/adore-djatoka\n\n</VirtualHost>' > /etc/apache2/sites-available/default
-   ;;
