@@ -72,7 +72,7 @@ class IslandoraVideoIngestTestCase extends IslandoraCollectionWebTestCase {
 
     // Determines whether or not the appropriate datastreams were created.
     $object = $this->getObjectFromPath($this->url);
-      $datastreams = array(
+    $datastreams = array(
       'RELS-EXT',
       'DC',
       'OBJ',
