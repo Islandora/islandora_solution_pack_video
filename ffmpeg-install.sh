@@ -16,6 +16,7 @@
      ./configure --enable-static --enable-shared
      make
      checkinstall --pkgname=x264 --pkgversion="3:$(./version.sh | awk -F'[" ]' '/POINT/{print $4"+git"$5}')" --backup=no --deldoc=yes  --fstrans=no --default
+     ldconfig
      cd ~/ffmpeg-source
      git clone --depth 1 git://github.com/mstorsjo/fdk-aac.git
      cd fdk-aac
