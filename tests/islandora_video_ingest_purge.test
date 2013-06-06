@@ -64,7 +64,7 @@ class IslandoraVideoIngestTestCase extends IslandoraCollectionWebTestCase {
     $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
 
     // Attempts to create an object.
-    $path = 'islandora/object/' .  $collectionpid . '/manage/overview/ingest';
+    $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.avi';
     $edit = array('files[file]' => $file);
     $this->drupalPost($path, $edit, 'Ingest');
