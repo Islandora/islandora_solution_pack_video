@@ -39,7 +39,6 @@ class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTest
   public function testIngestPurgeVideoDerivatives() {
 
     // Sets up the testing space.
-
     $user = $this->drupalCreateUser(array(
       'view fedora repository objects',
       'ingest fedora objects',
@@ -69,6 +68,9 @@ class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTest
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $edit = array();
     $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.avi';
+    $handle = fopen($file, 'r');
+    $contents = fread($handle, filesize($file));
+    fclose($handle);
     $edit['files[file]'] = $file;
     $this->drupalPost($path, $edit, t('Ingest'));
     $this->assertText('New Object', 'Video object was created', 'Islandora');
@@ -85,6 +87,40 @@ class IslandoraVideoDerivativesIngestTestCase extends IslandoraCollectionWebTest
       'TN',
     );
     $this->assertDatastreams($object, $datastreams);
+
+    // Checks if the OBJ datastream is valid.
+    if (isset($object['OBJ'])) {
+      $avi = $object['OBJ']->content;
+      $this->assertTrue($avi = $contents, 'OBJ datastream matches binary of originally ingested object', 'Islandora');
+    }
+
+    // Checks if the MP4 datastream is valid.
+    if (isset($object['MP4'])) {
+      $mp4 = $object['MP4']->content;
+      if (strpos($mp4, 'ftyp')) {
+        $mp4_ftyp = substr(strpos($mp4, 'ftyp'), 4, 4);
+        $this->pass("MP4 datastream asserts that it is a valid ISO-formatted video file using ftyp {$mp4_ftyp}", 'Islandora');
+      }
+      else {
+        $this->fail("MP4 datastream is not a valid ISO-formatted video", 'Islandora');
+      }
+    }
+
+    // Checks if the OGG datastream is valid.
+    if (isset($object['OGG'])) {
+      $ogg = $object['OGG']->content;
+      $ogg_pages = substr_count($ogg, 'OggS');
+      $this->assertTrue(substr_count($ogg, 'OggS'), "OGG datastream asserts that it contains {$ogg_pages} Ogg pages (even a very small file should contain several)", 'Islandora');
+      $this->assertTrue(substr_count($ogg, 'theora'), 'OGG datastream asserts that it contains Theora-encoded video data', 'Islandora');
+      $this->assertTrue(substr_count($ogg, 'vorbis'), 'OGG datastream asserts that it contains Vorbis-encoded audio data', 'Islandora');
+    }
+
+    // Checks if the MKV datastream is valid.
+    if (isset($object['MKV'])) {
+      $mkv = bin2hex($object['MKV']->content);
+      $this->assertTrue(substr($mkv, 0, 8) == '1a45dfa3', 'MKV datastream asserts that it is an EBML-formatted file', 'Islandora');
+      $this->assertTrue(substr_count($mkv, '6d6174726f736b61') == 1, 'MKV datastream asserts that its EBML DocType is Matroska', 'Islandora');
+    }
 
     // Attempts to delete the object and then collection.
     $this->deleteObject($object->id);
