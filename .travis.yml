@@ -13,6 +13,7 @@ before_install:
   - git clone -b 7.x git://github.com/Islandora/islandora_solution_pack_collection.git
   - wget -c https://raw.github.com/christianselig/islandora_solution_pack_video/7.x/ffmpeg-install.sh
   - sudo sh ffmpeg-install.sh
+  - export ISLANDORA_DIR=$HOME/islandora
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_video
