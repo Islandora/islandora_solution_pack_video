@@ -90,7 +90,8 @@ class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
           'files[file]' => $file,
         );
         $this->drupalPost($path, $edit, t('Ingest'));
-        $this->assertTrue($contents == $this->getObjectFromPath($this->url)['OBJ']->content, "OBJ datastream matches {$file}", 'Islandora');
+        $object = $this->getObjectFromPath($this->url);
+        $this->assertTrue($contents == $object['OBJ']->content, "OBJ datastream matches {$file}", 'Islandora');
       }
     }
 
