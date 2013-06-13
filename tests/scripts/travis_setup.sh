@@ -5,3 +5,4 @@ wget http://jenkins.discoverygarden.ca:8080/x264_travisci.deb
 sudo dpkg -i ffmpeg_travisci.deb
 sudo dpkg -i x264_travisci.deb
 sudo ln -s /usr/local/lib/libx264.so.133 /usr/lib/libx264.so.133
+sudo ln -s /usr/local/bin/ffmpeg /bin/ffmpeg
