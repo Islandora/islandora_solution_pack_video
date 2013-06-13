@@ -20,11 +20,8 @@ before_install:
   - drush en --user=1 --yes islandora_basic_collection
   - drush en --user=1 --yes islandora_video
 script:
-#  - ant -buildfile sites/all/modules/islandora_solution_pack_video/build.xml lint
-#  - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_video
-#  - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
-#  - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
-#  - drush test-run --uri=http://localhost:8081 "Islandora Video"
-  - dpkg --get-selections | grep ffmpeg
-  - which ffmpeg
-  - ffmpeg
+  - ant -buildfile sites/all/modules/islandora_solution_pack_video/build.xml lint
+  - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_video
+  - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
+  - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
+  - drush test-run --uri=http://localhost:8081 "Islandora Video"
