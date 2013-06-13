@@ -25,4 +25,6 @@ script:
 #  - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
 #  - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
 #  - drush test-run --uri=http://localhost:8081 "Islandora Video"
+  - dpkg --get-selections | grep ffmpeg
+  - which ffmpeg
   - ffmpeg
