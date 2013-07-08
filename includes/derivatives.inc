@@ -152,7 +152,7 @@ function islandora_video_create_mkv($archival_file) {
   $out_file = $archival_file . '.mkv';
 
   $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
-  $command = "$ffmpeg_executable -i $archival_file -f mp4 $out_file";
+  $command = "$ffmpeg_executable -i $archival_file $out_file";
   $return_value = FALSE;
   exec($command, $output, $return_value);
 
