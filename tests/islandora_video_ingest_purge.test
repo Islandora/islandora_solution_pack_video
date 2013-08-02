@@ -38,14 +38,7 @@ class IslandoraVideoIngestTestCase extends IslandoraCollectionWebTestCase {
    */
   public function testIngestPurgeVideo() {
 
-    $user = $this->drupalCreateUser(array(
-      'view fedora repository objects',
-      'ingest fedora objects',
-      'administer site configuration',
-      'manage object properties',
-      'delete fedora objects and datastreams',
-      'create child collection',
-    ));
+    $user = $this->drupalCreateUser(array_keys(module_invoke_all('permission')));
     $this->drupalLogin($user);
 
     $label = $this->randomName(16);
@@ -53,7 +46,7 @@ class IslandoraVideoIngestTestCase extends IslandoraCollectionWebTestCase {
     $collectionpid = 'islandora:' . $suffix;
     $this->createTestCollection($label, 'islandora:sp_videoCModel', $collectionpid);
 
-    // Ensures derivative creation is turned on.
+    // Ensures derivative creation is turned off.
     $edit = array(
       'islandora_video_retain_original' => FALSE,
       'islandora_video_make_archive' => FALSE,
