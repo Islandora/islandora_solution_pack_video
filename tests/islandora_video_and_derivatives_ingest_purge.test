@@ -128,7 +128,7 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
     // the hex-translated version, so we just look for 'matroska' in hex.
     if (isset($object['MKV'])) {
       $mkv = bin2hex($object['MKV']->content);
-      $this->assertTrue(substr($mkv, 0, 4) == '1a45dfa3', 'MKV datastream asserts that it is an EBML-formatted file', 'Islandora');
+      $this->assertTrue(substr($mkv, 0, 8) == '1a45dfa3', 'MKV datastream asserts that it is an EBML-formatted file', 'Islandora');
       $this->assertTrue(substr_count($mkv, '6d6174726f736b61') == 1, 'MKV datastream asserts that its EBML DocType is Matroska', 'Islandora');
     }
 
