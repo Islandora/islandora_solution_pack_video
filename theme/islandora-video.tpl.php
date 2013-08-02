@@ -18,7 +18,7 @@
  */
 ?>
 
-<div class="islandora-video-object islandora" itemscope itemtype="http://schema.org/VideoObject">
+<div class="islandora-video-object islandora" vocab="http://schema.org" prefix="dcterms: http://purl.org/dc/terms/" typeof="http://schema.org/VideoObject">
   <div class="islandora-video-content-wrapper clearfix">
     <?php if ($islandora_content): ?>
       <div class="islandora-video-content">
@@ -28,7 +28,7 @@
   <div class="islandora-video-sidebar">
     <?php if (!empty($dc_array['dc:description']['value'])): ?>
       <h2><?php print $dc_array['dc:description']['label']; ?></h2>
-      <p itemprop="description"><?php print $dc_array['dc:description']['value']; ?></p>
+      <p property="description"><?php print $dc_array['dc:description']['value']; ?></p>
     <?php endif; ?>
     <?php if ($parent_collections): ?>
       <div>
