@@ -11,6 +11,7 @@ env:
 before_install:
   - cd $HOME
   - git clone -b 7.x git://github.com/Islandora/islandora.git
+  - git clone -b 7.x git://github.com/Islandora/islandora_solution_pack_collection.git
   - export ISLANDORA_DIR=$HOME/islandora
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*

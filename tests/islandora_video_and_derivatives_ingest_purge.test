@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * @file
+ * Attempts to ingest a video file into a randomly generated video collection.
+ */
+
+class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebTestCase {
+
+  /**
+   * Get test information.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Video Ingest/Purge (With Derivatives)',
+      'description' => 'Ingests and purges a video file from a randomly generated video collection with ffmpeg and ffmpeg2theora derivatives',
+      'group' => 'Islandora Video',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp(array(
+      'islandora',
+      'islandora_video',
+      'islandora_basic_collection',
+    ));
+  }
+
+  /**
+   * Creates an administrative user and attempts to ingest a video file.
+   */
+  public function testIngestPurgeVideoAndDerivatives() {
+
+    // Sets up the testing space.
+    $user = $this->drupalCreateUser(array_keys(module_invoke_all('permission')));
+    $this->drupalLogin($user);
+
+    $label = $this->randomName(16);
+    $suffix = $this->randomName(16);
+    $collectionpid = 'islandora:' . $suffix;
+    $this->createTestCollection($label, 'islandora:sp_videoCModel', $collectionpid);
+
+    // Ensures derivative creation is turned on.
+    $edit = array(
+      'islandora_video_retain_original' => TRUE,
+      'islandora_video_make_archive' => TRUE,
+      'islandora_video_make_mp4_locally' => TRUE,
+      'islandora_video_make_ogg_locally' => TRUE,
+      'islandora_video_make_thumbnail_locally' => TRUE,
+    );
+    $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
+
+    // Attempts to create an object.
+    $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
+    $edit = array();
+    $file = drupal_get_path('module', 'islandora_video') . '/tests/fixtures/test.avi';
+    $handle = fopen($file, 'r');
+    $contents = fread($handle, filesize($file));
+    fclose($handle);
+    $edit['files[file]'] = $file;
+    $this->drupalPost($path, $edit, t('Ingest'));
+    $this->assertText('New Object', 'Video object was created', 'Islandora');
+
+    // Determines whether or not the appropriate datastreams were created.
+    $object = $this->getObjectFromPath($this->url);
+    $datastreams = array(
+      'RELS-EXT',
+      'DC',
+      'OBJ',
+      'MP4',
+      'OGG',
+      'MKV',
+      'TN',
+    );
+    $this->assertDatastreams($object, $datastreams);
+
+    // Checks if the OBJ datastream is valid.
+    if (isset($object['OBJ'])) {
+      $avi = $object['OBJ']->content;
+      $this->assertTrue($avi = $contents, 'OBJ datastream matches binary of originally ingested object', 'Islandora');
+    }
+
+    // Checks if the MP4 datastream is valid. MP4 files are a subset of the ISO
+    // file format specification, and as such need to contain a 64-bit
+    // declaration of type within the first eight eight bytes of the file. This
+    // declaration is comprised of the characters 'ftyp', followed by a four-
+    // character filetype code. Below, we look for 'ftyp', and then pass the
+    // filetype code to the test message.
+    if (isset($object['MP4'])) {
+      $mp4 = $object['MP4']->content;
+      if (strpos($mp4, 'ftyp')) {
+        $mp4_ftyp = substr(strpos($mp4, 'ftyp'), 4, 4);
+        $this->pass("MP4 datastream asserts that it is a valid ISO-formatted video file using ftyp {$mp4_ftyp}", 'Islandora');
+      }
+      else {
+        $this->fail("MP4 datastream is not a valid ISO-formatted video", 'Islandora');
+      }
+    }
+
+    // Checks if the OGG datastream is valid. OGG files are made up of several
+    // 'pages' of OGG data, each prefaced with an OGG marker - the letters
+    // 'OggS'. The file header also contains information on what encoders were
+    // used to create the file. Here, we're looking for at least one OGG page,
+    // and confirming that the file asserts the Theora and Vorbis codecs were
+    // used to create the file.
+    if (isset($object['OGG'])) {
+      $ogg = $object['OGG']->content;
+      $ogg_pages = substr_count($ogg, 'OggS');
+      $this->assertTrue(substr_count($ogg, 'OggS'), "OGG datastream asserts that it contains {$ogg_pages} Ogg pages (even a very small file should contain several)", 'Islandora');
+      $this->assertTrue(substr_count($ogg, 'theora'), 'OGG datastream asserts that it contains Theora-encoded video data', 'Islandora');
+      $this->assertTrue(substr_count($ogg, 'vorbis'), 'OGG datastream asserts that it contains Vorbis-encoded audio data', 'Islandora');
+    }
+
+    // Checks if the MKV datastream is valid. There's not much we can do to
+    // check an MKV file, since the format is really, really loose. We do know
+    // a couple of things though - first, since MKV is an EBML format, the
+    // first four characters will always be the same. Since they're non-
+    // standard characters, we're looking at their hex values instead. And
+    // second, we know that the file will contain the declaration 'matroska'
+    // soon after. We could look for this in the binary, but we already have
+    // the hex-translated version, so we just look for 'matroska' in hex.
+    if (isset($object['MKV'])) {
+      $mkv = bin2hex($object['MKV']->content);
+      $this->assertTrue(substr($mkv, 0, 8) == '1a45dfa3', 'MKV datastream asserts that it is an EBML-formatted file', 'Islandora');
+      $this->assertTrue(substr_count($mkv, '6d6174726f736b61') == 1, 'MKV datastream asserts that its EBML DocType is Matroska', 'Islandora');
+    }
+
+    // Attempts to delete the object and then collection.
+    $this->deleteObject($object->id);
+    $this->deleteTestCollection($collectionpid);
+  }
+}
