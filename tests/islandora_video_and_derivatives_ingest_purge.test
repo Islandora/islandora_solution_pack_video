@@ -92,7 +92,7 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
     // declaration of type within the first eight eight bytes of the file. This
     // declaration is comprised of the characters 'ftyp', followed by a four-
     // character filetype code. Below, we look for 'ftyp', and then pass the
-    // filetype code to the test message.  
+    // filetype code to the test message.
     if (isset($object['MP4'])) {
       $mp4 = $object['MP4']->content;
       if (strpos($mp4, 'ftyp')) {
