@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Luke's magic video load test.
+ * A video load test. Instructions for its use are in the README.
  */
 
 class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
