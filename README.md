@@ -19,7 +19,7 @@ SUMMARY
 -------
 
 Adds all required Fedora objects to allow users to ingest and retrieve video
-files through the Islandora interface.
+files through the Islandora interface
 
 REQUIREMENTS
 ------------
