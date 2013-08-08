@@ -1,0 +1,51 @@
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_video.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_video)
+
+CI Server:
+http://jenkins.discoverygarden.ca
+
+CONTENTS OF THIS FILE
+---------------------
+
+ * summary
+ * requirements
+ * installation
+ * configuration
+ * licensing
+
+SUMMARY
+-------
+
+Adds all required Fedora objects to allow users to ingest and retrieve video
+files through the Islandora interface
+
+REQUIREMENTS
+------------
+
+ffmpeg2theora see
+https://wiki.duraspace.org/display/ISLANDORA6122/Chapter+12+-+Installing+Solution+Pack+Dependencies
+for instalation help.
+A specific ffmpeg version has been tested:
+http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz
+These instructions should be applicable except for using this tar file instead of downloading HEAD of dev.
+One will also need to remove the --enable-x11grab flag on the ffmpeg configure.
+http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide
+https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
+
+INSTALLATION
+------------
+
+For technical metadata extraction enable the Islandora FITS module.
+
+CONFIGURATION
+-------------
+
+For compatability with the D6 version of the video solution pack one may wish to
+configure the FITS DSID to FITS in the Islandora FITS module's admin.
+
+LICENSING
+---------
+
+This module requires libfaac.  libfaac is not free for comercial use.
