@@ -15,10 +15,13 @@ before_install:
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_video
+  - ln -s $HOME/islandora_solution_pack_collection sites/all/modules/islandora_solution_pack_collection
+  - $TRAVIS_BUILD_DIR/tests/scripts/ffmpeg-install.sh
+  - drush en --user=1 --yes islandora_basic_collection
   - drush en --user=1 --yes islandora_video
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_video/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_video
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
-  - drush test-run --uri=http://localhost:8081 "Islandora Solution Pack Video"
+  - drush test-run --uri=http://localhost:8081 "Islandora Video"
