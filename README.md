@@ -1,3 +1,11 @@
+BUILD STATUS
+------------
+Current build status:
+[![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_video.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_video)
+
+CI Server:
+http://jenkins.discoverygarden.ca
+
 CONTENTS OF THIS FILE
 ---------------------
 
@@ -11,7 +19,7 @@ SUMMARY
 -------
 
 Adds all required Fedora objects to allow users to ingest and retrieve video
-files through the Islandora interface.
+files through the Islandora interface
 
 REQUIREMENTS
 ------------
