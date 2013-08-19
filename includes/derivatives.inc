@@ -19,7 +19,7 @@
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['MP4']) || (isset($object['MP4']) && $force === TRUE)) {
+  if ($force || !isset($object['MP4'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
       return islandora_video_no_obj_datastream($object->id);
@@ -32,7 +32,7 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
     $return_value = FALSE;
     exec($command, $output, $return_value);
     file_delete($archival_file['file']);
-    if ($return_value == '0') {
+    if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'MP4', $out_file);
     }
     else {
@@ -65,7 +65,7 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['OGG']) || (isset($object['OGG']) && $force === TRUE)) {
+  if ($force || !isset($object['OGG'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
       return islandora_video_no_obj_datastream($object->id);
@@ -78,7 +78,7 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
     $return_value = FALSE;
     exec($command, $output, $return_value);
     file_delete($archival_file['file']);
-    if ($return_value == '0') {
+    if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'OGG', $out_file);
     }
     else {
@@ -111,7 +111,7 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['MKV']) || (isset($object['MKV']) && $force === TRUE)) {
+  if ($force || !isset($object['MKV'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
       return islandora_video_no_obj_datastream($object->id);
@@ -124,7 +124,7 @@ function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
     $return_value = FALSE;
     exec($command, $output, $return_value);
     file_delete($archival_file['file']);
-    if ($return_value == '0') {
+    if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'MKV', $out_file);
     }
     else {
@@ -157,7 +157,7 @@ function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['TN']) || (isset($object['TN']) && $force === TRUE)) {
+  if ($force || !isset($object['TN'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
       return islandora_video_no_obj_datastream($object->id);
@@ -190,7 +190,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
       $return_value = FALSE;
       exec($tn_creation, $output, $return_value);
       file_delete($archival_file['file']);
-      if ($return_value == '0') {
+      if ($return_value === 0) {
         return islandora_video_add_datastream($object, 'TN', $out_file);
       }
       // Unable to generate with Ffmpeg, add default TN.
