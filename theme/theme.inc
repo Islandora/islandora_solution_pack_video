@@ -19,7 +19,7 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
   $repository = $object->repository;
   // Get DC metadata.
   try {
-    if (isset($object['DC']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $object['DC'])) {
+    if (isset($object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['DC'])) {
       $dc = $object['DC']->content;
       $dc_object = DublinCore::importFromXMLString($dc);
     }
@@ -44,7 +44,7 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
     'pid' => $object->id,
   );
   // Video player.
-  if (isset($object[$viewer_dsid]) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $object[$viewer_dsid])) {
+  if (isset($object[$viewer_dsid]) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object[$viewer_dsid])) {
     $video_url = url("islandora/object/{$object->id}/datastream/$viewer_dsid/view");
     $video_params += array(
       'mime' => 'video/mp4',
@@ -52,7 +52,7 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
     );
   }
   // Thumbnail.
-  if (isset($object['TN']) && islandora_datastream_access(FEDORA_VIEW_OBJECTS, $object['TN'])) {
+  if (isset($object['TN']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['TN'])) {
     $video_params += array(
       'tn' => url("islandora/object/{$object->id}/datastream/TN/view", array('absolute' => TRUE)),
     );
