@@ -18,7 +18,7 @@
  */
 ?>
 
-<div class="islandora-video-object islandora" vocab="http://schema.org" prefix="dcterms: http://purl.org/dc/terms/" typeof="http://schema.org/VideoObject">
+<div class="islandora-video-object islandora" vocab="http://schema.org/" prefix="dcterms: http://purl.org/dc/terms/" typeof="VideoObject">
   <div class="islandora-video-content-wrapper clearfix">
     <?php if ($islandora_content): ?>
       <div class="islandora-video-content">
