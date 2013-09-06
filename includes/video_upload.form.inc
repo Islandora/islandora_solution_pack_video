@@ -18,7 +18,7 @@
  */
 function islandora_video_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
-  $extensions = array('ogg mp4 mov qt m4v avi mpv');
+  $extensions = array('ogg mp4 mov qt m4v avi mkv');
   return array(
     'file' => array(
       '#title' => t('Video'),
