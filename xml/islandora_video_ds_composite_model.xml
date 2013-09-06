@@ -21,7 +21,7 @@
     <form MIME="video/ogg"/>
   </dsTypeModel>
   <dsTypeModel ID="MKV" optional="false">
-    <form MIME="video/m4v"/>
+    <form MIME="video/x-matroska"/>
   </dsTypeModel>
   <dsTypeModel ID="TECHMD_FITS" optional="false">
     <form MIME="text/xml"/>
@@ -32,7 +32,6 @@
   <dsTypeModel ID="OBJ">
     <form MIME="video/mp4"/>
     <form MIME="video/quicktime"/>
-    <form MIME="video/m4v"/>
     <form MIME="video/ogg"/>
   </dsTypeModel>
 </dsCompositeModel>
