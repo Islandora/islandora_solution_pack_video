@@ -32,6 +32,7 @@
   <dsTypeModel ID="OBJ">
     <form MIME="video/mp4"/>
     <form MIME="video/quicktime"/>
+    <form MIME="video/m4v"/>
     <form MIME="video/x-matroska"/>
     <form MIME="video/ogg"/>
   </dsTypeModel>
