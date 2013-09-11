@@ -81,6 +81,10 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
     );
     $this->assertDatastreams($object, $datastreams);
 
+    // Checks if the thumbnail is valid.
+    $datastreams = array('TN');
+    $this->assertImageDatastreams($object, $datastreams);
+
     // Checks if the OBJ datastream is valid.
     if (isset($object['OBJ'])) {
       $avi = $object['OBJ']->content;

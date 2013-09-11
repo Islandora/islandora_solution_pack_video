@@ -200,7 +200,7 @@ function islandora_video_create_thumbnail($archival_file) {
     $time_array = explode(':', $time_val);
     $output_time = floor((($time_array[0] * 360) + ($time_array[1] * 60) + $time_array[2]) / 2);
 
-    $tn_creation = "$ffmpeg_executable -itsoffset -4 -ss $output_time -i $archival_file -vcodec mjpeg -vframes 1 -an -f rawvideo $out_file";
+    $tn_creation = "$ffmpeg_executable -itsoffset -2 -ss $output_time -i $archival_file -vcodec mjpeg -vframes 1 -an -f rawvideo $out_file";
 
     $return_value = FALSE;
     exec($tn_creation, $output, $return_value);
