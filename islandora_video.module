@@ -124,14 +124,6 @@ function islandora_video_islandora_sp_videoCModel_islandora_view_object($object,
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_object_ingested().
- */
-function islandora_video_islandora_sp_videoCModel_islandora_object_ingested($object) {
-  module_load_include('inc', 'islandora_video', 'includes/derivatives');
-  islandora_video_create_all_derivatives($object);
-}
-
-/**
  * Implements hook_islandora_ingest_steps().
  */
 function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
@@ -144,4 +136,56 @@ function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
       'file' => 'includes/video_upload.form.inc',
     ),
   );
+}
+
+/**
+ * Implements hook_islandora_CMODEL_PID_derivative().
+ */
+function islandora_video_islandora_sp_videoCModel_islandora_derivative() {
+  $derivatives = array();
+  if (variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
+    $derivatives[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'TN',
+      'weight' => '0',
+      'function' => array(
+        'islandora_video_create_thumbnail',
+      ),
+      'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
+    );
+  }
+  if (variable_get('islandora_video_make_mp4_locally', TRUE)) {
+    $derivatives[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'MP4',
+      'weight' => '1',
+      'function' => array(
+        'islandora_video_create_mp4',
+      ),
+      'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
+    );
+  }
+  if (variable_get('islandora_video_make_ogg_locally', TRUE)) {
+    $derivatives[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'OGG',
+      'weight' => '2',
+      'function' => array(
+        'islandora_video_create_ogg',
+      ),
+      'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
+    );
+  }
+  if (variable_get('islandora_video_make_archive', TRUE)) {
+    $derivatives[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'MKV',
+      'weight' => '3',
+      'function' => array(
+        'islandora_video_create_mkv',
+      ),
+      'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
+    );
+  }
+  return $derivatives;
 }
