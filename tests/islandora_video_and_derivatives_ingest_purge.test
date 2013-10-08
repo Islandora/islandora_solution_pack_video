@@ -93,7 +93,7 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
     // TODO: Make an actual .avi validator you goof.
     if (isset($object['OBJ'])) {
       $avi = $object['OBJ']->content;
-      $this->assertTrue($avi = $contents, 'OBJ datastream matches binary of originally ingested object', 'Islandora');
+      $this->assertTrue($avi == $contents, 'OBJ datastream matches binary of originally ingested object', 'Islandora');
     }
 
     // Attempts to delete the object and then collection.
