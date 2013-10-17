@@ -13,6 +13,10 @@
  */
 function islandora_video_create_all_derivatives(AbstractObject $object) {
   if (!isset($object["OBJ"])) {
+    $variables = array(
+      '@s' => $object->id,
+    );
+    watchdog('islandora_video', 'Islandora video could not create derivatives for @s. No file was uploaded.', $variables, WATCHDOG_ERROR);
     drupal_set_message(t("Could not create derivatives for @s. No file was uploaded.", array("@s" => $object->id)), "error");
     return FALSE;
   }
@@ -235,6 +239,11 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri, $lab
     $object->ingestDatastream($ds);
   }
   catch (exception $e) {
-    drupal_set_message(t("@message", array("@message" => $e->getMessage())));
+    $variables = array(
+      '@error' => $e->getTraceAsString(),
+      '@dsid' => $datastream_id,
+    );
+    watchdog('islandora_video', 'Islandora video failed to add datastream @dsid.<br/>Error:<br/>@error', $variables, WATCHDOG_ERROR);
+    drupal_set_message(t("@message", array("@message" => $e->getTraceAsString())));
   }
 }
