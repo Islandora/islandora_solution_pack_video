@@ -262,11 +262,12 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
       'success' => FALSE,
       'messages' => array(
         array(
-          'message' => t('Failed to add @dsid datastream for @pid. Error message: @message'),
+          'message' => t('Failed to add @dsid datastream for @pid. Error message: "@message" with trace: @stack'),
           'message_sub' => array(
             '@dsid' => $datastream_id,
             '@pid' => $object->id,
             '@message' => $e->getMessage(),
+            '@stack' => $e->getTraceAsString(),
           ),
           'type' => 'watchdog',
           'severity' => WATCHDOG_ERROR,
