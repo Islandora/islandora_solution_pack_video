@@ -17,8 +17,13 @@
   clear: both;
 }
 
+/* This is kept for legacy reasons. */
 dl.islandora-video-fields {
   width: 100%;
+}
+
+dl.islandora-metadata-fields {
+    width:100%;
 }
 
 .islandora-video-metadata dt {
@@ -64,5 +69,5 @@ body.two-sidebars .islandora-video-sidebar {
     width: 35%;
     clear: none;
   }
-  
+
 }
