@@ -18,18 +18,16 @@
  */
 ?>
 
-<div class="islandora-video-object islandora">
+<div class="islandora-video-object islandora" vocab="http://schema.org/" prefix="dcterms: http://purl.org/dc/terms/" typeof="VideoObject">
   <div class="islandora-video-content-wrapper clearfix">
     <?php if ($islandora_content): ?>
       <div class="islandora-video-content">
         <?php print $islandora_content; ?>
       </div>
     <?php endif; ?>
-  <div class="islandora-video-sidebar">
-    <?php if (!empty($dc_array['dc:description']['value'])): ?>
-      <h2><?php print $dc_array['dc:description']['label']; ?></h2>
-      <p><?php print $dc_array['dc:description']['value']; ?></p>
-    <?php endif; ?>
+  </div>
+  <div class="islandora-video-metadata">
+    <?php print $description; ?>
     <?php if ($parent_collections): ?>
       <div>
         <h2><?php print t('In collections'); ?></h2>
@@ -40,23 +38,6 @@
         </ul>
       </div>
     <?php endif; ?>
+    <?php print $metadata; ?>
   </div>
-  </div>
-  <fieldset class="collapsible collapsed islandora-video-metadata">
-  <legend><span class="fieldset-legend"><?php print t('Details'); ?></span></legend>
-    <div class="fieldset-wrapper">
-      <dl class="islandora-inline-metadata islandora-video-fields">
-        <?php $row_field = 0; ?>
-        <?php foreach($dc_array as $key => $value): ?>
-          <dt class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
-            <?php print $value['label']; ?>
-          </dt>
-          <dd class="<?php print $value['class']; ?><?php print $row_field == 0 ? ' first' : ''; ?>">
-            <?php print $value['value']; ?>
-          </dd>
-          <?php $row_field++; ?>
-        <?php endforeach; ?>
-      </dl>
-    </div>
-  </fieldset>
 </div>
