@@ -13,11 +13,13 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   module_load_include('inc', 'islandora', 'includes/authtokens');
+  module_load_include('inc', 'islandora', 'includes/metadata');
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $object = $variables['object'];
   $repository = $object->repository;
-  // Get DC metadata.
+  // We should eventually remove the DC object and dc_array code as it only
+  // exists to not break legacy implementations.
   try {
     if (isset($object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['DC'])) {
       $dc = $object['DC']->content;
@@ -32,6 +34,8 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
   $variables['islandora_object_label'] = $object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_video__' . str_replace(':', '_', $object->id);
   $variables['parent_collections'] = islandora_get_parents_from_rels_ext($object);
+  $variables['metadata'] = islandora_retrieve_metadata_markup($object);
+  $variables['description'] = islandora_retrieve_description_markup($object);
   // Use OGG datastream for chrome but MP4 for everybody else.
   if (stristr($_SERVER['HTTP_USER_AGENT'], 'chrome') !== FALSE) {
     $viewer_dsid = 'OGG';
