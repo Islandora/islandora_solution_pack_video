@@ -26,8 +26,6 @@ function islandora_video_uninstall() {
     'islandora_video_retain_original',
     'islandora_video_make_archive',
     'islandora_video_make_mp4_locally',
-    'islandora_video_make_ogg_locally',
-    'islandora_video_ffmpeg2theora_path',
   );
   array_map('variable_del', $variables);
   islandora_install_solution_pack('islandora_video', 'uninstall');
