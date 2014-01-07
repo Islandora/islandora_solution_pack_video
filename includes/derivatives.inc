@@ -52,52 +52,6 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
 }
 
 /**
- * This function will create an OGG file for upload.
- *
- * @param AbstractObject $object
- *   An AbstractObject representing an object within Fedora.
- * @param bool $force
- *   Whether derivative generation is being forced or not.
- *
- * @return array
- *   An array describing the outcome of the OGG creation.
- *
- * @see hook_islandora_derivative()
- */
-function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
-  if ($force || !isset($object['OGG'])) {
-    $archival_file = islandora_video_copy_obj_datastream($object);
-    if ($archival_file === FALSE) {
-      return islandora_video_no_obj_datastream($object->id);
-    }
-    $archival_path = drupal_realpath($archival_file['file']->uri);
-    $out_file = $archival_path . '.ogg';
-
-    $theora_executable = variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora');
-    $command = "$theora_executable $archival_path -o $out_file";
-    $return_value = FALSE;
-    exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
-    if ($return_value === 0) {
-      return islandora_video_add_datastream($object, 'OGG', $out_file);
-    }
-    else {
-      return array(
-        'success' => FALSE,
-        'messages' => array(
-          array(
-            'message' => t('Ffmpeg2theora encoding failed for object @pid - OGG creation was skipped.'),
-            'message_sub' => array('@pid' => $object->id),
-            'type' => 'watchdog',
-            'severity' => WATCHDOG_ERROR,
-          ),
-        ),
-      );
-    }
-  }
-}
-
-/**
  * This function will create an MKV file for upload.
  *
  * @param AbstractObject $object

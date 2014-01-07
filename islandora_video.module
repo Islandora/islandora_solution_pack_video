@@ -165,17 +165,6 @@ function islandora_video_islandora_sp_videoCModel_islandora_derivative() {
       'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
     );
   }
-  if (variable_get('islandora_video_make_ogg_locally', TRUE)) {
-    $derivatives[] = array(
-      'source_dsid' => 'OBJ',
-      'destination_dsid' => 'OGG',
-      'weight' => '2',
-      'function' => array(
-        'islandora_video_create_ogg',
-      ),
-      'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
-    );
-  }
   if (variable_get('islandora_video_make_archive', TRUE)) {
     $derivatives[] = array(
       'source_dsid' => 'OBJ',
