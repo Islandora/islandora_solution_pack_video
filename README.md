@@ -24,9 +24,6 @@ files through the Islandora interface
 REQUIREMENTS
 ------------
 
-ffmpeg2theora see
-https://wiki.duraspace.org/display/ISLANDORA6122/Chapter+12+-+Installing+Solution+Pack+Dependencies
-for instalation help.
 A specific ffmpeg version has been tested:
 http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz
 These instructions should be applicable except for using this tar file instead of downloading HEAD of dev.
@@ -70,4 +67,4 @@ GLOB_BRACE FLAG (E.G. SOLARIS).
 LICENSING
 ---------
 
-This module requires libfaac.  libfaac is not free for comercial use.
+This module requires libfaac. Libfaac is not free for commercial use.
