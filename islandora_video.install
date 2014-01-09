@@ -42,4 +42,7 @@ function islandora_video_update_7100(&$sandbox) {
   It previously existed as an access derivative for viewing in certain browsers. MP4 appears to be the standard now. As such,
   the solution pack no longer creates OGG derivatives. If you would like to remove the OGG derivatives from existing
   video objects you can run the associated command in the Drush script with the module.'), 'warning');
+
+  variable_del('islandora_video_make_ogg_locally');
+  variable_del('islandora_video_ffmpeg2theora_path');
 }

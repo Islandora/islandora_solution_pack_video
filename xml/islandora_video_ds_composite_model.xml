@@ -31,5 +31,6 @@
     <form MIME="video/quicktime"/>
     <form MIME="video/m4v"/>
     <form MIME="video/x-matroska"/>
+    <form MIME="video/ogg"/>
   </dsTypeModel>
 </dsCompositeModel>
