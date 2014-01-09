@@ -17,9 +17,6 @@
   <dsTypeModel ID="TN" optional="false">
     <form MIME="image/jpg"/>
   </dsTypeModel>
-  <dsTypeModel ID="OGG" optional="false">
-    <form MIME="video/ogg"/>
-  </dsTypeModel>
   <dsTypeModel ID="MKV" optional="false">
     <form MIME="video/x-matroska"/>
   </dsTypeModel>

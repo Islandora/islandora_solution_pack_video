@@ -60,20 +60,6 @@ function islandora_video_admin(array $form, array &$form_state) {
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_mp4_locally', TRUE),
   );
-
-  // Theora configuration.
-  $form['islandora_video_ffmpeg2theora_path'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Path to Theora executable'),
-    '#description' => t('Path to Theora conversion program on your server'),
-    '#default_value' => variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora'),
-  );
-  $form['islandora_video_make_ogg_locally'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Create OGG locally'),
-    '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
-    '#default_value' => variable_get('islandora_video_make_ogg_locally', TRUE),
-  );
   $form['islandora_video_make_thumbnail_locally'] = array(
     '#type' => 'checkbox',
     '#title' => t('Create thumbnail locally'),
@@ -95,8 +81,6 @@ function islandora_video_admin_submit($form, &$form_state) {
       variable_del('islandora_video_retain_original');
       variable_del('islandora_video_make_archive');
       variable_del('islandora_video_make_mp4_locally');
-      variable_del('islandora_video_make_ogg_locally');
-      variable_del('islandora_video_ffmpeg2theora_path');
       break;
   }
 }

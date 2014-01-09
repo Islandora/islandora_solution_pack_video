@@ -52,7 +52,6 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
       'islandora_video_retain_original' => TRUE,
       'islandora_video_make_archive' => TRUE,
       'islandora_video_make_mp4_locally' => TRUE,
-      'islandora_video_make_ogg_locally' => TRUE,
       'islandora_video_make_thumbnail_locally' => TRUE,
     );
     $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
@@ -75,7 +74,6 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
       'DC',
       'OBJ',
       'MP4',
-      'OGG',
       'MKV',
       'TN',
     );
@@ -83,7 +81,6 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
 
     $datastreams = array(
       array('MP4', 'mp4'),
-      array('OGG', 'ogg'),
       array('MKV', 'mkv'),
       array('TN', 'image'),
     );

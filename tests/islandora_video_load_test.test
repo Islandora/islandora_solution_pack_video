@@ -59,7 +59,6 @@ class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
       'islandora_video_retain_original' => TRUE,
       'islandora_video_make_archive' => TRUE,
       'islandora_video_make_mp4_locally' => TRUE,
-      'islandora_video_make_ogg_locally' => TRUE,
       'islandora_video_make_thumbnail_locally' => TRUE,
     );
     $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
@@ -67,7 +66,7 @@ class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
     // Some preparation for going through the folder full of videos.
     // Essentially, we're checking that the files have an appropriate extension
     // and that they are no bigger than the post_max_size set in php.ini.
-    $files = glob(drupal_get_path('module', 'islandora_video') . '/tests/fixtures/load/*.{ogg,mp4,mov,qt,m4a,avi}', GLOB_BRACE);
+    $files = glob(drupal_get_path('module', 'islandora_video') . '/tests/fixtures/load/*.{mp4,mov,qt,m4a,avi}', GLOB_BRACE);
     $php_max_filesize = ini_get('post_max_size');
     $max_bytes = trim($php_max_filesize);
     $last = strtolower($max_bytes[strlen($max_bytes) - 1]);
