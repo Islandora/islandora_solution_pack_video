@@ -65,7 +65,7 @@ function islandora_video_admin(array $form, array &$form_state) {
   $form['islandora_video_make_ogg_locally'] = array(
     '#type' => 'checkbox',
     '#title' => t('Create OGG locally'),
-    '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
+    '#description' => t("Check this box if an optional OGG archival datastream is desired and should being created locally. Please note that OGG derivatives are no longer used within Islandora and this option remains to be consistent."),
     '#default_value' => variable_get('islandora_video_make_ogg_locally', FALSE),
   );
   $form['islandora_video_ffmpeg2theora_path'] = array(
