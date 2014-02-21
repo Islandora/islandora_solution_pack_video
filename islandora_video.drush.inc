@@ -44,7 +44,7 @@ function islandora_video_update_videos_create_batch() {
     ),
     'title' => t('Removing OGG derivatives from existing video objects...'),
     'init_message' => t('Preparing to delete OGGs.'),
-    'progress_message' => t('Time elapsed: @elapsed <br/>Estimated time remaning @estimate.'),
+    'progress_message' => t('Time elapsed: @elapsed <br/>Estimated time remaining @estimate.'),
     'error_message' => t('An error has occurred.'),
     'file' => drupal_get_path('module', 'islandora_video') . '/islandora_video.drush.inc',
   );
