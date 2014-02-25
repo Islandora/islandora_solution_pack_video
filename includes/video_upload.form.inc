@@ -55,7 +55,7 @@ function islandora_video_upload_form_submit(array $form, array &$form_state) {
   }
   $file = file_load($form_state['values']['file']);
   $path = drupal_realpath($file->uri);
-  $ds->setContentFromFile($path);
+  $ds->setContentFromFile($path, FALSE);
   $ds->label = $file->filename;
   $ds->mimetype = $file->filemime;
 }
