@@ -58,4 +58,7 @@ function islandora_video_upload_form_submit(array $form, array &$form_state) {
   $ds->setContentFromFile($path, FALSE);
   $ds->label = $file->filename;
   $ds->mimetype = $file->filemime;
+  if (isset($file)) {
+    file_unmanaged_delete($path);
+  }
 }
