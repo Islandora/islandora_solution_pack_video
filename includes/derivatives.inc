@@ -19,6 +19,7 @@
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if ($force || !isset($object['MP4'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
@@ -31,7 +32,7 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
     $command = "$ffmpeg_executable -i $archival_path -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
+    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
     if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'MP4', $out_file);
     }
@@ -65,6 +66,7 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if ($force || !isset($object['OGG'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
@@ -77,7 +79,7 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
     $command = "$theora_executable $archival_path -o $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
+    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
     if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'OGG', $out_file);
     }
@@ -111,6 +113,7 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if ($force || !isset($object['MKV'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
@@ -123,7 +126,7 @@ function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
     $command = "$ffmpeg_executable -i $archival_path $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
+    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
     if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'MKV', $out_file);
     }
@@ -189,7 +192,8 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
 
       $return_value = FALSE;
       exec($tn_creation, $output, $return_value);
-      file_delete($archival_file['file']);
+      $name = drupal_realname($out_file);
+      islandora_temp_file_entry($name, $archival_file['file']->uri);
       if ($return_value === 0) {
         return islandora_video_add_datastream($object, 'TN', $out_file);
       }
@@ -201,7 +205,8 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
     }
     // Unable to grab duration at the default thunbnail.
     else {
-      file_delete($archival_file['file']);
+      $name = drupal_realname($archival_file['file']->uri);
+      islandora_temp_file_entry($name, $archival_file['file']->uri);
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
       return islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
     }
@@ -241,7 +246,8 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
       $object->ingestDatastream($ds);
     }
     if (file_valid_uri($file_uri)) {
-      file_unmanaged_delete($file_uri);
+      $name = drupal_realname($file_uri);
+      islandora_temp_file_entry($name, $file_uri);
     }
     return array(
       'success' => TRUE,
