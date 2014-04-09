@@ -192,7 +192,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
 
       $return_value = FALSE;
       exec($tn_creation, $output, $return_value);
-      $name = drupal_realname($out_file);
+      $name = drupal_basename($out_file);
       islandora_temp_file_entry($name, $archival_file['file']->uri);
       if ($return_value === 0) {
         return islandora_video_add_datastream($object, 'TN', $out_file);
@@ -205,7 +205,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
     }
     // Unable to grab duration at the default thunbnail.
     else {
-      $name = drupal_realname($archival_file['file']->uri);
+      $name = drupal_basename($archival_file['file']->uri);
       islandora_temp_file_entry($name, $archival_file['file']->uri);
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
       return islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
@@ -246,7 +246,7 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
       $object->ingestDatastream($ds);
     }
     if (file_valid_uri($file_uri)) {
-      $name = drupal_realname($file_uri);
+      $name = drupal_basename($file_uri);
       islandora_temp_file_entry($name, $file_uri);
     }
     return array(
