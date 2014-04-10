@@ -1,7 +1,7 @@
 name = "Islandora Video Solution Pack"
 description = "A default Islandora module to handle video"
 dependencies[] = islandora
-package = Islandora
+package = Islandora Solution Packs
 version = 7.x-dev
 core = 7.x
 configure = admin/islandora/video
