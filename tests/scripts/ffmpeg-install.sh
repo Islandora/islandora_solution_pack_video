@@ -27,7 +27,7 @@ autoreconf -fiv
 make
 checkinstall --pkgname=fdk-aac --pkgversion="$(date +%Y%m%d%H%M)-git" --backup=no --deldoc=yes --fstrans=no --default
 cd ~/ffmpeg-source
-git clone --depth 1 http://git.chromium.org/webm/libvpx.git
+git clone --depth 1 https://chromium.googlesource.com/webm/libvpx
 cd libvpx
 ./configure --disable-examples --disable-unit-tests
 make
