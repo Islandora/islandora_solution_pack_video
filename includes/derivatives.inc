@@ -27,12 +27,14 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.mp4';
+    $file_name = drupal_basename($archival_file['file']->uri);
+    islandora_temp_file_entry($file_name, $archival_file['file']->uri);
 
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
     $command = "$ffmpeg_executable -i $archival_path -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
+
     if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'MP4', $out_file);
     }
@@ -75,11 +77,14 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.ogg';
 
+    $file_name = drupal_basename($archival_file['file']->uri);
+    islandora_temp_file_entry($file_name, $archival_file['file']->uri);
+
     $theora_executable = variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora');
     $command = "$theora_executable $archival_path -o $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
+
     if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'OGG', $out_file);
     }
@@ -122,11 +127,14 @@ function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.mkv';
 
+    $file_name = drupal_basename($archival_file['file']->uri);
+    islandora_temp_file_entry($file_name, $archival_file['file']->uri);
+
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
     $command = "$ffmpeg_executable -i $archival_path $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
+
     if ($return_value === 0) {
       return islandora_video_add_datastream($object, 'MKV', $out_file);
     }
@@ -168,7 +176,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '-TN.jpg';
     $name = drupal_basename($archival_file['file']->uri);
-    islandora_temp_file_entry($out_file, $archival_file['file']->uri);
+    islandora_temp_file_entry($name, $archival_file['file']->uri);
 
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
 
