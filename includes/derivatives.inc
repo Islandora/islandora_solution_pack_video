@@ -196,8 +196,6 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
       $return_value = FALSE;
       exec($tn_creation, $output, $return_value);
 
-
-
       if ($return_value === 0) {
         return islandora_video_add_datastream($object, 'TN', $out_file);
       }
