@@ -55,7 +55,7 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
       'islandora_video_make_ogg_locally' => TRUE,
       'islandora_video_make_thumbnail_locally' => TRUE,
     );
-    $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
+    $this->drupalPost('admin/islandora/solution_pack_config/video', $edit, 'Save configuration');
 
     // Attempts to create an object.
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';

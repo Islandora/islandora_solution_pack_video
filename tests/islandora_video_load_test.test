@@ -62,7 +62,7 @@ class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
       'islandora_video_make_ogg_locally' => TRUE,
       'islandora_video_make_thumbnail_locally' => TRUE,
     );
-    $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
+    $this->drupalPost('admin/islandora/solution_pack_config/video', $edit, 'Save configuration');
 
     // Some preparation for going through the folder full of videos.
     // Essentially, we're checking that the files have an appropriate extension
