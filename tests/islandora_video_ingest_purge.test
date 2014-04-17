@@ -54,7 +54,7 @@ class IslandoraVideoIngestTestCase extends IslandoraCollectionWebTestCase {
       'islandora_video_make_ogg_locally' => FALSE,
       'islandora_video_make_thumbnail_locally' => FALSE,
     );
-    $this->drupalPost('admin/islandora/video', $edit, 'Save configuration');
+    $this->drupalPost('admin/islandora/solution_pack_config/video', $edit, 'Save configuration');
 
     // Attempts to create an object.
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
