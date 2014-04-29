@@ -27,12 +27,49 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.mp4';
-    $file_name = drupal_basename($archival_file['file']->uri);
-
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
     $command = "$ffmpeg_executable -i $archival_path -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
     $return_value = FALSE;
-    exec($command, $output, $return_value);
+    dsm($out_file, "outfile");
+    //exec($command, $output, $return_value);
+
+    // descriptor array
+    $desc = array(
+      0 => array('pipe', 'r'), // 0 is STDIN for process
+      1 => array('pipe', 'w'), // 1 is STDOUT for process
+      2 => array('file', '/tmp/mp4-error-output.txt', 'a') // 2 is STDERR for process
+    );
+   // $pipes = array();
+    $process = proc_open($command, $desc, $pipes);
+   // stream_set_blocking($pipes[1], false);
+    dsm($process, "Process: ");
+    $info = proc_get_status($process);
+    if (is_resource($process)) {
+      while ($info = proc_get_status($process) && $info['running']) {
+        try {
+          //$info = proc_get_status($process);
+//         dsm($info, "info before");
+        // Renew the timestamp for $file.
+         file_usage_add($archival_file['file'], 'islandora_video', 'user', 1);
+         //sleep(2);
+        } catch (Exception $e) {
+          dsm($e, "exception");
+        }
+
+//         $info = proc_get_status($process);
+//         dsm($info, "info after");
+//         sleep(1);
+        // And check again shortly.
+      }
+    }
+    fclose($pipes[0]);
+    fclose($pipes[1]);
+    if (isset($pipes[2])) {
+      fclose($pipes[2]);
+    }
+    // Processing should now be done; clean up the resource.
+    $return_value = proc_close($process);
+    dsm($return_value, "stat");
     if ($return_value === 0) {
       $ret = islandora_video_add_datastream($object, 'MP4', $out_file);
       file_delete($archival_file['file']);
@@ -77,9 +114,6 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.ogg';
-
-    $file_name = drupal_basename($archival_file['file']->uri);
-
     $theora_executable = variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora');
     $command = "$theora_executable $archival_path -o $out_file";
     $return_value = FALSE;
@@ -178,7 +212,6 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '-TN.jpg';
-    $name = drupal_basename($archival_file['file']->uri);
 
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
 
@@ -257,9 +290,6 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    if (file_valid_uri($file_uri)) {
-      $name = drupal_basename($file_uri);
-    }
     return array(
       'success' => TRUE,
       'messages' => array(
@@ -304,6 +334,7 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
  *   FALSE when the object doesn't have the OBJ, an array otherwise.
  */
 function islandora_video_copy_obj_datastream(AbstractObject $object) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   $mime_detect = new MimeDetect();
   if (!isset($object['OBJ'])) {
     return FALSE;
@@ -313,16 +344,12 @@ function islandora_video_copy_obj_datastream(AbstractObject $object) {
 
   // Create a file object we can save.
   $file_uri = file_create_filename("{$file_name}OBJ.{$ext}", 'temporary://');
-  $file = new stdClass();
-  $file->uri = $file_uri;
-  $file->filename = $file_name;
-  $file->filemime = $object['OBJ']->mimeType;
-  // Temporary.
-  $file->status = 0;
-  $object['OBJ']->getContent($file_uri);
-  $original_file = file_save($file);
+  $copy_uri = drupal_realpath($file_uri);
+  touch($copy_uri);
+  $file = islandora_temp_file_entry($file_uri, $object['OBJ']->mimeType);
+  $object['OBJ']->getContent($file->uri);
   return array(
-    'file' => $original_file,
+    'file' => $file,
     'extension' => $ext,
     'filename' => $file_name,
   );
