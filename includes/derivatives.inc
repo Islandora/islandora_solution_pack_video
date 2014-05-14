@@ -19,6 +19,7 @@
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if ($force || !isset($object['MP4'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
@@ -26,16 +27,55 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.mp4';
-
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
     $command = "$ffmpeg_executable -i $archival_path -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
-    $return_value = FALSE;
-    exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
-    if ($return_value === 0) {
-      return islandora_video_add_datastream($object, 'MP4', $out_file);
+
+    // descriptor array
+    $desc = array(
+      0 => array('pipe', 'r'), // 0 is STDIN for process
+      1 => array('pipe', 'w'), // 1 is STDOUT for process
+      2 => array('file', '/tmp/mp4-error-output.txt', 'a') // 2 is STDERR for process
+    );
+    $process = proc_open($command, $desc, $pipes);
+    $info = proc_get_status($process);
+    $status = $info['exitcode'];
+    if (is_resource($process)) {
+      while ($info = proc_get_status($process) && $info['running']) {
+        try {
+          // Renew the timestamp for $file.
+          file_usage_add($archival_file['file'], 'islandora_video', 'user', 1);
+          sleep(2);
+        }
+        catch (Exception $e) {
+          array(
+            'success' => FALSE,
+            'messages' => array(
+              array(
+                'message' => t('Ffmpeg encoding failed for object @pid - MP4 creation was skipped.'),
+                'message_sub' => array('@pid' => $object->id),
+                'type' => 'watchdog',
+                'severity' => WATCHDOG_ERROR,
+              ),
+            ),
+          );
+        }
+      }
+    }
+    fclose($pipes[0]);
+    fclose($pipes[1]);
+    if (isset($pipes[2])) {
+      fclose($pipes[2]);
+    }
+    // Processing should now be done; clean up the resource.
+    proc_close($process);
+
+    if ($status) {
+      $ret = islandora_video_add_datastream($object, 'MP4', $out_file);
+      file_delete($archival_file['file']);
+      return $ret;
     }
     else {
+      file_delete($archival_file['file']);
       return array(
         'success' => FALSE,
         'messages' => array(
@@ -65,6 +105,7 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if ($force || !isset($object['OGG'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
@@ -72,16 +113,17 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.ogg';
-
     $theora_executable = variable_get('islandora_video_ffmpeg2theora_path', 'ffmpeg2theora');
     $command = "$theora_executable $archival_path -o $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
     if ($return_value === 0) {
-      return islandora_video_add_datastream($object, 'OGG', $out_file);
+      $ret = islandora_video_add_datastream($object, 'OGG', $out_file);
+      file_delete($archival_file['file']);
+      return $ret;
     }
     else {
+      file_delete($archival_file['file']);
       return array(
         'success' => FALSE,
         'messages' => array(
@@ -111,6 +153,7 @@ function islandora_video_create_ogg(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if ($force || !isset($object['MKV'])) {
     $archival_file = islandora_video_copy_obj_datastream($object);
     if ($archival_file === FALSE) {
@@ -119,15 +162,19 @@ function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '.mkv';
 
+    $file_name = drupal_basename($archival_file['file']->uri);
+
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
     $command = "$ffmpeg_executable -i $archival_path $out_file";
     $return_value = FALSE;
     exec($command, $output, $return_value);
-    file_delete($archival_file['file']);
     if ($return_value === 0) {
-      return islandora_video_add_datastream($object, 'MKV', $out_file);
+      $ret = islandora_video_add_datastream($object, 'MKV', $out_file);
+      file_delete($archival_file['file']);
+      return $ret;
     }
     else {
+      file_delete($archival_file['file']);
       return array(
         'success' => FALSE,
         'messages' => array(
@@ -164,11 +211,11 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
     }
     $archival_path = drupal_realpath($archival_file['file']->uri);
     $out_file = $archival_path . '-TN.jpg';
+
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
 
     $vid_length = "$ffmpeg_executable -i $archival_path 2>&1";
     exec($vid_length, $time_output, $ret_value);
-
     $dur_match = FALSE;
     $duration = '';
     foreach ($time_output as $key => $value) {
@@ -189,7 +236,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
 
       $return_value = FALSE;
       exec($tn_creation, $output, $return_value);
-      file_delete($archival_file['file']);
+
       if ($return_value === 0) {
         return islandora_video_add_datastream($object, 'TN', $out_file);
       }
@@ -201,10 +248,12 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
     }
     // Unable to grab duration at the default thunbnail.
     else {
-      file_delete($archival_file['file']);
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
       return islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
     }
+
+    file_delete($archival_file['file']);
+
   }
 }
 
@@ -239,9 +288,6 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
     $ds->setContentFromFile(drupal_realpath($file_uri));
     if ($ingest) {
       $object->ingestDatastream($ds);
-    }
-    if (file_valid_uri($file_uri)) {
-      file_unmanaged_delete($file_uri);
     }
     return array(
       'success' => TRUE,
@@ -287,6 +333,7 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
  *   FALSE when the object doesn't have the OBJ, an array otherwise.
  */
 function islandora_video_copy_obj_datastream(AbstractObject $object) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   $mime_detect = new MimeDetect();
   if (!isset($object['OBJ'])) {
     return FALSE;
@@ -296,16 +343,12 @@ function islandora_video_copy_obj_datastream(AbstractObject $object) {
 
   // Create a file object we can save.
   $file_uri = file_create_filename("{$file_name}OBJ.{$ext}", 'temporary://');
-  $file = new stdClass();
-  $file->uri = $file_uri;
-  $file->filename = $file_name;
-  $file->filemime = $object['OBJ']->mimeType;
-  // Temporary.
-  $file->status = 0;
-  $object['OBJ']->getContent($file_uri);
-  $original_file = file_save($file);
+  $copy_uri = drupal_realpath($file_uri);
+  touch($copy_uri);
+  $file = islandora_temp_file_entry($file_uri, $object['OBJ']->mimeType);
+  $object['OBJ']->getContent($file->uri);
   return array(
-    'file' => $original_file,
+    'file' => $file,
     'extension' => $ext,
     'filename' => $file_name,
   );
