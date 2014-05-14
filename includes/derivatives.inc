@@ -29,7 +29,7 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
     $out_file = $archival_path . '.mp4';
     $ffmpeg_executable = variable_get('islandora_video_ffmpeg_path', 'ffmpeg');
     $command = "$ffmpeg_executable -i $archival_path -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
-    $return_value = FALSE;
+
     dsm($out_file, "outfile");
     //exec($command, $output, $return_value);
 
@@ -39,27 +39,31 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
       1 => array('pipe', 'w'), // 1 is STDOUT for process
       2 => array('file', '/tmp/mp4-error-output.txt', 'a') // 2 is STDERR for process
     );
-   // $pipes = array();
     $process = proc_open($command, $desc, $pipes);
-   // stream_set_blocking($pipes[1], false);
     dsm($process, "Process: ");
     $info = proc_get_status($process);
     if (is_resource($process)) {
       while ($info = proc_get_status($process) && $info['running']) {
         try {
-          //$info = proc_get_status($process);
-//         dsm($info, "info before");
-        // Renew the timestamp for $file.
-         file_usage_add($archival_file['file'], 'islandora_video', 'user', 1);
-         //sleep(2);
-        } catch (Exception $e) {
-          dsm($e, "exception");
+          $info = proc_get_status($process);
+          dsm($info, "info during");
+          // Renew the timestamp for $file.
+          file_usage_add($archival_file['file'], 'islandora_video', 'user', 1);
+          sleep(2);
         }
-
-//         $info = proc_get_status($process);
-//         dsm($info, "info after");
-//         sleep(1);
-        // And check again shortly.
+        catch (Exception $e) {
+          array(
+            'success' => FALSE,
+            'messages' => array(
+              array(
+                'message' => t('Ffmpeg encoding failed for object @pid - MP4 creation was skipped.'),
+                'message_sub' => array('@pid' => $object->id),
+                'type' => 'watchdog',
+                'severity' => WATCHDOG_ERROR,
+              ),
+            ),
+          );
+        }
       }
     }
     fclose($pipes[0]);
@@ -68,9 +72,10 @@ function islandora_video_create_mp4(AbstractObject $object, $force = FALSE) {
       fclose($pipes[2]);
     }
     // Processing should now be done; clean up the resource.
-    $return_value = proc_close($process);
-    dsm($return_value, "stat");
-    if ($return_value === 0) {
+    $status = proc_get_status($process);
+    proc_close($process);
+
+    if ($status['signaled'] === FALSE) {
       $ret = islandora_video_add_datastream($object, 'MP4', $out_file);
       file_delete($archival_file['file']);
       return $ret;
