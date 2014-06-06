@@ -5,6 +5,9 @@
   -moz-border-radius: 5px;
   border-radius: 5px;
   padding: 15px;
+  width: auto;
+  max-width: 100%;
+  float: left;
 }
 
 .islandora-video-content img {
@@ -54,11 +57,6 @@ body.two-sidebars .islandora-video-sidebar {
 }
 
 @media all and (min-width: 768px) {
-
-  body.no-sidebars .islandora-video-content {
-    width: 65%;
-    float: left; /* LTR */
-  }
 
   body.no-sidebars .islandora-video-sidebar {
     padding-left: 20px;
