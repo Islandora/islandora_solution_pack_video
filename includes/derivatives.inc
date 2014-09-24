@@ -236,11 +236,11 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
       $ds = $object[$datastream_id];
     }
     $ds->mimetype = $mime_detector->getMimetype($file_uri);
-    $ds->setContentFromFile(drupal_realpath($file_uri));
+    $ds->setContentFromFile($file_uri);
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    if (file_valid_uri($file_uri)) {
+    if (file_exists($file_uri)) {
       file_unmanaged_delete($file_uri);
     }
     return array(
