@@ -242,7 +242,7 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri, $del
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    if (file_exists($file_uri) && $delete_file) {
+    if (file_exists($file_uri) && $delete_file === TRUE) {
       file_unmanaged_delete($file_uri);
     }
     return array(
