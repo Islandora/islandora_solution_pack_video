@@ -196,14 +196,14 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
       // Unable to generate with Ffmpeg, add default TN.
       else {
         $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
-        return islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
+        return islandora_video_add_datastream($object, 'TN', $stored_thumbnail, FALSE);
       }
     }
     // Unable to grab duration at the default thunbnail.
     else {
       file_delete($archival_file['file']);
       $stored_thumbnail = drupal_get_path('module', 'islandora_video') . '/images/crystal_clear_app_camera.png';
-      return islandora_video_add_datastream($object, 'TN', $stored_thumbnail);
+      return islandora_video_add_datastream($object, 'TN', $stored_thumbnail, FALSE);
     }
   }
 }
@@ -217,13 +217,15 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
  *   The datastream id of the added datastream.
  * @param string $file_uri
  *   A URI to the file containing the content for the datastream.
+ * @param bool $delete_file
+ *   A flag indicating if the file should be deleted after ingest.
  *
  * @return array
  *   An array describing the outcome of the PROXY_MP3 creation.
  *
  * @see hook_islandora_derivative()
  */
-function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
+function islandora_video_add_datastream($object, $datastream_id, $file_uri, $delete_file = TRUE) {
   try {
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
@@ -236,11 +238,11 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
       $ds = $object[$datastream_id];
     }
     $ds->mimetype = $mime_detector->getMimetype($file_uri);
-    $ds->setContentFromFile(drupal_realpath($file_uri));
+    $ds->setContentFromFile($file_uri);
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    if (file_valid_uri($file_uri)) {
+    if ($delete_file && file_exists($file_uri)) {
       file_unmanaged_delete($file_uri);
     }
     return array(
