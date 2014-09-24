@@ -215,15 +215,15 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
  *   The object to add the datasteam to.
  * @param string $datastream_id
  *   The datastream id of the added datastream.
- * @param string $file_path
- *   A path to the file containing the content for the datastream.
+ * @param string $file_uri
+ *   A URI to the file containing the content for the datastream.
  *
  * @return array
  *   An array describing the outcome of the PROXY_MP3 creation.
  *
  * @see hook_islandora_derivative()
  */
-function islandora_video_add_datastream($object, $datastream_id, $file_path) {
+function islandora_video_add_datastream($object, $datastream_id, $file_uri) {
   try {
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
@@ -235,13 +235,13 @@ function islandora_video_add_datastream($object, $datastream_id, $file_path) {
     else {
       $ds = $object[$datastream_id];
     }
-    $ds->mimetype = $mime_detector->getMimetype($file_path);
-    $ds->setContentFromFile($file_path);
+    $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    $ds->setContentFromFile($file_uri);
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    if (file_exists($file_path)) {
-      file_unmanaged_delete($file_path);
+    if (file_exists($file_uri)) {
+      file_unmanaged_delete($file_uri);
     }
     return array(
       'success' => TRUE,
