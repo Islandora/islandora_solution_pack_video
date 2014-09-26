@@ -46,12 +46,6 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
   $video_content_model->owner = 'fedoraAdmin';
   $video_content_model->label = 'Islandora Video Content Model';
   $video_content_model->models = 'fedora-system:ContentModel-3.0';
-  // ISLANDORACM Datastream.
-  $datastream = $video_content_model->constructDatastream('ISLANDORACM', 'X');
-  $datastream->label = 'Islandora content model';
-  $datastream->mimetype = 'text/xml';
-  $datastream->setContentFromFile("$module_path/xml/islandora_video_cmodel.xml", FALSE);
-  $video_content_model->ingestDatastream($datastream);
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $video_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
