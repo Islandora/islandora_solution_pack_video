@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <dsCompositeModel xmlns="info:fedora/fedora-system:def/dsCompositeModel#">
   <dsTypeModel ID="DC">
     <form FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" MIME="text/xml"/>
@@ -26,14 +27,14 @@
   <dsTypeModel ID="TECHMD_FITS" optional="false">
     <form MIME="text/xml"/>
   </dsTypeModel>
-  <dsTypeModel ID="MP4" optional="false">
-    <form MIME="video/mp4"/>
-  </dsTypeModel>
   <dsTypeModel ID="OBJ">
     <form MIME="video/mp4"/>
     <form MIME="video/quicktime"/>
     <form MIME="video/m4v"/>
     <form MIME="video/x-matroska"/>
     <form MIME="video/ogg"/>
+  </dsTypeModel>
+  <dsTypeModel ID="MP4" optional="false">
+    <form MIME="video/mp4"/>
   </dsTypeModel>
 </dsCompositeModel>
