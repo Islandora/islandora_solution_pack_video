@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content_model xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="standard_qt" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
+  <mimetypes>
+    <type>video/quicktime</type>
+    <type>video/mp4</type>
+    <type>audio/mp3</type>
+    <type>audio/x-aiff</type>
+    <type>video/m4v</type>
+    <type>audio/ogg</type>
+    <type>video/ogg</type>
+    <type>video/quicktime</type>
+  </mimetypes>
+  <ingest_rules>
+    <rule>
+      <applies_to>video/quicktime</applies_to>
+      <applies_to>video/mp4</applies_to>
+      <applies_to>audio/mp3</applies_to>
+      <applies_to>audio/x-aiff</applies_to>
+      <applies_to>video/m4v</applies_to>
+      <applies_to>video/ogg</applies_to>
+      <applies_to>audio/ogg</applies_to>
+      <ingest_methods>
+        <ingest_method class="VideoExiftool" dsid="EXIF" file="video_sp.inc" method="extractMetadata" module="islandora_video_sp" modified_files_ext=""/>
+        <ingest_method class="fits" dsid="TECHMD_FITS" file="plugins/fits.inc" method="extractFits" module="fedora_repository" modified_files_ext=""/>
+        <ingest_method class="VideoCreation" dsid="TN" file="video_sp.inc" method="get_thumbnail" module="islandora_video_sp" modified_files_ext="jpg">
+          <parameters>
+            <parameter name="s">92x92</parameter>
+          </parameters>
+        </ingest_method>
+        <ingest_method class="VideoCreation" dsid="PROXY_M4V" file="video_sp.inc" method="createFile" module="islandora_video_sp" modified_files_ext=""/>
+      </ingest_methods>
+    </rule>
+  </ingest_rules>
+  <datastreams>
+    <datastream dsid="OBJ"/>
+    <datastream dsid="MP4">
+      <display_method class="IslandoraVideoPlayer" file="video_viewer.inc" method="showM4V" module="islandora_video_sp"/>
+    </datastream>
+    <datastream dsid="OBJ_EXIFTOOL"/>
+    <datastream dsid="TECHMD_FITS"/>
+    <datastream dsid="MP4"/>
+    <datastream dsid="MKV"/>
+    <datastream dsid="OGG"/>
+    <datastream dsid="TN"/>
+    <datastream dsid="FULL_SIZE"/>
+  </datastreams>
+</content_model>
