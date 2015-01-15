@@ -12,14 +12,13 @@ This module requires the following modules/libraries:
 
 * [Islandora](https://github.com/islandora/islandora)
 * [Tuque](https://github.com/islandora/tuque)
-* FFmpeg - Compliation guides: [Ubuntu](http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide
-), [CentOS](https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide).
-* ffmpeg2theora (optional) - [Instructions](https://wiki.duraspace.org/display/ISLANDORA6122/Chapter+12+-+Installing+Solution+Pack+Dependencies)
+* FFmpeg - Compliation guides: [Ubuntu](https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
+), [CentOS](http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide).
+* ffmpeg2theora (optional) - [Instructions](https://wiki.duraspace.org/display/ISLANDORA714/Chapter+12+-+Installing+Solution+Pack+Dependencies)
 
-FFmpeg version 1.1.1 has been tested. It can be downloaded [here](http://www.ffmpeg.org/releases/ffmpeg-1.1.1.tar.gz)
+FFmpeg version 1.1.4 has been tested. It can be downloaded [here](http://www.ffmpeg.org/releases/ffmpeg-1.1.4.tar.gz)
 
-**NOTE**: remove the `--enable-x11grab` flag on the ffmpeg configure.
-
+Sample compile flags: ` --prefix=/usr/local/stow/ffmpeg-1.1.4 --enable-gpl --enable-version3 --enable-nonfree --enable-postproc --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libdc1394 --enable-libfaac --enable-libgsm --enable-libmp3lame --enable-libopenjpeg --enable-libschroedinger --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libxvid`
 
 ## Installation
 

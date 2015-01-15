@@ -46,12 +46,6 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
   $video_content_model->owner = 'fedoraAdmin';
   $video_content_model->label = 'Islandora Video Content Model';
   $video_content_model->models = 'fedora-system:ContentModel-3.0';
-  // ISLANDORACM Datastream.
-  $datastream = $video_content_model->constructDatastream('ISLANDORACM', 'X');
-  $datastream->label = 'Islandora content model';
-  $datastream->mimetype = 'application/xml';
-  $datastream->setContentFromFile("$module_path/xml/islandora_video_cmodel.xml", FALSE);
-  $video_content_model->ingestDatastream($datastream);
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $video_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
@@ -165,7 +159,7 @@ function islandora_video_islandora_sp_videoCModel_islandora_derivative() {
       'file' => drupal_get_path('module', 'islandora_video') . '/includes/derivatives.inc',
     );
   }
-  if (variable_get('islandora_video_make_ogg_locally', TRUE)) {
+  if (variable_get('islandora_video_make_ogg_locally', FALSE)) {
     $derivatives[] = array(
       'source_dsid' => 'OBJ',
       'destination_dsid' => 'OGG',
