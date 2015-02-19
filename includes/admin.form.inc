@@ -63,11 +63,11 @@ function islandora_video_admin(array $form, array &$form_state) {
   $form['islandora_video_mp4_audio_codec'] = array(
     '#type' => 'textfield',
     '#title' => t('MP4 audio codec'),
-    '#description' => t("Defaults to FFmpeg's built-in aac encoder. To use a non-free codec (such as libfdk_aac or libfaac), ffmpeg on your server must have been compiled from source with that encoder enabled. See !FFMPEG for more info.",
+    '#description' => t("Defaults to libfaac, a non-free encoder. Ffmpeg must have been compiled from source with that encoder enabled. See !FFMPEG for more info.",
       array(
         '!FFMPEG' => l(t("FFmpeg's AAC encoding guide"), 'https://trac.ffmpeg.org/wiki/Encode/AAC'),
       )),
-    '#default_value' => variable_get('islandora_video_mp4_audio_codec', 'aac'),
+    '#default_value' => variable_get('islandora_video_mp4_audio_codec', 'libfaac'),
   );
 
   // Theora configuration.
@@ -131,11 +131,11 @@ function islandora_video_admin_validate($form, &$form_state) {
     $command = 'ffmpeg -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
     exec($command, $output, $ret);
     if (!$output) {
-      form_set_error('', 'The selected MP4 codec was not found in ffmpeg. Try aac or enable the desired codec.');
+      form_set_error('', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
     }
     $form_state['values']['islandora_video_mp4_audio_codec'] = $safe_value;
   }
   else {
-    $form_state['values']['islandora_video_mp4_audio_codec'] = 'aac';
+    $form_state['values']['islandora_video_mp4_audio_codec'] = 'libfaac';
   }
 }
