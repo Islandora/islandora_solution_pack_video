@@ -4,7 +4,7 @@
 
 Adds all required Fedora objects to allow users to ingest and retrieve video files through the Islandora interface
 
-**This module requires libfaac. Libfaac is not free for commercial use.**
+**This module uses libfaac by default. Libfaac is not free for commercial use.** This setting can be changed in the configuration options.
 
 ## Requirements
 

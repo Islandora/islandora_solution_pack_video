@@ -60,6 +60,15 @@ function islandora_video_admin(array $form, array &$form_state) {
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_mp4_locally', TRUE),
   );
+  $form['islandora_video_mp4_audio_codec'] = array(
+    '#type' => 'textfield',
+    '#title' => t('MP4 audio codec'),
+    '#description' => t("Defaults to libfaac, a non-free encoder. Ffmpeg must have been compiled from source with that encoder enabled. See !FFMPEG for more info.",
+      array(
+        '!FFMPEG' => l(t("FFmpeg's AAC encoding guide"), 'https://trac.ffmpeg.org/wiki/Encode/AAC'),
+      )),
+    '#default_value' => variable_get('islandora_video_mp4_audio_codec', 'libfaac'),
+  );
 
   // Theora configuration.
   $form['islandora_video_make_ogg_locally'] = array(
@@ -102,6 +111,31 @@ function islandora_video_admin_submit($form, &$form_state) {
       variable_del('islandora_video_make_mp4_locally');
       variable_del('islandora_video_make_ogg_locally');
       variable_del('islandora_video_ffmpeg2theora_path');
+      variable_del('islandora_video_mp4_audio_codec');
       break;
+  }
+}
+
+/**
+ * Form validation ensuring the selected ffmpeg options are available.
+ */
+function islandora_video_admin_validate($form, &$form_state) {
+  // Ensure the mp4 audio codec is enabled.
+  $raw_value = $form_state['values']['islandora_video_mp4_audio_codec'];
+  if ($raw_value) {
+    if (preg_match('/[^0-9a-zA-Z_-]/', $raw_value) === 1) {
+      form_set_error('', "The value entered for MP4 audio codec contains forbidden characters.");
+      return;
+    }
+    $safe_value = strtolower(trim($raw_value));
+    $command = 'ffmpeg -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
+    exec($command, $output, $ret);
+    if (!$output) {
+      form_set_error('', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
+    }
+    $form_state['values']['islandora_video_mp4_audio_codec'] = $safe_value;
+  }
+  else {
+    $form_state['values']['islandora_video_mp4_audio_codec'] = 'libfaac';
   }
 }
