@@ -238,7 +238,9 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri, $del
     else {
       $ds = $object[$datastream_id];
     }
-    $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    if ($ds->mimetype != $mime_detector->getMimetype($file_uri)) {
+      $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    }
     $ds->setContentFromFile($file_uri);
     if ($ingest) {
       $object->ingestDatastream($ds);
