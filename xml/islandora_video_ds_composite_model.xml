@@ -38,5 +38,7 @@
     <form MIME="video/m4v"/>
     <form MIME="video/x-matroska"/>
     <form MIME="video/ogg"/>
+    <form MIME="video/x-msvideo"/>
+    <form MIME="video/avi"/>
   </dsTypeModel>
 </dsCompositeModel>
