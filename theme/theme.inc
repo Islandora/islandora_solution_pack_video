@@ -38,6 +38,11 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
   $variables['description'] = islandora_retrieve_description_markup($object);
 
   $viewer_dsid = 'MP4';
+
+  if (!$object['MP4'] && $object['OBJ'] && $object['OBJ']->mimetype == 'video/mp4') {
+    $viewer_dsid = 'OBJ';
+  }
+
   $mime = 'video/mp4';
 
   $video_params = array(
