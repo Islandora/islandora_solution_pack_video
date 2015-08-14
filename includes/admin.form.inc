@@ -94,6 +94,20 @@ function islandora_video_admin(array $form, array &$form_state) {
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
     '#default_value' => variable_get('islandora_video_make_thumbnail_locally', TRUE),
   );
+  // Fallback to OBJ datastream
+  $form['islandora_video_play_obj'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Play OBJ datastream if MP4 is not present'),
+    '#description' => t('Check this box to use the OBJ datastream in the viewer (configured above) if the MP4 datastream is not present and the OBJ datastream has mimetype video/mp4.'),
+    '#default_value' => variable_get('islandora_video_play_obj', TRUE),
+  );
+  $form['islandora_video_max_obj_size'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum file size for playing OBJ (in MB)'),
+    '#description' => t("Set a maximum size (in megabytes) for sending the OBJ datastream to the player."),
+    '#default_value' => variable_get('islandora_video_max_obj_size', '500'),
+  );
+
   return system_settings_form($form);
 }
 
