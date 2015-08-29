@@ -144,7 +144,7 @@ function islandora_video_admin_validate($form, &$form_state) {
       return;
     }
     $safe_value = strtolower(trim($raw_value));
-    $command = 'ffmpeg -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
+    $command = variable_get('islandora_video_ffmpeg_path', 'ffmpeg') . ' -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
     exec($command, $output, $ret);
     if (!$output) {
       form_set_error('', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
