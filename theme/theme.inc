@@ -38,6 +38,18 @@ function islandora_video_preprocess_islandora_video(array &$variables) {
   $variables['description'] = islandora_retrieve_description_markup($object);
 
   $viewer_dsid = 'MP4';
+
+  if (!$object['MP4']) {
+    if (variable_get('islandora_video_play_obj', TRUE)) {
+      if ($object['OBJ'] && $object['OBJ']->mimetype == 'video/mp4') {
+        $max_file_size = ((int) variable_get('islandora_video_max_obj_size', 500)) * 1024 * 1024;
+        if ($object['OBJ']->size < $max_file_size) {
+          $viewer_dsid = 'OBJ';
+        }
+      }
+    }
+  }
+
   $mime = 'video/mp4';
 
   $video_params = array(

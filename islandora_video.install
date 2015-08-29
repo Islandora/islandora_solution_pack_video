@@ -29,6 +29,8 @@ function islandora_video_uninstall() {
     'islandora_video_make_ogg_locally',
     'islandora_video_ffmpeg2theora_path',
     'islandora_video_mp4_audio_codec',
+    'islandora_video_play_obj',
+    'islandora_video_max_obj_size',
   );
   array_map('variable_del', $variables);
   islandora_install_solution_pack('islandora_video', 'uninstall');
