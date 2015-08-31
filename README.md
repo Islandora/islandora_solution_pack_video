@@ -30,6 +30,10 @@ Set the path for `ffmpeg`, select configuration options and viewer in Administra
 
 ![Configuration](https://raw.githubusercontent.com/wiki/Islandora/islandora_solution_pack_video/images/islandora_video_config.png)
 
+## Documentation
+
+Further documentation for this module is available at [our wiki](https://wiki.duraspace.org/display/ISLANDORA/Video+Solution+Pack).
+
 ## Troubleshooting/Issues
 
 Having problems or solved a problem? Check out the Islandora google groups for a solution.
@@ -45,7 +49,7 @@ Current maintainers:
 
 ## Development
 
-If you would like to contribute to this module, please check out our helpful [Documentation for Developers](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers) info, as well as our [Developers](http://islandora.ca/developers) section on the Islandora.ca site.
+If you would like to contribute to this module, please check out [CONTRIBUTING.md](CONTRIBUTING.md). In addition, we have helpful [Documentation for Developers](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers) info, as well as our [Developers](http://islandora.ca/developers) section on the [Islandora.ca](http://islandora.ca) site.
 
 The Video Solution Pack includes an ingest/purge load test that is disabled and unusable by default. This particular solution pack was chosen for load testing due to the resource-heavy process of creating video derivatives and ingesting several potentially-massive files. To enable and use it:
 
