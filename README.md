@@ -14,7 +14,7 @@ This module requires the following modules/libraries:
 * [Tuque](https://github.com/islandora/tuque)
 * FFmpeg - Compliation guides: [Ubuntu](https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
 ), [CentOS](http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide).
-* ffmpeg2theora (optional) - [Instructions](https://wiki.duraspace.org/display/ISLANDORA714/Chapter+12+-+Installing+Solution+Pack+Dependencies)
+* [ffmpeg2theora](http://v2v.cc/~j/ffmpeg2theora/) (optional)
 
 FFmpeg version 1.1.4 has been tested. It can be downloaded [here](http://www.ffmpeg.org/releases/ffmpeg-1.1.4.tar.gz)
 
