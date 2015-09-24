@@ -32,7 +32,7 @@
   <dsTypeModel ID="MP4" optional="false">
     <form MIME="video/mp4"/>
   </dsTypeModel>
-  <dsTypeModel ID="OBJ">
+  <dsTypeModel ID="OBJ" optional="true">
     <form MIME="video/mp4"/>
     <form MIME="video/quicktime"/>
     <form MIME="video/m4v"/>
