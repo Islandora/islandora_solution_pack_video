@@ -5,7 +5,8 @@
  * This is the template file for the object page for video
  *
  * Available variables:
- * - $islandora_object: The Islandora object rendered in this template file
+ * - $islandora_content: The rendered output of the viewer configured for
+ *   this module.
  * - $islandora_dublin_core: The DC datastream object
  * - $dc_array: The DC datastream object values as a sanitized array. This
  *   includes label, value and class name.
