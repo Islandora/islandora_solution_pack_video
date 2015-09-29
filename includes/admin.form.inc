@@ -143,8 +143,9 @@ function islandora_video_admin_validate($form, &$form_state) {
       form_set_error('', "The value entered for MP4 audio codec contains forbidden characters.");
       return;
     }
+    $ffmpeg = ($form_state['values']['islandora_video_ffmpeg_path'] !== variable_get('islandora_video_ffmpeg_path', 'ffmpeg') ? $form_state['values']['islandora_video_ffmpeg_path'] : variable_get('islandora_video_ffmpeg_path', 'ffmpeg'));
     $safe_value = strtolower(trim($raw_value));
-    $command = variable_get('islandora_video_ffmpeg_path', 'ffmpeg') . ' -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
+    $command = $ffmpeg . ' -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
     exec($command, $output, $ret);
     if (!$output) {
       form_set_error('', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
