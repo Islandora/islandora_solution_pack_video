@@ -45,7 +45,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 ## Maintainers/Sponsors
 Current maintainers:
 
-* [Nick Ruest](https://github.com/ruebot)
+* [Jordan Dukart](https://github.com/jordandukart)
 
 ## Development
 
