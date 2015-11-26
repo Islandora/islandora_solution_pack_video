@@ -19,10 +19,12 @@
 function islandora_video_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $extensions = array('ogg mp4 mov qt m4v avi mkv');
+  $upload_required = variable_get('islandora_require_obj_upload', TRUE);
   return array(
     'file' => array(
       '#title' => t('Video'),
       '#type' => 'managed_file',
+      '#required' => $upload_required,
       '#description' => t('Select video to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $extensions[0])),
       '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
       '#upload_location' => 'temporary://',
