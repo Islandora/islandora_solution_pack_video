@@ -12,6 +12,15 @@
   <dsTypeModel ID="MODS" optional="true">
     <form FORMAT_URI="http://www.loc.gov/mods/v3" MIME="application/xml"/>
   </dsTypeModel>
+  <dsTypeModel ID="OBJ" optional="true">
+    <form MIME="video/mp4"/>
+    <form MIME="video/quicktime"/>
+    <form MIME="video/m4v"/>
+    <form MIME="video/x-matroska"/>
+    <form MIME="video/ogg"/>
+    <form MIME="video/x-msvideo"/>
+    <form MIME="video/avi"/>
+  </dsTypeModel>
   <dsTypeModel ID="TECHMD">
     <form MIME="application/xml"/>
   </dsTypeModel>
@@ -31,14 +40,5 @@
   </dsTypeModel>
   <dsTypeModel ID="MP4" optional="false">
     <form MIME="video/mp4"/>
-  </dsTypeModel>
-  <dsTypeModel ID="OBJ" optional="true">
-    <form MIME="video/mp4"/>
-    <form MIME="video/quicktime"/>
-    <form MIME="video/m4v"/>
-    <form MIME="video/x-matroska"/>
-    <form MIME="video/ogg"/>
-    <form MIME="video/x-msvideo"/>
-    <form MIME="video/avi"/>
   </dsTypeModel>
 </dsCompositeModel>
