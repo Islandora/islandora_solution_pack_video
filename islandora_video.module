@@ -82,9 +82,9 @@ function islandora_video_islandora_required_objects(IslandoraTuque $connection) 
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_forms().
+ * Implements hook_xml_form_builder_forms().
  */
-function islandora_video_islandora_xml_form_builder_forms() {
+function islandora_video_xml_form_builder_forms() {
   $module_path = drupal_get_path('module', 'islandora_video');
   return array(
     'Video MODS form' => array(
@@ -94,9 +94,9 @@ function islandora_video_islandora_xml_form_builder_forms() {
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_form_associations().
+ * Implements hook_xml_form_builder_form_associations().
  */
-function islandora_video_islandora_xml_form_builder_form_associations() {
+function islandora_video_xml_form_builder_form_associations() {
   return array(
     'islandora_video_mods_form' => array(
       'content_model' => 'islandora:sp_videoCModel',
