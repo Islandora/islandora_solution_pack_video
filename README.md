@@ -28,7 +28,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 Set the path for `ffmpeg`, select configuration options and viewer in Administration » Islandora » Solution Pack Configuration » Video Solution Pack (admin/islandora/solution_pack_config/video).
 
-![Configuration](https://raw.githubusercontent.com/wiki/Islandora/islandora_solution_pack_video/images/islandora_video_config.png)
+![Configuration](https://cloud.githubusercontent.com/assets/1943338/19574828/4ff6559e-96e2-11e6-9453-6cb4fb019245.png)
 
 ## Documentation
 
