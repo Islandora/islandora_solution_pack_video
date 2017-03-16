@@ -1,3 +1,4 @@
+sudo: required
 language: php
 php:
   - 5.3.3
@@ -26,11 +27,14 @@ before_install:
   - sudo sh $TRAVIS_BUILD_DIR/tests/scripts/ffmpeg-install.sh
   - drush en --user=1 --yes islandora_basic_collection
   - drush en --user=1 --yes islandora_video
+before_script:
+  # Mysql might time out for long tests, increase the wait timeout.
+  - mysql -e 'SET @@GLOBAL.wait_timeout=1200'
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_video/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_video
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
-  - drush test-run --uri=http://localhost:8081 "Islandora Video"
+  - php scripts/run-tests.sh --php `phpenv which php` --url http://localhost:8081 --verbose "Islandora Video"
 notifications:
   irc: "irc.freenode.org#islandora"
