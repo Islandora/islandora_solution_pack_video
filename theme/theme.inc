@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements template_preprocess().
+ * Implements template_preprocess_hook().
  */
 function template_preprocess_islandora_video(array &$variables) {
   module_load_include('inc', 'islandora', 'includes/datastream');
