@@ -35,6 +35,9 @@
   <dsTypeModel ID="MKV" optional="false">
     <form MIME="video/x-matroska"/>
   </dsTypeModel>
+  <dsTypeModel ID="MKV" optional="false">
+    <form MIME="video/x-matroska"/>
+  </dsTypeModel>
   <dsTypeModel ID="TECHMD_FITS" optional="false">
     <form MIME="application/xml"/>
   </dsTypeModel>
