@@ -45,7 +45,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 ## Maintainers/Sponsors
 Current maintainers:
 
-* [Rosie Le Faive](https://github.com/rosiel)
+* [Jonathan Green](https://github.com/jonathangreen)
 
 ## Development
 
