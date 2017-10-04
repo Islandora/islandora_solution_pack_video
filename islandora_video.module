@@ -183,3 +183,14 @@ function islandora_video_islandora_sp_videoCModel_islandora_derivative() {
   }
   return $derivatives;
 }
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ */
+function islandora_video_file_mimetype_mapping_alter(&$mapping) {
+  // Make sure the mapping is sensible for video/mp4 by removing
+  // it from array and adding it to end so it has priority.
+  $code = $mapping['extensions']['mp4'];
+  unset($mapping['extensions']['mp4']);
+  $mapping['extensions']['mp4'] = $code;
+}
