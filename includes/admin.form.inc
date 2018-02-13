@@ -32,14 +32,6 @@ function islandora_video_admin(array $form, array &$form_state) {
     '#submit' => array('islandora_video_admin_submit'),
   );
 
-  // Misc config.
-  $form['islandora_video_retain_original'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Keep original file after ingest'),
-    '#description' => t('Stores the originally uploaded video file for archival purposes.'),
-    '#default_value' => variable_get('islandora_video_retain_original', TRUE),
-  );
-
   // FFMPEG configuration.
   $form['islandora_video_ffmpeg_path'] = array(
     '#type' => 'textfield',
@@ -120,7 +112,6 @@ function islandora_video_admin_submit($form, &$form_state) {
     case 'edit-reset':
       variable_del('islandora_video_viewers');
       variable_del('islandora_video_ffmpeg_path');
-      variable_del('islandora_video_retain_original');
       variable_del('islandora_video_make_archive');
       variable_del('islandora_video_make_mp4_locally');
       variable_del('islandora_video_make_ogg_locally');
