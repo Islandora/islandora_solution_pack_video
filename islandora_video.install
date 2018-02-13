@@ -23,7 +23,6 @@ function islandora_video_uninstall() {
   $variables = array(
     'islandora_video_viewers',
     'islandora_video_ffmpeg_path',
-    'islandora_video_retain_original',
     'islandora_video_make_archive',
     'islandora_video_make_mp4_locally',
     'islandora_video_make_ogg_locally',
@@ -47,4 +46,13 @@ function islandora_video_update_7100(&$sandbox) {
   It previously existed as an access derivative for viewing in certain browsers. MP4 appears to be the standard now. As such,
   the OGG datastream is now an optional derivative. If you would like to remove the OGG derivatives from existing
   video objects you can run the associated command in the Drush script with the module.'), 'warning');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Deletes the unused legacy variable islandora_video_retain_original.
+ */
+function islandora_video_update_7101(&$sandbox) {
+  variable_del('islandora_video_retain_original');
 }
