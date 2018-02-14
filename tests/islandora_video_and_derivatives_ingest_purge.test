@@ -49,7 +49,6 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
 
     // Ensures derivative creation is turned on.
     $edit = array(
-      'islandora_video_retain_original' => TRUE,
       'islandora_video_make_archive' => TRUE,
       'islandora_video_make_mp4_locally' => TRUE,
       'islandora_video_make_ogg_locally' => TRUE,

@@ -48,7 +48,6 @@ class IslandoraVideoIngestTestCase extends IslandoraCollectionWebTestCase {
 
     // Ensures derivative creation is turned off.
     $edit = array(
-      'islandora_video_retain_original' => FALSE,
       'islandora_video_make_archive' => FALSE,
       'islandora_video_make_mp4_locally' => FALSE,
       'islandora_video_make_ogg_locally' => FALSE,
