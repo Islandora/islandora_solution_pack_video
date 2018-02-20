@@ -60,6 +60,11 @@ function islandora_video_admin(array $form, array &$form_state) {
         '!FFMPEG' => l(t("FFmpeg's AAC encoding guide"), 'https://trac.ffmpeg.org/wiki/Encode/AAC'),
       )),
     '#default_value' => variable_get('islandora_video_mp4_audio_codec', 'libfaac'),
+    '#states' => array(
+      'invisible' => array(
+        ':input[name="islandora_video_make_mp4_locally"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
   // Theora configuration.
@@ -127,23 +132,25 @@ function islandora_video_admin_submit($form, &$form_state) {
  * Form validation ensuring the selected ffmpeg options are available.
  */
 function islandora_video_admin_validate($form, &$form_state) {
-  // Ensure the mp4 audio codec is enabled.
-  $raw_value = $form_state['values']['islandora_video_mp4_audio_codec'];
-  if ($raw_value) {
-    if (preg_match('/[^0-9a-zA-Z_-]/', $raw_value) === 1) {
-      form_set_error('', "The value entered for MP4 audio codec contains forbidden characters.");
-      return;
+  // Ensure the mp4 audio codec is present if MP4 derivative is enabled.
+  if ($form_state['values']['islandora_video_make_mp4_locally'] == 1) {
+    $raw_value = $form_state['values']['islandora_video_mp4_audio_codec'];
+    if ($raw_value) {
+      if (preg_match('/[^0-9a-zA-Z_-]/', $raw_value) === 1) {
+        form_set_error('islandora_video_mp4_audio_codec', "The value entered for MP4 audio codec contains forbidden characters.");
+        return;
+      }
+      $ffmpeg = ($form_state['values']['islandora_video_ffmpeg_path'] !== variable_get('islandora_video_ffmpeg_path', 'ffmpeg') ? $form_state['values']['islandora_video_ffmpeg_path'] : variable_get('islandora_video_ffmpeg_path', 'ffmpeg'));
+      $safe_value = strtolower(trim($raw_value));
+      $command = $ffmpeg . ' -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
+      exec($command, $output, $ret);
+      if (!$output) {
+        form_set_error('islandora_video_mp4_audio_codec', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
+      }
+      $form_state['values']['islandora_video_mp4_audio_codec'] = $safe_value;
     }
-    $ffmpeg = ($form_state['values']['islandora_video_ffmpeg_path'] !== variable_get('islandora_video_ffmpeg_path', 'ffmpeg') ? $form_state['values']['islandora_video_ffmpeg_path'] : variable_get('islandora_video_ffmpeg_path', 'ffmpeg'));
-    $safe_value = strtolower(trim($raw_value));
-    $command = $ffmpeg . ' -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
-    exec($command, $output, $ret);
-    if (!$output) {
-      form_set_error('', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
+    else {
+      $form_state['values']['islandora_video_mp4_audio_codec'] = 'libfaac';
     }
-    $form_state['values']['islandora_video_mp4_audio_codec'] = $safe_value;
-  }
-  else {
-    $form_state['values']['islandora_video_mp4_audio_codec'] = 'libfaac';
   }
 }
