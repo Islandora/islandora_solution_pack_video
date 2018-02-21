@@ -133,7 +133,7 @@ function islandora_video_admin_submit($form, &$form_state) {
  */
 function islandora_video_admin_validate($form, &$form_state) {
   // Ensure the mp4 audio codec is present if MP4 derivative is enabled.
-  if ($form_state['values']['islandora_video_make_mp4_locally'] == 1) {
+  if ($form_state['values']['islandora_video_make_mp4_locally'] == TRUE) {
     $raw_value = $form_state['values']['islandora_video_mp4_audio_codec'];
     if ($raw_value) {
       if (preg_match('/[^0-9a-zA-Z_-]/', $raw_value) === 1) {
