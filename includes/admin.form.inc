@@ -39,10 +39,10 @@ function islandora_video_admin(array $form, array &$form_state) {
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );
-  $description = t("When Off (default), only the MP4 datastream will be played in a viewer (if a viewer is configured above). With this box checked, the uploaded file (OBJ datastream) will be played if: ");
+  $description = t("When Off (default), only the MP4 datastream will be played in a viewer (if a viewer is configured above). With this box checked, the uploaded file (OBJ datastream) will be played if:");
   $description .= '<ul><li>' . t('the MP4 datastream is not present') . '</li>';
   $description .= '<li>' . t('the OBJ datastream has mimetype video/mp4') . '</li>';
-  $description .= '<li>' . t('the OBJ datastream is smaller than the size configured below: ') . '</li></ul>';
+  $description .= '<li>' . t('the OBJ datastream is smaller than the size configured below:') . '</li></ul>';
   $form['playback']['islandora_video_play_obj'] = array(
     '#type' => 'checkbox',
     '#title' => t('Play OBJ datastream in viewer'),
