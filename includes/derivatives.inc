@@ -153,7 +153,7 @@ function islandora_video_create_mkv(AbstractObject $object, $force = FALSE) {
  *   Whether derivative generation is being forced or not.
  *
  * @return array
- *   An array describing the outcome of the MKV creation.
+ *   An array describing the outcome of the TN creation.
  *
  * @see hook_islandora_derivative()
  */
@@ -184,6 +184,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
       // Snip off the ms because we don't care about them.
       $time_val = preg_replace('/\.(.*)/', '', $duration);
       $time_array = explode(':', $time_val);
+      // Calculate the number of seconds halfway through the video.
       $output_time = floor((($time_array[0] * 360) + ($time_array[1] * 60) + $time_array[2]) / 2);
 
       $tn_creation = "$ffmpeg_executable -itsoffset -2 -ss $output_time -i $archival_path -vcodec mjpeg -vframes 1 -an -f rawvideo $out_file";
