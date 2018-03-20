@@ -140,14 +140,30 @@ function islandora_video_admin_validate($form, &$form_state) {
         form_set_error('islandora_video_mp4_audio_codec', "The value entered for MP4 audio codec contains forbidden characters.");
         return;
       }
+      // Lower-case the value because all codecs in ffmpeg are lower case.
+      $codec = strtolower(trim($raw_value));
+      $form_state['values']['islandora_video_mp4_audio_codec'] = $codec;
+
+      // Test that FFMPEG path is valid.
       $ffmpeg = ($form_state['values']['islandora_video_ffmpeg_path'] !== variable_get('islandora_video_ffmpeg_path', 'ffmpeg') ? $form_state['values']['islandora_video_ffmpeg_path'] : variable_get('islandora_video_ffmpeg_path', 'ffmpeg'));
-      $safe_value = strtolower(trim($raw_value));
-      $command = $ffmpeg . ' -encoders 2>/dev/null | grep "^ ...... ' . $safe_value . ' "';
-      exec($command, $output, $ret);
-      if (!$output) {
-        form_set_error('islandora_video_mp4_audio_codec', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
+      if (preg_match('/[^0-9a-zA-Z\\/\\\\_-]/', $ffmpeg) === 1) {
+        form_set_error('islandora_video_ffmpeg_path', "The value entered for FFmpeg path contains forbidden characters.");
+        return;
       }
-      $form_state['values']['islandora_video_mp4_audio_codec'] = $safe_value;
+      $command = $ffmpeg . ' -version';
+      exec($command, $output, $ret);
+      if ($ret !== 0) {
+        form_set_error('islandora_video_ffmpeg_path', "FFmpeg was not found. A valid FFmpeg path is required if MP4 derivative generation is enabled.");
+      }
+      else {
+        // Test that the specified codec is present.
+        unset($output);
+        $command = $ffmpeg . ' -encoders 2>/dev/null | grep "^ ...... ' . $codec . ' "';
+        exec($command, $output, $ret);
+        if (!$output) {
+          form_set_error('islandora_video_mp4_audio_codec', 'The selected MP4 codec was not found in ffmpeg. Try using aac or enable the desired codec.');
+        }
+      }
     }
     else {
       $form_state['values']['islandora_video_mp4_audio_codec'] = 'libfaac';
