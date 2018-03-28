@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Adds all required Fedora objects to allow users to ingest and retrieve video files through the Islandora interface
-
-**This module uses libfaac by default. Libfaac is not free for commercial use.** This setting can be changed in the configuration options.
+A framework for ingesting and retrieving video objects in Islandora. Currently supports videos with the following extensions:
+`mp4`, `mov`, `qt`, `m4v`, `avi`, `mkv`, `ogg`. A viewer module, such as
+[Islandora Video.js](https://github.com/islandora/islandora_videojs), may be enabled to play compatible videos.
 
 ## Requirements
 
@@ -12,23 +12,35 @@ This module requires the following modules/libraries:
 
 * [Islandora](https://github.com/islandora/islandora)
 * [Tuque](https://github.com/islandora/tuque)
-* FFmpeg - Compliation guides: [Ubuntu](https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
-), [CentOS](http://ffmpeg.org/trac/ffmpeg/wiki/CentosCompilationGuide).
-* [ffmpeg2theora](http://v2v.cc/~j/ffmpeg2theora/) (optional)
+* FFmpeg (if creating derivatives locally) - see below for details.
+* [ffmpeg2theora](http://v2v.cc/~j/ffmpeg2theora/) (if creating OGG derivatives)
 
-FFmpeg version 1.1.4 has been tested. It can be downloaded [here](http://www.ffmpeg.org/releases/ffmpeg-1.1.4.tar.gz)
+### Installing FFmpeg and AAC Encoders
 
-Sample compile flags: ` --prefix=/usr/local/stow/ffmpeg-1.1.4 --enable-gpl --enable-version3 --enable-nonfree --enable-postproc --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libdc1394 --enable-libfaac --enable-libgsm --enable-libmp3lame --enable-libopenjpeg --enable-libschroedinger --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libxvid`
+FFmpeg is a command-line video-processing library, required to create TN, MP4, and MKV derivatives.
+This module has been tested with FFmpeg version 1.1.4. It can be downloaded
+[here](http://www.ffmpeg.org/releases/ffmpeg-1.1.4.tar.gz)
+
+To support the creation of MP4 files, FFmpeg needs an [AAC encoder](https://trac.ffmpeg.org/wiki/Encode/AAC).
+For legacy reasons, this module uses `libfaac` by default. **Libfaac is not free for commercial use**. Alternate encoders
+(such as `libfdk_aac`) may be set in the configuration options. However, due to license restrictions, the mentioned encoders
+are not bundled with FFmpeg and must be enabled when FFmpeg is compiled from source.
+
+Compilation guides:
+* [Ubuntu](https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu)
+* [CentOS](https://trac.ffmpeg.org/wiki/CompilationGuide/Centos)
+
+Sample compile flags: ` --prefix=/usr/local/stow/ffmpeg-1.1.4 --enable-gpl --enable-version3 --enable-nonfree --enable-postproc --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libdc1394 --enable-libfaac --enable-libgsm --enable-libmp3lame --enable-libopenjpeg --enable-libschroedinger --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libxvid --enable-libfdk-aac`
 
 ## Installation
 
-Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
+Install as usual, see [this](https://www.drupal.org/docs/7/extend/installing-modules) for further information.
 
 ## Configuration
 
-Set the path for `ffmpeg`, select configuration options and viewer in Administration » Islandora » Solution Pack Configuration » Video Solution Pack (admin/islandora/solution_pack_config/video).
+Configure this module, including which (if any) derivatives to create, and which (if any) viewer to use at Administration » Islandora » Solution Pack Configuration » Video Solution Pack (admin/islandora/solution_pack_config/video).
 
-![Configuration](https://user-images.githubusercontent.com/1943338/36169050-7a1f70ca-10d1-11e8-9516-b8f3fe3cfe1f.png)
+![Configuration](https://user-images.githubusercontent.com/1943338/36505613-7a3df7a2-172a-11e8-8ad0-0c26859ccebc.png)
 
 ## Documentation
 
@@ -51,9 +63,11 @@ Current maintainers:
 
 If you would like to contribute to this module, please check out [CONTRIBUTING.md](CONTRIBUTING.md). In addition, we have helpful [Documentation for Developers](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers) info, as well as our [Developers](http://islandora.ca/developers) section on the [Islandora.ca](http://islandora.ca) site.
 
+### Load Testing
+
 The Video Solution Pack includes an ingest/purge load test that is disabled and unusable by default. This particular solution pack was chosen for load testing due to the resource-heavy process of creating video derivatives and ingesting several potentially-massive files. To enable and use it:
 
-1. Make sure that the Testing module is enabled and that all prerequisites for derivative creation are satisfied for the Video Solution Pack.
+1. Make sure that the [Testing](https://www.drupal.org/docs/7/testing/testing-module) module is enabled and that all prerequisites for derivative creation are satisfied for the Video Solution Pack.
 2. Edit the islandora_video.info file in this folder, removing the ; and whitespace before the line `files[] = tests/islandora_video_load_test.test`
 3. Create a folder in the `tests/fixtures/` called `load`, and place as many videos in that folder as you would like to ingest. These files all must fit within the size specified by your php.ini file's maximum post size, and they must have a file extension supported by the Video Solution Pack, otherwise they will not be picked up by the load test.
 4. Clear the Drupal cache.
