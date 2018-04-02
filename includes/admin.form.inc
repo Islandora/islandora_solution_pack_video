@@ -109,7 +109,8 @@ function islandora_video_admin(array $form, array &$form_state) {
 }
 
 /**
- * Form submit for allowing the deletion of the viewer variable.
+ * Form submit to delete the configuration variables. Everything else is handled
+ * by system_settings_form().
  */
 function islandora_video_admin_submit($form, &$form_state) {
   $op = $form_state['clicked_button']['#id'];
@@ -132,6 +133,11 @@ function islandora_video_admin_submit($form, &$form_state) {
  * Form validation ensuring the selected ffmpeg options are available.
  */
 function islandora_video_admin_validate($form, &$form_state) {
+  // Don't validate if resetting.
+  $op = $form_state['clicked_button']['#id'];
+  if ($op == 'edit-reset') {
+    return;
+  }
   // Ensure the mp4 audio codec is present if MP4 derivative is enabled.
   if ($form_state['values']['islandora_video_make_mp4_locally'] == TRUE) {
     $raw_value = $form_state['values']['islandora_video_mp4_audio_codec'];
