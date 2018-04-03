@@ -133,8 +133,7 @@ function islandora_video_admin(array $form, array &$form_state) {
 }
 
 /**
- * Form submit to delete the configuration variables. Everything else is handled
- * by system_settings_form().
+ * Submit function for the system_settings_form to reset config variables.
  */
 function islandora_video_admin_submit($form, &$form_state) {
   $op = $form_state['clicked_button']['#id'];
