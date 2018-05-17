@@ -40,7 +40,7 @@ Install as usual, see [this](https://www.drupal.org/docs/7/extend/installing-mod
 
 Configure this module, including which (if any) derivatives to create, and which (if any) viewer to use at Administration » Islandora » Solution Pack Configuration » Video Solution Pack (admin/islandora/solution_pack_config/video).
 
-![Configuration](https://user-images.githubusercontent.com/1943338/36505613-7a3df7a2-172a-11e8-8ad0-0c26859ccebc.png)
+![Configuration](https://user-images.githubusercontent.com/2857697/40198903-64b76d5a-59dd-11e8-934e-1001bba66b01.png)
 
 ## Documentation
 
