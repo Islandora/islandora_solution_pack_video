@@ -33,6 +33,7 @@ Compilation guides:
 Sample compile flags: ` --prefix=/usr/local/stow/ffmpeg-1.1.4 --enable-gpl --enable-version3 --enable-nonfree --enable-postproc --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libdc1394 --enable-libfaac --enable-libgsm --enable-libmp3lame --enable-libopenjpeg --enable-libschroedinger --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libxvid --enable-libfdk-aac`
 
 ## Installation
+Install as a Drupal module; see [this](https://www.drupal.org/docs/7/extend/installing-modules) for further information. This module requires new Fedora objects. If enabling through Drush, use the administrative user (e.g. drush en -u 1 islandora_audio).
 
 Install as usual, see [this](https://www.drupal.org/docs/7/extend/installing-modules) for further information.
 
