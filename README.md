@@ -35,8 +35,6 @@ Sample compile flags: ` --prefix=/usr/local/stow/ffmpeg-1.1.4 --enable-gpl --ena
 ## Installation
 Install as a Drupal module; see [this](https://www.drupal.org/docs/7/extend/installing-modules) for further information. This module requires new Fedora objects. If enabling through Drush, use the administrative user (e.g. drush en -u 1 islandora_audio).
 
-Install as usual, see [this](https://www.drupal.org/docs/7/extend/installing-modules) for further information.
-
 ## Configuration
 
 Configure this module, including which (if any) derivatives to create, and which (if any) viewer to use at Administration » Islandora » Solution Pack Configuration » Video Solution Pack (admin/islandora/solution_pack_config/video).
