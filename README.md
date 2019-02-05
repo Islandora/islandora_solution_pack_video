@@ -18,13 +18,18 @@ This module requires the following modules/libraries:
 ### Installing FFmpeg and AAC Encoders
 
 FFmpeg is a command-line video-processing library, required to create TN, MP4, and MKV derivatives.
-This module has been tested with FFmpeg version 1.1.4. It can be downloaded
-[here](http://www.ffmpeg.org/releases/ffmpeg-1.1.4.tar.gz)
+This module has been tested with:
 
-To support the creation of MP4 files, FFmpeg needs an [AAC encoder](https://trac.ffmpeg.org/wiki/Encode/AAC).
-For legacy reasons, this module uses `libfaac` by default. **Libfaac is not free for commercial use**. Alternate encoders
-(such as `libfdk_aac`) may be set in the configuration options. However, due to license restrictions, the mentioned encoders
-are not bundled with FFmpeg and must be enabled when FFmpeg is compiled from source.
+* FFmpeg version 1.1.4. [(download)](http://www.ffmpeg.org/releases/ffmpeg-1.1.4.tar.gz)
+* FFmpeg version 2.8.11 from Ubuntu 16.04 Package management
+
+
+To support the creation of MP4 files, FFmpeg needs an AAC encoder. For legacy reasons, this module defaults to `libfaac`,
+but keeping this default is **not recommended** as it is neither free for commercial use
+nor considered the best encoder available. See the [documentation on AAC encoders](https://trac.ffmpeg.org/wiki/Encode/AAC) for
+more information and to select an encoder. Due to license restrictions, many of these encoders (`libfaac`, `libfdk_aac`, and others)
+are not bundled with FFmpeg and must be enabled when FFmpeg is compiled from source. When it is available in FFmpeg, then it can be
+selected in this module's configuration form.
 
 Compilation guides:
 * [Ubuntu](https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu)
