@@ -112,7 +112,7 @@ function islandora_video_xml_form_builder_form_associations() {
 /**
  * Implements hook_CMODEL_PID_islandora_view_object().
  */
-function islandora_video_islandora_sp_videoCModel_islandora_view_object($object, $page_number, $page_size) {
+function islandora_video_islandora_sp_videocmodel_islandora_view_object($object, $page_number, $page_size) {
   $output = theme('islandora_video', array('object' => $object));
   return array('' => $output);
 }
@@ -120,7 +120,7 @@ function islandora_video_islandora_sp_videoCModel_islandora_view_object($object,
 /**
  * Implements hook_islandora_ingest_steps().
  */
-function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
+function islandora_video_islandora_sp_videocmodel_islandora_ingest_steps() {
   return array(
     'islandora_video_upload' => array(
       'weight' => 10,
@@ -135,7 +135,7 @@ function islandora_video_islandora_sp_videoCModel_islandora_ingest_steps() {
 /**
  * Implements hook_islandora_CMODEL_PID_derivative().
  */
-function islandora_video_islandora_sp_videoCModel_islandora_derivative() {
+function islandora_video_islandora_sp_videocmodel_islandora_derivative() {
   $derivatives = array();
   if (variable_get('islandora_video_make_thumbnail_locally', TRUE)) {
     $derivatives[] = array(

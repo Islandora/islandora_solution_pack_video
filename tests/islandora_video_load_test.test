@@ -5,6 +5,9 @@
  * A video load test. Instructions for its use are in the README.
  */
 
+/**
+ * Does a load test for videos, ingesting and deleting 10 videos.
+ */
 class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
 
   /**
@@ -97,4 +100,5 @@ class IslandoraVideoLoadTestCase extends IslandoraCollectionWebTestCase {
     // Attempts to delete the collection, removing all objects in batch.
     $this->deleteTestCollection($collectionpid);
   }
+
 }

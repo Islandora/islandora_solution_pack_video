@@ -1,5 +1,5 @@
 .islandora-video-content {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   border: 1px solid #ddd;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -26,7 +26,7 @@ dl.islandora-video-fields {
 }
 
 dl.islandora-metadata-fields {
-    width:100%;
+  width: 100%;
 }
 
 .islandora-video-metadata dt {
@@ -52,8 +52,8 @@ dl.islandora-metadata-fields {
 }
 
 body.two-sidebars .islandora-video-sidebar {
-    clear: both;
-    width: 100%;
+  clear: both;
+  width: 100%;
 }
 
 @media all and (min-width: 768px) {
