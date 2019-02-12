@@ -23,7 +23,7 @@ function template_preprocess_islandora_video(array &$variables) {
   try {
     if (isset($object['DC']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $object['DC'])) {
       $dc = $object['DC']->content;
-      $dc_object = DublinCore::importFromXMLString($dc);
+      $dc_object = DublinCore::importFromXmlString($dc);
     }
   }
   catch (Exception $e) {
