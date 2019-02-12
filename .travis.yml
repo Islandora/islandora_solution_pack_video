@@ -48,10 +48,7 @@ before_script:
   # Mysql might time out for long tests, increase the wait timeout.
   - mysql -e 'SET @@GLOBAL.wait_timeout=1200'
 script:
-  - ant -buildfile sites/all/modules/islandora_solution_pack_video/build.xml lint
-  - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_video
-  - drush coder-review --reviews=production,security,style,i18n,potx,sniffer islandora_video
-  - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_solution_pack_video
-  - php scripts/run-tests.sh --php `phpenv which php` --url http://localhost:8081 --verbose "Islandora Video"
+  - $HOME/islandora/tests/scripts/travis_scripts.sh
+  - $HOME/islandora/tests/scripts/run_tests.sh "Islandora Video"
 notifications:
   irc: "irc.freenode.org#islandora"
