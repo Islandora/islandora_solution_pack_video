@@ -5,6 +5,9 @@
  * Attempts to ingest a video file into a randomly generated video collection.
  */
 
+/**
+ * Ingest and purge a video from the repository.
+ */
 class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebTestCase {
 
   /**
@@ -99,4 +102,5 @@ class IslandoraVideoAndDerivativesIngestTestCase extends IslandoraCollectionWebT
     $this->deleteObject($object->id);
     $this->deleteTestCollection($collectionpid);
   }
+
 }

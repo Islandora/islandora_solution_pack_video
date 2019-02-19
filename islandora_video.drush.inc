@@ -56,7 +56,7 @@ function islandora_video_update_videos_create_batch() {
  * @param array $context
  *   The context of the Drupal batch.
  */
-function islandora_video_update_videos_batch_operation(&$context) {
+function islandora_video_update_videos_batch_operation(array &$context) {
   $update_offset = 25;
   $base_query = <<<EOQ
 SELECT ?pid ?date FROM <#ri>

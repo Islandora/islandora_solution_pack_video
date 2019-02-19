@@ -227,7 +227,7 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
  *
  * @see hook_islandora_derivative()
  */
-function islandora_video_add_datastream($object, $datastream_id, $file_uri, $delete_file = TRUE) {
+function islandora_video_add_datastream(AbstractObject $object, $datastream_id, $file_uri, $delete_file = TRUE) {
   try {
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
@@ -289,7 +289,7 @@ function islandora_video_add_datastream($object, $datastream_id, $file_uri, $del
  * @param AbstractObject $object
  *   An AbstractObject representing an object within Fedora.
  *
- * @return array|stdClass
+ * @return array|object
  *   FALSE when the object doesn't have the OBJ, an array otherwise.
  */
 function islandora_video_copy_obj_datastream(AbstractObject $object) {

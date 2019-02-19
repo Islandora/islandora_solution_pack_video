@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This is the template file for the object page for video
+ * This is the template file for the object page for video.
  *
  * Available variables:
  * - $islandora_content: The rendered output of the viewer configured for
