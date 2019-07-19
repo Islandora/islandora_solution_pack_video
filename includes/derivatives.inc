@@ -193,7 +193,32 @@ function islandora_video_create_thumbnail(AbstractObject $object, $force = FALSE
       exec($tn_creation, $output, $return_value);
       file_delete($archival_file['file']);
       if ($return_value === 0) {
-        return islandora_video_add_datastream($object, 'TN', $out_file);
+        // Still not done here -- this image is the size of the video and needs
+        // to be resized to 200x200.
+        if (module_exists('imagemagick')) {
+          module_load_include('module', 'imagemagick');
+          $resized_out_file = $archival_path . '_200x200-TN.jpg';
+          $args = array();
+          $args[] = '-quality ' . escapeshellarg(variable_get('imagemagick_quality', 75));
+          $args[] = '-resize ' . escapeshellarg("200 x 200");
+          $command = escapeshellarg($out_file) . ' ' . implode(' ', $args) . ' ' . escapeshellarg($resized_out_file);
+          $output = array();
+          $ret = -1;
+          if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
+            $variables = array(
+              '@ret' => $ret,
+              '@command' => $command,
+              '!output' => implode('<br/>', $output),
+            );
+            watchdog('islandora_video', 'ImageMagick failed to convert.<br/>Error: @ret<br/>Command: @command <br/>Output !output', $variables, WATCHDOG_ERROR);
+            return FALSE;
+          }
+          file_unmanaged_delete($out_file);
+          return islandora_video_add_datastream($object, 'TN', $resized_out_file);
+        }
+        else {
+          return islandora_video_add_datastream($object, 'TN', $out_file);
+        }
       }
       // Unable to generate with Ffmpeg, add default TN.
       else {
